@@ -21,3 +21,21 @@
   font-style: normal;
   src: url('../assets/fonts/sansforgetica-regular.otf') format("opentype");
 }
+
+.nav-label {
+  padding: 8px 16px;
+}
+
+.recite-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  .span-inner-left {
+    text-align: left;
+  }
+  .span-inner-right {
+    text-align: right;
+  }
+  span {
+    text-align: center;
+  }
+}

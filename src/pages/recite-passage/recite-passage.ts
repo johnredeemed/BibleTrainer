@@ -30,6 +30,7 @@ export class RecitePassagePage {
   indexInFolder;
   folderObject;
   speechReady = false;
+  contentClass = "recite-passage";
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -37,6 +38,10 @@ export class RecitePassagePage {
               public events: Events,
               private toastCtrl: ToastController,
               private speechRecognition: SpeechRecognition) {
+    this.storage.get("useSansForgetica").then((value) => {
+      if (value) this.contentClass = "recite-passage forgetica-enabled"
+    });
+
     this.shown = [];
     this.counter = 0;
 
@@ -196,6 +201,10 @@ export class RecitePassagePage {
   ionViewDidLoad() {
   }
 
+  onClickFAB = () => {
+    this.onShowPart();
+  }
+
   onShowPart = () => {
     if (this.counter >= this.parts.length) {
       this.endOfPassage = true;
@@ -273,6 +282,8 @@ export class RecitePassagePage {
   }
 
   onRead = () => {
+    // todo make automatic
+    // todo put toast above toolbar, and allow undo
     this.events.publish('passageRead', { folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : this.indexInFolder });
   }
 
@@ -349,8 +360,8 @@ export class RecitePassagePage {
             position: 'bottom'
           });
           toast.present();
-          this.shown = matches;
-          // todo - remove above line
+          //this.shown = matches;
+          // todo - remove above line; this is debug
         }
       },
       (onerror) => {

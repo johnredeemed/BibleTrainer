@@ -45,7 +45,6 @@ export class SettingsPage {
 
   changeFont() {
     this.storage.set("useSansForgetica", this.sansforgetica);
-    //todo
   }
 
   changeReplace() {

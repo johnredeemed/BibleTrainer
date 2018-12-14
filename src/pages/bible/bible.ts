@@ -12,6 +12,7 @@ import moment from 'moment';
 })
 
 export class BiblePage {
+  screenTitle = "Bible Trainer";
   deadline;
   warning;
   passages = [];
@@ -107,6 +108,9 @@ export class BiblePage {
         });
       });
     }
+    else {
+      this.screenTitle = this.folder;
+    }
 
     this.events.subscribe('passagesChanged', () => {
       this.zone.run(() => {
@@ -184,8 +188,7 @@ export class BiblePage {
   }
 
   addPassage() {
-    // todo include folder name
-    this.navCtrl.push('AddPassagePage');
+    this.navCtrl.push('AddPassagePage', { folder : this.folder });
   }
 
   selectPassage = (passage) => {

@@ -7,34 +7,48 @@
 <ion-header>
   <ion-navbar>
     <ion-title>{{reference}}</ion-title>
-
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <button ion-button (click)="onShowPart()" (press)="onShowAll()">Phrase</button>
-        </ion-col>
-        <ion-col>
-          <button ion-button (click)="onShowVerse()" (press)="onShowAll()">Verse</button>
-        </ion-col>
-        <ion-col>
-          <button ion-button (click)="onGoBack()" (press)="onHideAll()">Back</button>
-        </ion-col>
-        <ion-col>
-          <button ion-button (click)="onRecite()">Recite Aloud</button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
   </ion-navbar>
 </ion-header>
 
-<ion-content #content class="recite-passage">
+<ion-content #content>
   <div
+    [class]="contentClass"
     *ngFor="let part of shown"
     (click)="onShowPart()"
     [innerHTML]="part">
   </div>
   <br/>
   <button ion-button *ngIf="endOfPassage" (click)="onRead()">Mark as read</button>
-  <button ion-button *ngIf="endOfPassage && previousPassageExists" (click)="onPrevious()">Previous</button>
-  <button ion-button *ngIf="endOfPassage && nextPassageExists" (click)="onNext()">Next</button>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-buttons class="recite-footer">
+      <span>
+        <button ion-button *ngIf="endOfPassage && previousPassageExists" (click)="onPrevious()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </span>
+      <span class="span-inner-left">
+        <button ion-button (click)="onGoBack()" (press)="onHideAll()">
+          <ion-icon name="undo"></ion-icon>
+        </button>
+      </span>
+      <span class="span-inner-right">
+        <button ion-button (click)="onRecite()">
+          <ion-icon name="mic"></ion-icon>
+        </button>
+      </span>
+      <span>
+        <button ion-button *ngIf="endOfPassage && nextPassageExists" (click)="onNext()">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+<ion-fab bottom center>
+  <button ion-fab class="recite-passage-fab" (click)="onShowPart()" (press)="onShowAll()">
+    <ion-icon name="add"></ion-icon>
+  </button>
+</ion-fab>

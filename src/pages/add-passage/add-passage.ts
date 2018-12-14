@@ -109,6 +109,7 @@ export class AddPassagePage {
               public events: Events,
               private toastCtrl: ToastController,
               private socialSharing: SocialSharing) {
+    this.folder = this.navParams.data.folder;
     this.folderSelectOptions = {title: 'Folders'};
     this.bookSelectOptions = {title: 'Book'};
     this.book = "Psalm";
@@ -118,7 +119,6 @@ export class AddPassagePage {
       }
       var folderNames = folders.map( (folder) => { return folder.reference; })
       this.folders = ["Top Level Folder"].concat(folderNames);
-      this.folder = "Top Level Folder";
     });
   }
 
