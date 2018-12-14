@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar>
+    <ion-row>
+      <ion-col col-1>
+        <ion-buttons>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+          <button ion-button icon-only (click)="addPassage()">
+            <ion-icon name="add"></ion-icon>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col>
+        <ion-title>Bible Trainer</ion-title>
+      </ion-col>
+    </ion-row>
+  </ion-navbar>
+</ion-header>
+<ion-content padding id="bible">
+  <ion-list>
+    <button ion-item [color]="overdue(passage.timestamp)" *ngFor="let passage of passages" (press)="pressPassage(passage)" (click)="selectPassage(passage)">
+      {{passage.reference}}<br>Last read on {{passage.date}}
+    </button>
+  </ion-list>
+</ion-content>

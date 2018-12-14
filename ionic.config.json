@@ -1,0 +1,7 @@
+{
+  "name": "BibleTrainer",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

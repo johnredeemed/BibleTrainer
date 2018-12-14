@@ -1,0 +1,28 @@
+<ion-menu [content]="mainContent">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        Bible Trainer
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content id="side-menu21" style="background-color:#FFFFFF;">
+    <button ion-button menuClose color="positive" block (click)="showInfo()">
+      Info
+    </button>
+    <button ion-button menuClose color="positive" block (click)="suggestedPassages()">
+      Suggested Passages
+    </button>
+    <button ion-button menuClose color="positive" block (click)="addFolder()">
+      Add Folder
+    </button>
+    <button ion-button menuClose color="positive" block (click)="settings()">
+      Settings
+    </button>
+    <button ion-button menuClose color="negative" block (click)="clear()">
+      Clear storage
+    </button>
+  </ion-content>
+</ion-menu>
+
+<ion-nav #mainContent [root]="rootPage"></ion-nav>

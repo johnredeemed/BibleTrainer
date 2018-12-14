@@ -1,0 +1,40 @@
+<!--
+  Generated template for the RecitePassagePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{reference}}</ion-title>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <button ion-button (click)="onShowPart()" (press)="onShowAll()">Phrase</button>
+        </ion-col>
+        <ion-col>
+          <button ion-button (click)="onShowVerse()" (press)="onShowAll()">Verse</button>
+        </ion-col>
+        <ion-col>
+          <button ion-button (click)="onGoBack()" (press)="onHideAll()">Back</button>
+        </ion-col>
+        <ion-col>
+          <button ion-button (click)="onRecite()">Recite Aloud</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-navbar>
+</ion-header>
+
+<ion-content #content class="recite-passage">
+  <div
+    *ngFor="let part of shown"
+    (click)="onShowPart()"
+    [innerHTML]="part">
+  </div>
+  <br/>
+  <button ion-button *ngIf="endOfPassage" (click)="onRead()">Mark as read</button>
+  <button ion-button *ngIf="endOfPassage && previousPassageExists" (click)="onPrevious()">Previous</button>
+  <button ion-button *ngIf="endOfPassage && nextPassageExists" (click)="onNext()">Next</button>
+</ion-content>

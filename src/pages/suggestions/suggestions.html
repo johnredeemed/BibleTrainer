@@ -1,0 +1,44 @@
+<!--
+  Generated template for the SuggestionsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Suggestions</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item>
+    <ion-label>Topic</ion-label>
+    <ion-select [(ngModel)]="topic" interface="action-sheet" multiple="false" (ionChange)="updateTopic()">
+      <ion-option>Salvation</ion-option>
+      <ion-option>Grace</ion-option>
+      <ion-option>Confession</ion-option>
+      <ion-option>Suffering</ion-option>
+      <ion-option>Motivation to holiness</ion-option>
+      <ion-option>Adoption</ion-option>
+      <ion-option>Trusting God</ion-option>
+      <ion-option>The greatness of God</ion-option>
+      <ion-option>The kindness of God</ion-option>
+      <ion-option>Preservation</ion-option>
+      <ion-option>Evangelism</ion-option>
+      <ion-option>Eternal life</ion-option>
+      <ion-option>New creation</ion-option>
+      <ion-option>Satisfaction</ion-option>
+      <ion-option>Family</ion-option>
+      <ion-option>Money</ion-option>
+      <ion-option>All suggestions</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-list>
+    <button ion-item *ngFor="let passage of passages" (click)="selectPassage(passage)">
+      {{passage}}
+    </button>
+  </ion-list>
+</ion-content>
