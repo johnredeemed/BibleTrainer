@@ -218,7 +218,6 @@ export class RecitePassagePage {
 
   onShowPart = () => {
     if (this.counter >= this.parts.length) {
-      this.endOfPassage = true;
       return;
     }
 
@@ -226,8 +225,7 @@ export class RecitePassagePage {
     this.counter++;
     this.shown = this.parts.slice(0, this.counter);
     if (this.counter >= this.parts.length) {
-      this.endOfPassage = true;
-      this.onRead();
+      this.finishPassage();
     }
 
     this.scrollDown();
@@ -235,7 +233,6 @@ export class RecitePassagePage {
 
   onShowVerse = () => {
     if (this.counter >= this.parts.length) {
-      this.endOfPassage = true;
       return;
     }
 
@@ -244,8 +241,7 @@ export class RecitePassagePage {
       this.counter++;
       this.shown = this.parts.slice(0, this.counter);
       if (this.counter >= this.parts.length) {
-        this.endOfPassage = true;
-        this.onRead();
+        this.finishPassage();
         break;
       }
     } while(this.parts[this.counter].search(/\[/) == -1);
@@ -254,10 +250,9 @@ export class RecitePassagePage {
   }
 
   onShowAll = () => {
-    this.counter = this.parts.length - 1;
+    this.counter = this.parts.length;
     this.shown = this.parts;
-    this.endOfPassage = true;
-    this.onRead();
+    this.finishPassage();
     this.scrollDown();
   }
 
@@ -267,6 +262,24 @@ export class RecitePassagePage {
     this.storage.get(this.reference).then(() => {
       this.content.scrollToBottom(400);
     });
+  }
+
+  finishPassage() {
+    this.endOfPassage = true;
+    var date = moment().format("MM[/]DD[/]YY");
+    let toast = this.toastCtrl.create({
+      message: this.reference + ' marked as read on ' + date + '. May it dwell in you richly!',
+      duration: 2000,
+      position: 'middle',
+      showCloseButton: true,
+      closeButtonText: 'Undo'
+    });
+    toast.onDidDismiss((data, role) => {
+      if (role !== "close") {
+        this.events.publish('passageRead', { folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : this.indexInFolder });
+      }
+    });
+    toast.present();
   }
 
   onGoBack = () => {
@@ -295,22 +308,6 @@ export class RecitePassagePage {
     this.onHideAll();
     this.indexInFolder++;
     this.fetchPassage();
-  }
-
-  onRead = () => {
-    var date = moment().format("MM[/]DD[/]YY");
-    let toast = this.toastCtrl.create({
-      message: this.reference + ' marked as read on ' + date + '. May it dwell in you richly!',
-      duration: 2000,
-      showCloseButton: true,
-      closeButtonText: 'Undo'
-    });
-    toast.onDidDismiss((data, role) => {
-      if (role !== "close") {
-        this.events.publish('passageRead', { folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : this.indexInFolder });
-      }
-    });
-    toast.present();
   }
 
   onRecite = () => {

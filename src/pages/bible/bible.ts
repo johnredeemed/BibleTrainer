@@ -379,12 +379,6 @@ export class BiblePage {
     // only for testing     args.passagesInFolder[args.indexInFolder].date += " " + args.passagesInFolder[args.indexInFolder].timestamp;
     this.storage.set(args.folder, args.passagesInFolder).then(() => {
       this.events.publish('passagesChanged');
-      /*let toast = this.toastCtrl.create({
-        message: args.passagesInFolder[args.indexInFolder].reference + ' marked as read on ' + date + '. May it dwell in you richly!',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();*/
     });
 
     this.checkFolderLastRead(args);
