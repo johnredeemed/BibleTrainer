@@ -37,9 +37,9 @@ export class MyApp {
     let alert = this.alertCtrl.create();
     alert.setTitle('Info');
     var message = 'This screen will have the list of passages you are memorising. There are two ways to add new passages: ' +
-      'pick from the list of suggested passages (do this through the menu option in the top left), or choose any passage from the Bible (click the "+" button at the top). ' +
-      '<br/><br/>Once you have a passage in your list, you can start to learn it by clicking on it, and in the next screen using the "PHRASE" and "VERSE" buttons to reveal the passage bit-by-bit. ' +
-      '<br/><br/>Keep practising the passages you\'re memorising to move them into your long-term memory. You can keep track of how recently you went over a passage by clicking "MARK AS READ". ' +
+      'pick from the list of suggested passages (do this through the menu option in the top left), or choose any passage from the Bible (click the "+" button at the bottom right). ' +
+      '<br/><br/>Once you have a passage in your list, you can start to learn it by clicking on it, and in the next screen using the "+" button to reveal the passage bit-by-bit. ' +
+      '<br/><br/>Keep practising the passages you\'re memorising to move them into your long-term memory. You have the option to order passages by when they were last read - choose this in the settings page. ' +
       '<br/><br/>You can organise your passages into folders; add a new folder through the menu option and then either ' +
       'move existing passages into the folder (by long-pressing on a passage and choosing "Move to folder"), or add passages directly to the folder with the drop-down menu in the Add Passage screen. ';
     alert.setMessage(message);
