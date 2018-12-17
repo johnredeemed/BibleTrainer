@@ -13,6 +13,10 @@
 <ion-content padding>
   <ion-item>
     <ion-label text-wrap>Use Sans Forgetica font</ion-label>
+    <!-- todo fix this so that the info button shows -->
+    <button ion-button (click)="onFontInfo()">
+      <ion-icon name="information-circle"></ion-icon>
+    </button>
     <ion-toggle [(ngModel)]="sansforgetica" (ionChange)="changeFont()"></ion-toggle>
   </ion-item>
   <ion-item>

@@ -21,7 +21,7 @@
       <ion-option>Grace</ion-option>
       <ion-option>Confession</ion-option>
       <ion-option>Suffering</ion-option>
-      <ion-option>Motivation to holiness</ion-option>
+      <ion-option>Purity</ion-option>
       <ion-option>Adoption</ion-option>
       <ion-option>Trusting God</ion-option>
       <ion-option>The greatness of God</ion-option>
@@ -37,8 +37,9 @@
     </ion-select>
   </ion-item>
   <ion-list>
+    <!-- todo make the text part a smaller font size? -->
     <button ion-item *ngFor="let passage of passages" (click)="selectPassage(passage)">
-      {{passage}}
+      {{passage.reference}}<br>{{passage.text}}
     </button>
   </ion-list>
 </ion-content>

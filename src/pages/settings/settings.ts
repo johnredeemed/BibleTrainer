@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AlertController, Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {Storage} from "@ionic/storage";
 
 /**
@@ -24,7 +24,8 @@ export class SettingsPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public events: Events,
-              private storage: Storage) {
+              private storage: Storage,
+              public alertCtrl: AlertController) {
     this.storage.get("useSansForgetica").then((value) => {
       this.sansforgetica = value;
     });
@@ -43,9 +44,16 @@ export class SettingsPage {
   ionViewDidLoad() {
   }
 
-  // todo explain the font
   changeFont() {
     this.storage.set("useSansForgetica", this.sansforgetica);
+  }
+
+  onFontInfo() {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Sans Forgetica');
+    alert.setMessage('Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation. It was created by a multidisciplinary team of designers and behavioural scientists from RMIT University.<br/><br/>https://sansforgetica.rmit/');
+    alert.addButton('Ok');
+    alert.present();
   }
 
   changeReplace() {
