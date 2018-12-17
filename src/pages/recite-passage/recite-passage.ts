@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Events, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
+import moment from 'moment';
 
 /**
  * Generated class for the RecitePassagePage page.
@@ -205,16 +206,28 @@ export class RecitePassagePage {
     this.onShowPart();
   }
 
+  displayVerseMarker(part) {
+    var verseNumbers = part.match(/\[[0-9]+\]/g);
+    if (!verseNumbers || verseNumbers.length < 1) return;
+    var verseNumber = verseNumbers[0].replace(/[\[\]]/g, '');
+
+    // todo display verse number separately
+    console.log('part: ' + part);
+    console.log('verse: ' + verseNumber);
+  }
+
   onShowPart = () => {
     if (this.counter >= this.parts.length) {
       this.endOfPassage = true;
       return;
     }
 
+    this.displayVerseMarker(this.parts[this.counter]);
     this.counter++;
     this.shown = this.parts.slice(0, this.counter);
     if (this.counter >= this.parts.length) {
       this.endOfPassage = true;
+      this.onRead();
     }
 
     this.scrollDown();
@@ -227,10 +240,12 @@ export class RecitePassagePage {
     }
 
     do {
+      this.displayVerseMarker(this.parts[this.counter]);
       this.counter++;
       this.shown = this.parts.slice(0, this.counter);
       if (this.counter >= this.parts.length) {
         this.endOfPassage = true;
+        this.onRead();
         break;
       }
     } while(this.parts[this.counter].search(/\[/) == -1);
@@ -242,6 +257,7 @@ export class RecitePassagePage {
     this.counter = this.parts.length - 1;
     this.shown = this.parts;
     this.endOfPassage = true;
+    this.onRead();
     this.scrollDown();
   }
 
@@ -282,9 +298,19 @@ export class RecitePassagePage {
   }
 
   onRead = () => {
-    // todo make automatic
-    // todo put toast above toolbar, and allow undo
-    this.events.publish('passageRead', { folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : this.indexInFolder });
+    var date = moment().format("MM[/]DD[/]YY");
+    let toast = this.toastCtrl.create({
+      message: this.reference + ' marked as read on ' + date + '. May it dwell in you richly!',
+      duration: 2000,
+      showCloseButton: true,
+      closeButtonText: 'Undo'
+    });
+    toast.onDidDismiss((data, role) => {
+      if (role !== "close") {
+        this.events.publish('passageRead', { folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : this.indexInFolder });
+      }
+    });
+    toast.present();
   }
 
   onRecite = () => {

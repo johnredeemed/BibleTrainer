@@ -43,6 +43,7 @@ export class SettingsPage {
   ionViewDidLoad() {
   }
 
+  // todo explain the font
   changeFont() {
     this.storage.set("useSansForgetica", this.sansforgetica);
   }
