@@ -6,4 +6,21 @@ page-recite-passage {
   .recite-passage-fab {
     background-color: #3f45b7;
   }
+
+  .scroll-content {
+    padding: 16px;
+  }
+
+  .recite-passage {
+    position: relative;
+    margin-left: 50px;
+    font-size: 16px;
+  }
+
+  .verse-num {
+    color: #488aff;
+    position: absolute;
+    left: -30px;
+    font-weight: bold;
+  }
 }
