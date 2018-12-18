@@ -10,14 +10,13 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content #content>
-  <div
+<ion-content #content (click)="onShowPart()">
+  <p
     [class]="contentClass"
     *ngFor="let part of shown"
-    (click)="onShowPart()"
-    [innerHTML]="part">
-  </div>
-  <br/>
+    [innerHTML]="part"
+    >
+  </p>
 </ion-content>
 
 <ion-footer>

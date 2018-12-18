@@ -207,13 +207,13 @@ export class RecitePassagePage {
   }
 
   displayVerseMarker(part) {
-    var verseNumbers = part.match(/\[[0-9]+\]/g);
-    if (!verseNumbers || verseNumbers.length < 1) return;
-    var verseNumber = verseNumbers[0].replace(/[\[\]]/g, '');
+    const verseNumbers = part.match(/\[[0-9]+\]/g);
+    if (!verseNumbers || verseNumbers.length < 1) return part;
 
-    // todo display verse number separately
-    console.log('part: ' + part);
-    console.log('verse: ' + verseNumber);
+    const verseNumber = verseNumbers[0].replace(/[\[\]]/g, '');
+    const wrappedVerse = `<span class="verse-num">${verseNumber}</span>`;
+
+    return part.replace(verseNumbers[0], wrappedVerse);
   }
 
   onShowPart = () => {
@@ -221,9 +221,9 @@ export class RecitePassagePage {
       return;
     }
 
-    this.displayVerseMarker(this.parts[this.counter]);
+    const wrappedVerse = this.displayVerseMarker(this.parts[this.counter]);
     this.counter++;
-    this.shown = this.parts.slice(0, this.counter);
+    this.shown.push(wrappedVerse);
     if (this.counter >= this.parts.length) {
       this.finishPassage();
     }
