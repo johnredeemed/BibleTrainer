@@ -214,6 +214,7 @@ export class SuggestionsPage {
     const actionSheet = this.actionSheetCtrl.create({
       title: passage.reference,
       subTitle: passage.text,
+      cssClass: 'as-suggestions',
       buttons: [
         {
           text: 'Add to my list',

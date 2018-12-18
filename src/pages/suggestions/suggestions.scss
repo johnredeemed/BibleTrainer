@@ -1,3 +1,11 @@
 page-suggestions {
+}
 
+.as-suggestions {
+  .action-sheet-sub-title {
+    /*hacky hacky hack*/
+    border-bottom: 1px solid #bdbdbd;
+    border-top: 1px solid #bdbdbd;
+    padding: 16px;
+  }
 }
