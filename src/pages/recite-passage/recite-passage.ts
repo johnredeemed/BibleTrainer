@@ -99,6 +99,8 @@ export class RecitePassagePage {
             .map((part) => '[' + part);
           verses.forEach(this.splitVerse.bind(this));
         }
+
+        this.parts = this.parts.map((part) => this.replaceVerseMarker(part));
       });
     });
   }
@@ -108,6 +110,16 @@ export class RecitePassagePage {
       return "&nbsp;&nbsp;&nbsp;&nbsp;" + line.replace("&nbsp;&nbsp;&nbsp;&nbsp;", "");
     }
     return line;
+  }
+
+  replaceVerseMarker(line) {
+    const verseNumbers = line.match(/\[[0-9]+\]/g);
+    if (!verseNumbers || verseNumbers.length < 1) return line;
+
+    const verseNumber = verseNumbers[0].replace(/[\[\]]/g, '');
+    const wrappedVerse = `<span class="verse-num">${verseNumber}</span>`;
+
+    return line.replace(verseNumbers[0], wrappedVerse);
   }
 
   splitVerse(verse) {
@@ -206,24 +218,13 @@ export class RecitePassagePage {
     this.onShowPart();
   }
 
-  displayVerseMarker(part) {
-    const verseNumbers = part.match(/\[[0-9]+\]/g);
-    if (!verseNumbers || verseNumbers.length < 1) return part;
-
-    const verseNumber = verseNumbers[0].replace(/[\[\]]/g, '');
-    const wrappedVerse = `<span class="verse-num">${verseNumber}</span>`;
-
-    return part.replace(verseNumbers[0], wrappedVerse);
-  }
-
   onShowPart = () => {
     if (this.counter >= this.parts.length) {
       return;
     }
 
-    const wrappedVerse = this.displayVerseMarker(this.parts[this.counter]);
     this.counter++;
-    this.shown.push(wrappedVerse);
+    this.shown = this.parts.slice(0, this.counter);
     if (this.counter >= this.parts.length) {
       this.finishPassage();
     }
@@ -237,7 +238,6 @@ export class RecitePassagePage {
     }
 
     do {
-      this.displayVerseMarker(this.parts[this.counter]);
       this.counter++;
       this.shown = this.parts.slice(0, this.counter);
       if (this.counter >= this.parts.length) {
