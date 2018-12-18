@@ -9,7 +9,8 @@ page-recite-passage {
 
   .recite-passage {
     font-size: 16px;
-    margin-left: 50px;
+    margin-left: 44px;
+    padding-left: 12px;
     position: relative;
 
     &.forgetica-enabled {
@@ -25,7 +26,7 @@ page-recite-passage {
     color: #488aff;
     display: inline-block;
     font-weight: bold;
-    left: -50px;
+    left: -44px;
     min-width: 36px;
     position: absolute;
     text-align: left;
