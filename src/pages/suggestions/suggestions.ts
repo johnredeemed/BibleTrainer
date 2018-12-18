@@ -218,6 +218,7 @@ export class SuggestionsPage {
       buttons: [
         {
           text: 'Add to my list',
+          icon: 'add',
           handler: () => {
             this.storage.get(passage.reference).then((passage2) => {
               // First check if passage is added already, or is a folder name
@@ -255,7 +256,8 @@ export class SuggestionsPage {
           }
         },{
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
+          icon: 'close',
         }
       ]
     });
