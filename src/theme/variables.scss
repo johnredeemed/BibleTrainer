@@ -92,3 +92,15 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+@font-face {
+  font-family: 'Sansforgetica';
+  font-weight: 200;
+  font-style: normal;
+  src: url('../assets/fonts/sansforgetica-regular.otf') format("opentype");
+}
+
+$font-family: (
+  default: 'Roboto',
+  forgettable: 'Sansforgetica'
+);
