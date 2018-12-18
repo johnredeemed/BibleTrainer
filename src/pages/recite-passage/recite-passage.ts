@@ -244,7 +244,7 @@ export class RecitePassagePage {
         this.finishPassage();
         break;
       }
-    } while(this.parts[this.counter].search(/\[/) == -1);
+    } while(this.parts[this.counter].search(/<span class=/) == -1);
 
     this.scrollDown();
   }
@@ -266,9 +266,8 @@ export class RecitePassagePage {
 
   finishPassage() {
     this.endOfPassage = true;
-    var date = moment().format("MM[/]DD[/]YY");
     let toast = this.toastCtrl.create({
-      message: this.reference + ' marked as read on ' + date + '. May it dwell in you richly!',
+      message: this.reference + ' marked as read. May it dwell in you richly!',
       duration: 2000,
       position: 'middle',
       showCloseButton: true,
