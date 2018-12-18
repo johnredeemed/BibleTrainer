@@ -267,9 +267,9 @@ export class RecitePassagePage {
   finishPassage() {
     this.endOfPassage = true;
     let toast = this.toastCtrl.create({
-      message: this.reference + ' marked as read. May it dwell in you richly!',
-      duration: 2000,
-      position: 'middle',
+      message: `${this.reference} marked as read. May it dwell in you richly!`,
+      duration: 5000,
+      cssClass: 'toastBeforeBottomNav',
       showCloseButton: true,
       closeButtonText: 'Undo'
     });

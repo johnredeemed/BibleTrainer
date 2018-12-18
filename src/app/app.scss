@@ -32,3 +32,10 @@
     text-align: center;
   }
 }
+
+.toastBeforeBottomNav {
+  height: auto;
+  position: absolute;
+  bottom: 56px;
+  z-index: 998;
+}
