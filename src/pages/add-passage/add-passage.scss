@@ -1,2 +1,18 @@
 page-add-passage {
+  ion-item.item-input, ion-item.item-select {
+    padding-left: 0;
+  }
+
+  ion-grid.grid {
+    padding: 5px 0;
+  }
+
+  ion-col.col:first-child{
+    padding-left: 0;
+  }
+
+  ion-col.col:last-child{
+    padding-right: 0;
+  }
 }
+
