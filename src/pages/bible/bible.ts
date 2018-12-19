@@ -210,8 +210,8 @@ export class BiblePage {
         buttons: [
           {
             text: 'Delete',
-            icon: 'trash',
             role: 'destructive',
+            icon: 'trash',
             handler: () => {
               this.storage.remove(passage.reference);
               this.passagesInFolder.splice(index, 1);
@@ -313,6 +313,7 @@ export class BiblePage {
         {
           text: 'Delete (this will remove all passages in the folder!)',
           role: 'destructive',
+          icon: 'trash',
           handler: () => {
             index = this.folders.indexOf(passage);
             if (index > -1) {
@@ -334,12 +335,14 @@ export class BiblePage {
         },
         {
           text: 'Mark all as read',
+          icon: 'checkmark',
           handler: () => {
             this.markFolderAsRead(passage);
           }
         },{
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
+          icon: 'close'
         }
       ]
     });
