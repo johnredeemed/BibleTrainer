@@ -8,7 +8,7 @@
   <ion-navbar>
     <ion-title>Add Passage</ion-title>
     <ion-buttons>
-      <!--<button ion-button icon-only *ngIf="showAddButton" (click)="share()">
+      <!--<button ion-button icon-only (click)="share()">
         <ion-icon name="share"></ion-icon>
       </button>-->
     </ion-buttons>
@@ -25,7 +25,7 @@
 
   <ion-item>
     <ion-label floating>Chapter</ion-label>
-    <ion-input min="1" type="number" [(ngModel)]="chapter" (ionChange)="hideAddButton()" (ionBlur)="getPassage()" value="1"></ion-input>
+    <ion-input min="1" type="number" [(ngModel)]="chapter" value="1"></ion-input>
   </ion-item>
 
   <ion-grid>
@@ -33,28 +33,18 @@
       <ion-col>
         <ion-item>
           <ion-label floating>Start Verse</ion-label>
-          <ion-input min="1" type="number" [(ngModel)]="startVerse" (ionChange)="hideAddButton()" value="1"></ion-input>
+          <ion-input min="1" type="number" [(ngModel)]="startVerse"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label floating>End Verse</ion-label>
-          <ion-input min="1" type="number" [(ngModel)]="endVerse" (ionChange)="hideAddButton()" (ionBlur)="getPassage()"></ion-input>
+          <ion-input min="1" type="number" [(ngModel)]="endVerse"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <button ion-button (click)="getPassage()">Get Passage</button>
-
-  <div [innerHTML]="formattedPassage"></div>
-
-  <ion-item>
-    <ion-label floating>Folder:</ion-label>
-    <ion-select [selectOptions]="folderSelectOptions" [(ngModel)]="folder" interface="action-sheet">
-      <ion-option *ngFor="let f of folders">{{f}}</ion-option>
-    </ion-select>
-  </ion-item>
-  <button ion-button *ngIf="showAddButton" (click)="addPassage()">Add Passage</button>
 </ion-content>
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {ActionSheetController, AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { Events } from 'ionic-angular';
@@ -24,15 +24,13 @@ export class AddPassagePage {
   originalPassage = "";
   passage = "";
   formattedPassage = "";
-  book = "";
+  book;
   bookSelectOptions;
-  folderSelectOptions;
-  folder = "";
+  folder;
   folders;
   chapter = 1;
-  startVerse = "1";
+  startVerse = "";
   endVerse = "";
-  showAddButton = false;
   bookChapters = {
     "Genesis": 50,
     "Exodus": 40,
@@ -108,9 +106,9 @@ export class AddPassagePage {
               private storage: Storage,
               public events: Events,
               private toastCtrl: ToastController,
+              public alertCtrl: AlertController,
               private socialSharing: SocialSharing) {
     this.folder = this.navParams.data.folder;
-    this.folderSelectOptions = {title: 'Folders'};
     this.bookSelectOptions = {title: 'Book'};
     this.book = "Psalm";
     this.storage.get("folders").then((folders) => {
@@ -126,23 +124,7 @@ export class AddPassagePage {
     console.log('ionViewDidLoad AddPassagePage');
   }
 
-  onBookSelect() {
-    /*var chapters = this.bookChapters[this.book];
-    this.chapterArray = Array(chapters);
-    for (var i = 0; i < chapters; i++) {
-      this.chapterArray[i] = i + 1;
-    }*/
-
-    this.chapter = 1;
-    this.startVerse = "1";
-    this.endVerse = "";
-    this.reference = this.book + " 1";
-    this.sendRequest();
-  }
-
-  hideAddButton = () => {
-    this.showAddButton = false;
-  }
+  onBookSelect() {}
 
   getPassage() {
     if (!this.book) {
@@ -178,10 +160,10 @@ export class AddPassagePage {
       toast.present();
     }
     else {
-      if (!this.endVerse || !this.startVerse) {
+      if (!this.startVerse) {
         this.reference = this.book + " " + this.chapter
       }
-      else if (this.endVerse === this.startVerse) {
+      else if (!this.endVerse || this.endVerse === this.startVerse) {
         this.reference = this.book + " " + this.chapter + ":" + this.startVerse;
       }
       else {
@@ -193,7 +175,6 @@ export class AddPassagePage {
   }
 
   sendRequest() {
-    this.showAddButton = false;
     var URL = "https://api.esv.org/v3/passage/text/?q=" + this.reference + "&include-passage-references=false&include-first-verse-numbers=true&include-verse-numbers=true&include-footnotes=false&include-footnote-body=false&include-short-copyright=false&include-copyright=false&include-passage-horizontal-lines=false&include-heading-horizontal-lines=false&include-headings=false&include-selahs=true&indent-using=space&indent-paragraphs=0&indent-poetry=true&indent-poetry-lines=4&indent-declares=4&indent-psalm-doxology=30&line-length=0";
     var xmlHttp = new XMLHttpRequest();
     const storage = this.storage;
@@ -221,15 +202,17 @@ export class AddPassagePage {
         });
 
         // check if end verse is off the end
-        if (this.endVerse) {
+        if (this.startVerse && this.endVerse) {
           var verses = this.formattedPassage.split('[');
           var lastVerse = verses[verses.length - 1];
           var lastVerseNumber = lastVerse.substring(0, lastVerse.indexOf(']'));
           if (this.endVerse !== lastVerseNumber) {
             this.endVerse = lastVerseNumber;
+            this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
           }
         }
-        this.showAddButton = true;
+
+        if (this.passage) this.showAlertToAddPassage();
       }
     }).bind(this);
     xmlHttp.open( "GET", URL, true );
@@ -252,19 +235,9 @@ export class AddPassagePage {
     this.socialSharing.share(this.reference + ' ' + this.originalPassage, this.reference);
   }
 
-  addPassage() {
-    if (!this.passage) {
-      let toast = this.toastCtrl.create({
-        message: 'Please get the passage first',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();
-      return;
-    }
-
+  showAlertToAddPassage() {
+    // First check if the reference is added already, or is a folder name
     this.storage.get(this.reference).then((passage) => {
-      // First check if passage is added already, or is a folder name
       if (passage != null) {
         let toast = this.toastCtrl.create({
           message: this.reference + ' already added',
@@ -275,22 +248,66 @@ export class AddPassagePage {
         return;
       }
 
-      this.storage.get(this.folder).then((folder) => {
-        if (folder == null) {
-          folder = [];
-        }
+      let alert = this.alertCtrl.create({
+        title: this.reference,
+        message: this.formattedPassage,
+        buttons: [
+          {
+            text: 'Add to my list',
+            handler: () => {
+              if (this.folders.length < 2) {
+                this.addPassage("Top Level Folder");
+                return;
+              }
 
-        folder.push({ reference: this.reference, date: moment().format("MM[/]DD[/]YY"), timestamp: moment.now() });
-        this.storage.set(this.folder, folder);
-        this.storage.set(this.reference, this.passage).then( () => {
-          this.events.publish('passagesChanged');
-          let toast = this.toastCtrl.create({
-            message: this.reference + ' added successfully',
-            duration: 2000,
-            position: 'bottom'
-          });
-          toast.present();
+              let folderChooser = this.alertCtrl.create();
+              folderChooser.setTitle('Which folder should this passage be in?');
+              this.folders.forEach((item) => {
+                folderChooser.addInput({
+                  type: 'radio',
+                  label: item,
+                  value: item,
+                  checked: item === this.folder // by default, select the folder the user was in
+                });
+              });
+              folderChooser.addButton({
+                text: 'Ok',
+                handler: (destinationFolderName: any) => {
+                  if (destinationFolderName) this.addPassage(destinationFolderName);
+                }
+              });
+              folderChooser.addButton({
+                text: 'Cancel',
+                role: 'cancel'
+              });
+              folderChooser.present();
+            }
+          }, {
+            text: 'Cancel',
+            role: 'cancel'
+          }
+        ]
+      });
+      alert.present();
+    });
+  }
+
+  addPassage(destinationFolderName) {
+    this.storage.get(destinationFolderName).then((folder) => {
+      if (folder == null) {
+        folder = [];
+      }
+
+      folder.push({ reference: this.reference, date: moment().format("MM[/]DD[/]YY"), timestamp: moment.now() });
+      this.storage.set(destinationFolderName, folder);
+      this.storage.set(this.reference, this.passage).then( () => {
+        this.events.publish('passagesChanged');
+        let toast = this.toastCtrl.create({
+          message: this.reference + ' added successfully',
+          duration: 2000,
+          position: 'bottom'
         });
+        toast.present();
       });
     });
   }
