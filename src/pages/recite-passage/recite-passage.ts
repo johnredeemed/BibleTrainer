@@ -383,7 +383,7 @@ export class RecitePassagePage {
           });
           toast.present();
           //this.shown = matches;
-          // todo - remove above line; this is debug
+          //for debug
         }
       },
       (onerror) => {
