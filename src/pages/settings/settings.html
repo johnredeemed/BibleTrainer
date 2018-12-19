@@ -12,23 +12,34 @@
 
 <ion-content padding>
   <ion-item>
-    <ion-label text-wrap>Use Sans Forgetica font</ion-label>
-    <!-- todo fix this so that the info button shows -->
-    <button ion-button (click)="onFontInfo()">
-      <ion-icon name="information-circle"></ion-icon>
-    </button>
+    <ion-label text-wrap>
+      <h2>Use Sans Forgetica font</h2>
+      <p>Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation</p>
+    </ion-label>
     <ion-toggle [(ngModel)]="sansforgetica" (ionChange)="changeFont()"></ion-toggle>
   </ion-item>
+
   <ion-item>
-    <ion-label text-wrap>Replace "The LORD"/"GOD" with "YHWH"</ion-label>
+    <ion-label text-wrap>
+      <h2>Replace "The LORD"/"GOD" with "YHWH"</h2>
+    </ion-label>
     <ion-toggle [(ngModel)]="replace" (ionChange)="changeReplace()"></ion-toggle>
   </ion-item>
+
   <ion-item>
-    <ion-label text-wrap>Order passages by when read, instead of book ordering</ion-label>
+    <ion-label text-wrap>
+      <h2>Display passages by last read date</h2>
+      <p>Defaults to Biblical order</p>
+    </ion-label>
     <ion-toggle [(ngModel)]="ordering" (ionChange)="changeOrdering()"></ion-toggle>
   </ion-item>
+
   <ion-item>
-    <ion-label text-wrap>After how many days should stale passages be highlighted</ion-label>
-    <ion-input type="tel" [(ngModel)]="deadline" (ionBlur)="changeDeadline()"></ion-input>
+    <ion-label text-wrap>
+      <h2>Review time</h2>
+      <p>Number of days until passage becomes old</p>
+    </ion-label>
+    <ion-input type="num" min="1" [(ngModel)]="deadline" (ionBlur)="changeDeadline()"></ion-input>
   </ion-item>
+
 </ion-content>

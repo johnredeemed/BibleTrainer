@@ -48,14 +48,6 @@ export class SettingsPage {
     this.storage.set("useSansForgetica", this.sansforgetica);
   }
 
-  onFontInfo() {
-    let alert = this.alertCtrl.create();
-    alert.setTitle('Sans Forgetica');
-    alert.setMessage('Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation. It was created by a multidisciplinary team of designers and behavioural scientists from RMIT University.<br/><br/>https://sansforgetica.rmit/');
-    alert.addButton('Ok');
-    alert.present();
-  }
-
   changeReplace() {
     this.storage.set("replaceTheLORDwithYHWH", this.replace);
   }
