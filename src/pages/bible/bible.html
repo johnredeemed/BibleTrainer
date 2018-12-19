@@ -14,7 +14,8 @@
   </ion-fab>
   <ion-list>
     <button ion-item [color]="overdue(passage.timestamp)" *ngFor="let passage of passages" (press)="pressPassage(passage)" (click)="selectPassage(passage)">
-      {{passage.reference}}<br>Last read on {{passage.date}}
+      <h2>{{passage.reference}}</h2>
+      <p>Last read on {{passage.date}}</p>
     </button>
   </ion-list>
 </ion-content>

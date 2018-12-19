@@ -37,9 +37,9 @@
     </ion-select>
   </ion-item>
   <ion-list>
-    <!-- todo make the text part a smaller font size? -->
     <button ion-item *ngFor="let passage of passages" (click)="selectPassage(passage)">
-      {{passage.reference}}<br>{{passage.text}}
+      <h2>{{passage.reference}}</h2>
+      <p>{{passage.text}}</p>
     </button>
   </ion-list>
 </ion-content>
