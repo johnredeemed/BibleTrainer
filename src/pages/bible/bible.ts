@@ -210,6 +210,7 @@ export class BiblePage {
         buttons: [
           {
             text: 'Delete',
+            icon: 'trash',
             role: 'destructive',
             handler: () => {
               this.storage.remove(passage.reference);
@@ -221,6 +222,7 @@ export class BiblePage {
           },
           {
             text: 'Move to folder',
+            icon: 'folder',
             handler: () => {
               // get dest folder
               this.storage.get("folders").then((folders) => {
@@ -290,12 +292,14 @@ export class BiblePage {
           },
           {
             text: 'Mark as read',
+            icon: 'checkmark',
             handler: () => {
               this.markPassageAsRead({ folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : index });
             }
           },{
             text: 'Cancel',
-            role: 'cancel'
+            role: 'cancel',
+            icon: 'close'
           }
         ]
       });

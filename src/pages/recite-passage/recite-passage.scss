@@ -1,8 +1,4 @@
 page-recite-passage {
-  .recite-passage.forgetica-enabled {
-    font-family: "Sansforgetica";
-  }
-
   .recite-passage-fab {
     background-color: #3f45b7;
   }
@@ -12,15 +8,27 @@ page-recite-passage {
   }
 
   .recite-passage {
-    position: relative;
-    margin-left: 50px;
     font-size: 16px;
+    margin-left: 44px;
+    padding-left: 12px;
+    position: relative;
+
+    &.forgetica-enabled {
+      font-family: map-get($font-family, forgettable);
+
+      span {
+        font-family: map-get($font-family, default);
+      }
+    }
   }
 
   .verse-num {
     color: #488aff;
-    position: absolute;
-    left: -30px;
+    display: inline-block;
     font-weight: bold;
+    left: -44px;
+    min-width: 36px;
+    position: absolute;
+    text-align: center;
   }
 }

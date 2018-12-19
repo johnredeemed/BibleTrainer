@@ -199,12 +199,12 @@ export class SuggestionsPage {
     else if (this.topic == "Purity") this.passages = this.purity;
     else if (this.topic == "Adoption") this.passages = this.adoption;
     else if (this.topic == "Trusting God") this.passages = this.trustingGod;
-    else if (this.topic == "The greatness of God") this.passages = this.theGreatnessOfGod;
-    else if (this.topic == "The kindness of God") this.passages = this.theKindnessOfGod;
+    else if (this.topic == "The Greatness of God") this.passages = this.theGreatnessOfGod;
+    else if (this.topic == "The Kindness of God") this.passages = this.theKindnessOfGod;
     else if (this.topic == "Preservation") this.passages = this.preservation;
     else if (this.topic == "Evangelism") this.passages = this.evangelism;
-    else if (this.topic == "Eternal life") this.passages = this.eternalLife;
-    else if (this.topic == "New creation") this.passages = this.newCreation;
+    else if (this.topic == "Eternal Life") this.passages = this.eternalLife;
+    else if (this.topic == "New Creation") this.passages = this.newCreation;
     else if (this.topic == "Satisfaction") this.passages = this.satisfaction;
     else if (this.topic == "Family") this.passages = this.family;
     else if (this.topic == "Money") this.passages = this.money;
@@ -214,9 +214,11 @@ export class SuggestionsPage {
     const actionSheet = this.actionSheetCtrl.create({
       title: passage.reference,
       subTitle: passage.text,
+      cssClass: 'as-suggestions',
       buttons: [
         {
           text: 'Add to my list',
+          icon: 'add',
           handler: () => {
             this.storage.get(passage.reference).then((passage2) => {
               // First check if passage is added already, or is a folder name
@@ -254,7 +256,8 @@ export class SuggestionsPage {
           }
         },{
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
+          icon: 'close',
         }
       ]
     });

@@ -23,12 +23,12 @@
   <ion-toolbar color="primary">
     <ion-buttons class="recite-footer">
       <span>
-        <button ion-button *ngIf="endOfPassage && previousPassageExists" (click)="onPrevious()">
+        <button ion-button *ngIf="endOfPassage && previousPassageExists" (click)="onPrevious()" aria-label="Go to previous passage">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
       </span>
       <span class="span-inner-left">
-        <button ion-button (click)="onGoBack()" (press)="onHideAll()">
+        <button ion-button (click)="onGoBack()" (press)="onHideAll()" aria-label="Hide previous segment of the passage">
           <ion-icon name="undo"></ion-icon>
         </button>
       </span>
@@ -38,12 +38,12 @@
         </button>
       </span>-->
       <span class="span-inner-right">
-        <button ion-button (click)="onShowVerse()" (press)="onShowAll()">
-          <ion-icon name="fastforward"></ion-icon>
+        <button ion-button (click)="onShowVerse()" (press)="onShowAll()" aria-label="Show next verse">
+          <ion-icon name="redo"></ion-icon>
         </button>
       </span>
       <span>
-        <button ion-button *ngIf="endOfPassage && nextPassageExists" (click)="onNext()">
+        <button ion-button *ngIf="endOfPassage && nextPassageExists" (click)="onNext()" aria-label="Go to next passage">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>
       </span>
@@ -51,7 +51,7 @@
   </ion-toolbar>
 </ion-footer>
 <ion-fab bottom center>
-  <button ion-fab class="recite-passage-fab" (click)="onShowPart()" (press)="onShowAll()">
+  <button ion-fab class="recite-passage-fab" (click)="onShowPart()" (press)="onShowAll()" aria-label="Show next segment of the passage">
     <ion-icon name="add"></ion-icon>
   </button>
 </ion-fab>
