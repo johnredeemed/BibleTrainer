@@ -32,3 +32,16 @@ page-recite-passage {
     text-align: center;
   }
 }
+
+
+.esv-copylabel {
+  text-align: center;
+  padding: 6px 8px;
+  font-size: 11px;
+
+  span {
+    cursor: pointer;
+    color: #018080;
+    text-decoration: underline;
+  }
+}
