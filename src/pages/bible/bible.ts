@@ -178,9 +178,9 @@ export class BiblePage {
   }
 
   overdue(timestamp) {
-    if (timestamp < this.deadline) return 'danger';
-    if (timestamp < this.warning) return 'warning';
-    return 'normal';
+    if (timestamp < this.deadline) return 'verse verse--danger';
+    if (timestamp < this.warning) return 'verse verse--warning';
+    return 'verse verse--normal';
   }
 
   ionViewDidLoad() {
