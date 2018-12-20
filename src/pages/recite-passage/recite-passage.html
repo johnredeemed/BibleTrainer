@@ -17,10 +17,14 @@
     [innerHTML]="part"
     >
   </p>
-  <ion-label (click)="showESVCopyright()">Scripture taken from the ESV. Click here to find out more.</ion-label>
 </ion-content>
 
 <ion-footer>
+
+  <ion-label ngClass="esv-copylabel" (click)="showESVCopyright()">
+    Scripture taken from the ESV. <span>Find out more</span>.
+  </ion-label>
+
   <ion-toolbar color="primary">
     <ion-buttons class="recite-footer">
       <span>

@@ -5,6 +5,7 @@ page-recite-passage {
 
   .scroll-content {
     padding: 16px;
+    margin-bottom: 130px;
   }
 
   .recite-passage {
@@ -30,5 +31,18 @@ page-recite-passage {
     min-width: 36px;
     position: absolute;
     text-align: center;
+  }
+}
+
+
+.esv-copylabel {
+  text-align: center;
+  padding: 6px 8px;
+  font-size: 11px;
+
+  span {
+    cursor: pointer;
+    color: #018080;
+    text-decoration: underline;
   }
 }

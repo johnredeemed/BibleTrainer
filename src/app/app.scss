@@ -36,6 +36,13 @@
 .toastBeforeBottomNav {
   height: auto;
   position: absolute;
-  bottom: 56px;
-  z-index: 998;
+  bottom: 70px;
+  opacity: 0.95;
+  margin: 0 10px;
+  border-radius: 5px;
+  width: calc(100% - 20px);
+
+  .toast-wrapper {
+    border-radius: 5px;
+  }
 }

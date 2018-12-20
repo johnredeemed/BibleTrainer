@@ -398,7 +398,7 @@ export class RecitePassagePage {
     );
   }
 
-  showESVCopyright = () => {
+  showESVCopyright() {
     let alert = this.alertCtrl.create();
     alert.setTitle('ESV');
     alert.setMessage('Scripture quotations marked “ESV” are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.');
