@@ -35,11 +35,11 @@
   </ion-item>
 
   <ion-item>
-    <ion-label text-wrap>
-      <h2>Review time</h2>
-      <p>Number of days until passage becomes old</p>
+    <ion-label floating>Days until review
     </ion-label>
-    <ion-input type="num" min="1" [(ngModel)]="deadline" (ionBlur)="changeDeadline()"></ion-input>
+
+    <ion-input type="num" min="0" [(ngModel)]="deadline" (ionBlur)="changeDeadline()"></ion-input>
+
   </ion-item>
 
 </ion-content>
