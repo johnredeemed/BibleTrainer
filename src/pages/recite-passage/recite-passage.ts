@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Events, NavController, NavParams, ToastController } from 'ionic-angular';
+import {AlertController, Events, NavController, NavParams, ToastController} from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import moment from 'moment';
@@ -38,7 +38,8 @@ export class RecitePassagePage {
               private storage: Storage,
               public events: Events,
               private toastCtrl: ToastController,
-              private speechRecognition: SpeechRecognition) {
+              private speechRecognition: SpeechRecognition,
+              public alertCtrl: AlertController) {
     this.storage.get("useSansForgetica").then((value) => {
       if (value) this.contentClass = "recite-passage forgetica-enabled"
     });
@@ -395,5 +396,13 @@ export class RecitePassagePage {
         toast.present();
       }
     );
+  }
+
+  showESVCopyright = () => {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('ESV');
+    alert.setMessage('Scripture quotations marked “ESV” are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.');
+    alert.addButton('Ok');
+    alert.present();
   }
 }
