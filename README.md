@@ -19,7 +19,7 @@ To get started…
 
 Make sure that you have [Android Studio](https://developer.android.com/studio/index.html) installed and set up.
 
-Then on the CLI run: `ionic cordova run android --prod --release`
+Then on the CLI run: `ionic cordova run android --prod`
 
 [More details](https://ionicframework.com/docs/intro/deploying/)
 
