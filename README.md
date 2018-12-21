@@ -25,4 +25,12 @@ Then on the CLI run: `ionic cordova run android --prod`
 
 ### iOS
 
+1. You'll need [Xcode](https://developer.apple.com/xcode/) installed
+2. Generate the Xcode files: `ionic cordova build ios --prod`
+3. Open the .xcodeproj file in platforms/ios/ in Xcode
+4. Connect your phone via USB and select it as the run target
+5. Click the play button in Xcode to try to run your app
+
+Get errors? Read the [Ionic documentation](https://ionicframework.com/docs/intro/deploying).
+
 Coming soon…
