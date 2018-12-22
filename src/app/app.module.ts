@@ -13,6 +13,7 @@ import { MenuPage } from '../pages/menu/menu';
 import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
+import {EmailComposer} from "@ionic-native/email-composer";
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { SuggestionsPage } from "../pages/suggestions/suggestions";
     StatusBar,
     SplashScreen,
     SocialSharing,
+    EmailComposer,
     SpeechRecognition,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

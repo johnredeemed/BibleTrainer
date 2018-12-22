@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {AlertController, Events, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {Storage} from "@ionic/storage";
+import { AlertController, Events, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Storage } from "@ionic/storage";
 
 /**
  * Generated class for the SettingsPage page.

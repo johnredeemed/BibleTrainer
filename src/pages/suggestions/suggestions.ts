@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {ActionSheetController, Events, IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
-import {Storage} from "@ionic/storage";
+import { ActionSheetController, Events, IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { Storage } from "@ionic/storage";
 import moment from 'moment';
 
 /**

@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import {AlertController, Events, NavController, NavParams, ToastController} from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
-import moment from 'moment';
 
 /**
  * Generated class for the RecitePassagePage page.

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ActionSheetController, AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { Events } from 'ionic-angular';

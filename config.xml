@@ -85,6 +85,7 @@
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     </plugin>
     <plugin name="cordova-plugin-speechrecognition" spec="1.2.0" />
+    <plugin name="cordova-plugin-email-composer" spec="0.9.1" />
     <engine name="android" spec="7.1.1" />
     <engine name="ios" spec="4.5.5" />
 </widget>
