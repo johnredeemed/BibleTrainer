@@ -161,7 +161,9 @@ export class BiblePage {
                 this.navCtrl.push(SuggestionsPage).then(() => {
                   let alert = this.alertCtrl.create();
                   alert.setTitle('Hello!');
-                  alert.setMessage('Welcome to the BibleTrainer app! To start, this screen has some suggestions of passages you may want to memorise - sorted by topic. If you have specific passages in mind, press the back button, and then the "+" button at the top left to choose a new passage.');
+                  alert.setMessage(
+                    'Welcome to the BibleTrainer app! This screen has some suggestions of passages you may want to memorise - sorted by topic. If you have specific passages in mind, press the back button, and then the "+" at the bottom left to choose a new passage.' +
+                    '<br/><br/>My prayer is that God would use this app to plant his word in your heart.');
                   alert.addButton('Ok');
                   alert.present();
                 });
