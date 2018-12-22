@@ -177,7 +177,6 @@ export class AddPassagePage {
   sendRequest() {
     var URL = "https://api.esv.org/v3/passage/text/?q=" + this.reference + "&include-passage-references=false&include-first-verse-numbers=true&include-verse-numbers=true&include-footnotes=false&include-footnote-body=false&include-short-copyright=false&include-copyright=false&include-passage-horizontal-lines=false&include-heading-horizontal-lines=false&include-headings=false&include-selahs=true&indent-using=space&indent-paragraphs=0&indent-poetry=true&indent-poetry-lines=4&indent-declares=4&indent-psalm-doxology=30&line-length=0";
     var xmlHttp = new XMLHttpRequest();
-    const storage = this.storage;
     xmlHttp.onreadystatechange = (function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
         var jsonResponse = JSON.parse(xmlHttp.responseText);
