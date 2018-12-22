@@ -340,6 +340,12 @@ export class BiblePage {
             this.markFolderAsRead(passage);
           }
         },{
+          text: 'Rename folder',
+          icon: 'create',
+          handler: () => {
+            this.renameFolder(passage);
+          }
+        },{
           text: 'Cancel',
           role: 'cancel',
           icon: 'close'
@@ -347,6 +353,81 @@ export class BiblePage {
       ]
     });
     actionSheet.present();
+  }
+
+  renameFolder(folderToRename) {
+    let alert = this.alertCtrl.create({
+      title: 'Enter new folder name',
+      inputs: [
+        {
+          name: 'folderName',
+          placeholder: ''
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Rename',
+          handler: data => {
+            if (data.folderName === "" || !data.folderName) {
+              let toast = this.toastCtrl.create({
+                message: 'Cannot accept blank folder name',
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+              return;
+            }
+
+            if (data.folderName === "folders" ||
+              data.folderName === "Top Level Folder" ||
+              data.folderName === "replaceTheLORDwithYHWH" ||
+              data.folderName === "useSansForgetica" ||
+              data.folderName === "sortByDate" ||
+              data.folderName === "dayStreak" ||
+              data.folderName === "dateFormat" ||
+              data.folderName === "notification") {
+              let toast = this.toastCtrl.create({
+                message: '\'' + data.folderName + '\' is reserved; please choose another name.',
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+              return;
+            }
+
+            this.storage.get(data.folderName).then((doesFolderExist) => {
+              if (doesFolderExist != null) {
+                let toast = this.toastCtrl.create({
+                  message: 'Item already exists as a folder or passage.',
+                  duration: 2000,
+                  position: 'bottom'
+                });
+                toast.present();
+                return;
+              }
+
+              var index = this.folders.indexOf(folderToRename);
+              if (index > -1) {
+                this.folders.splice(index, 1);
+                this.folders.push({ reference: data.folderName, date: folderToRename.date, timestamp: folderToRename.timestamp });
+                this.storage.set("folders", this.folders);
+
+                this.storage.get(folderToRename.reference).then((oldFolderList) => {
+                  this.storage.set(data.folderName, oldFolderList);
+                  this.storage.remove(folderToRename.reference);
+                  this.passages = this.folders.concat(this.passagesInFolder); //update view
+                });
+              }
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   markFolderAsRead(folder) {

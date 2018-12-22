@@ -103,7 +103,10 @@ export class MyApp {
                 data.folderName === "Top Level Folder" ||
                 data.folderName === "replaceTheLORDwithYHWH" ||
                 data.folderName === "useSansForgetica" ||
-                data.folderName === "sortByDate") {
+                data.folderName === "sortByDate" ||
+                data.folderName === "dayStreak" ||
+                data.folderName === "dateFormat" ||
+                data.folderName === "notification") {
               let toast = this.toastCtrl.create({
                 message: '\'' + data.folderName + '\' is reserved; please choose another name.',
                 duration: 2000,
