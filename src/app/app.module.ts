@@ -5,7 +5,6 @@ import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from "@ionic-native/social-sharing";
-import { SpeechRecognition } from '@ionic-native/speech-recognition';
 
 import { MyApp } from './app.component';
 import { BiblePage } from '../pages/bible/bible';
@@ -13,7 +12,7 @@ import { MenuPage } from '../pages/menu/menu';
 import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
-import {EmailComposer} from "@ionic-native/email-composer";
+import { EmailComposer } from "@ionic-native/email-composer";
 
 @NgModule({
   declarations: [
@@ -43,7 +42,6 @@ import {EmailComposer} from "@ionic-native/email-composer";
     SplashScreen,
     SocialSharing,
     EmailComposer,
-    SpeechRecognition,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

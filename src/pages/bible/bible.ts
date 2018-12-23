@@ -12,7 +12,7 @@ import moment from 'moment';
 })
 
 export class BiblePage {
-  screenTitle = "Bible Trainer";
+  screenTitle = "BibleTrainer";
   deadline;
   warning;
   passages = [];

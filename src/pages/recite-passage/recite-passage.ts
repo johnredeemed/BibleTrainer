@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import {AlertController, Events, NavController, NavParams, ToastController} from 'ionic-angular';
 import { Storage } from "@ionic/storage";
-import { SpeechRecognition } from '@ionic-native/speech-recognition';
 
 /**
  * Generated class for the RecitePassagePage page.
@@ -37,7 +36,6 @@ export class RecitePassagePage {
               private storage: Storage,
               public events: Events,
               private toastCtrl: ToastController,
-              private speechRecognition: SpeechRecognition,
               public alertCtrl: AlertController) {
     this.storage.get("useSansForgetica").then((value) => {
       if (value) this.contentClass = "recite-passage forgetica-enabled"
@@ -309,6 +307,7 @@ export class RecitePassagePage {
     this.fetchPassage();
   }
 
+/*
   onRecite = () => {
     if (this.speechReady){
       this.startRecognition();
@@ -396,6 +395,7 @@ export class RecitePassagePage {
       }
     );
   }
+*/
 
   showESVCopyright() {
     let alert = this.alertCtrl.create();
