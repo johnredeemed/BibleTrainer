@@ -37,7 +37,7 @@ export class MyApp {
     let alert = this.alertCtrl.create({
       title: 'Info',
       message:
-        'Feedback on would be gratefully received at bibletrainerapp@gmail.com' +
+        'Feedback would be gratefully received at bibletrainerapp@gmail.com' +
         '<br/><br/>This screen will have the list of passages you are memorising. There are two ways to add new passages: ' +
         'pick from the list of suggested passages (do this through the menu option in the top left), or choose any passage from the Bible (click the "+" button at the bottom right). ' +
         '<br/><br/>Once you have a passage in your list, you can start to learn it by clicking on it, and in the next screen using the "+" button to reveal the passage bit-by-bit. ' +
