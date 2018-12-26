@@ -204,6 +204,25 @@ export class BiblePage {
     this.navCtrl.push(BiblePage, { folder: passage.reference });
   }
 
+  deleteFolder = (passage) => {
+    var index = this.folders.indexOf(passage);
+    if (index > -1) {
+      this.storage.get(passage.reference).then((passagesInSelectedFolder) => {
+        if (passagesInSelectedFolder != null) {
+          passagesInSelectedFolder.forEach((item) => {
+            this.storage.remove(item.reference).then(() => {
+              console.log("removed " + item.reference);
+            })
+          });
+        }
+      });
+      this.storage.remove(passage.reference);
+      this.folders.splice(index, 1);
+      this.storage.set("folders", this.folders);
+      this.passages = this.folders.concat(this.passagesInFolder); //update view
+    }
+  };
+
   pressPassage = (passage) => {
     var index = this.passagesInFolder.indexOf(passage);
     if (index > -1) {
@@ -313,26 +332,28 @@ export class BiblePage {
       title: 'Folder Options: ' + passage.reference,
       buttons: [
         {
-          text: 'Delete (this will remove all passages in the folder!)',
+          text: 'Delete',
           role: 'destructive',
           icon: 'trash',
           handler: () => {
-            index = this.folders.indexOf(passage);
-            if (index > -1) {
-              this.storage.get(passage.reference).then((passagesInSelectedFolder) => {
-                if (passagesInSelectedFolder != null) {
-                  passagesInSelectedFolder.forEach((item) => {
-                    this.storage.remove(item.reference).then(() => {
-                      console.log("removed " + item.reference);
-                    })
-                  });
+            let alert = this.alertCtrl.create({
+              title: `Delete folder: ${passage.reference}`,
+              message: `Are you sure you want to delete the folder ${passage.reference}? All the passages contained will be deleted as well`,
+              buttons: [
+                {
+                  text: 'Cancel',
+                  role: 'cancel'
+                },
+                {
+                  text: 'Delete',
+                  role: 'destructive',
+                  handler: () => {
+                    this.deleteFolder(passage);
+                  }
                 }
-              });
-              this.storage.remove(passage.reference);
-              this.folders.splice(index, 1);
-              this.storage.set("folders", this.folders);
-              this.passages = this.folders.concat(this.passagesInFolder); //update view
-            }
+              ]
+            });
+            alert.present();
           }
         },
         {
