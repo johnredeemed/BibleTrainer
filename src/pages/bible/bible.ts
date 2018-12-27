@@ -179,6 +179,10 @@ export class BiblePage {
     });
   }
 
+  formatDate(datestamp, format = 'DD/MM/YYYY') {
+    return moment(datestamp, "MM/DD/YYYY").format(format);
+  }
+
   overdue(timestamp) {
     if (timestamp < this.deadline) return 'verse verse--danger';
     if (timestamp < this.warning) return 'verse verse--warning';
