@@ -263,6 +263,10 @@ export class RecitePassagePage {
   }
 
   finishPassage() {
+    // store this information locally in case the user has moved to a new passage by the time the toast goes away
+    var folderToUpdate = this.folder;
+    var passagesInFolderToUpdate = this.passagesInFolder;
+    var indexInFolderToUpdate = this.indexInFolder;
     this.endOfPassage = true;
     let toast = this.toastCtrl.create({
       message: `${this.reference} marked as read. May it dwell in you richly!`,
@@ -273,7 +277,7 @@ export class RecitePassagePage {
     });
     toast.onDidDismiss((data, role) => {
       if (role !== "close") {
-        this.events.publish('passageRead', { folder : this.folder, passagesInFolder : this.passagesInFolder, indexInFolder : this.indexInFolder });
+        this.events.publish('passageRead', { folder : folderToUpdate, passagesInFolder : passagesInFolderToUpdate, indexInFolder : indexInFolderToUpdate });
       }
     });
     toast.present();
