@@ -454,7 +454,7 @@ export class BiblePage {
   }
 
   markFolderAsRead(folder) {
-    var date = moment().format("MM[/]DD[/]YY");
+    var date = moment().format("MMM Do");
     var timestamp = moment.now();
     // only for testing        date += " " + timestamp;
     var index = this.folders.indexOf(folder);
@@ -484,7 +484,7 @@ export class BiblePage {
   }
 
   markPassageAsRead(args) {
-    var date = moment().format("MM[/]DD[/]YY");
+    var date = moment().format("MMM Do");
     args.passagesInFolder[args.indexInFolder].date = date;
     args.passagesInFolder[args.indexInFolder].timestamp = moment.now();
     // only for testing     args.passagesInFolder[args.indexInFolder].date += " " + args.passagesInFolder[args.indexInFolder].timestamp;

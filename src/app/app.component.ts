@@ -139,7 +139,7 @@ export class MyApp {
                   folders = [];
                 }
 
-                folders.push({ reference: data.folderName, date: moment().format("MM[/]DD[/]YY"), timestamp: moment.now() });
+                folders.push({ reference: data.folderName, date: moment().format("MMM Do"), timestamp: moment.now() });
 
                 this.storage.get("sortByDate").then((sortByDate) => {
                   if (sortByDate) {

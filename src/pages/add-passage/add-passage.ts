@@ -297,7 +297,7 @@ export class AddPassagePage {
         folder = [];
       }
 
-      folder.push({ reference: this.reference, date: moment().format("MM[/]DD[/]YY"), timestamp: moment.now() });
+      folder.push({ reference: this.reference, date: moment().format("MMM Do"), timestamp: moment.now() });
       this.storage.set(destinationFolderName, folder);
       this.storage.set(this.reference, this.passage).then( () => {
         this.events.publish('passagesChanged');
