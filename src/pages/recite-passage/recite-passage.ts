@@ -299,6 +299,40 @@ export class RecitePassagePage {
     this.endOfPassage = false;
   }
 
+  swipeRightEvent() {
+    if (this.previousPassageExists) {
+      this.onHideAll();
+      this.indexInFolder--;
+      this.fetchPassage();
+    }
+    else {
+      let toast = this.toastCtrl.create({
+        message: 'This is the first passage',
+        duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+      return;
+    }
+  }
+
+  swipeLeftEvent() {
+    if (this.nextPassageExists) {
+      this.onHideAll();
+      this.indexInFolder++;
+      this.fetchPassage();
+    }
+    else {
+      let toast = this.toastCtrl.create({
+        message: 'This is the last passage',
+        duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+      return;
+    }
+  }
+
   onPrevious = () => {
     this.onHideAll();
     this.indexInFolder--;
