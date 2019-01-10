@@ -13,6 +13,7 @@ import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { EmailComposer } from "@ionic-native/email-composer";
+import {LocalNotifications} from "@ionic-native/local-notifications";
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { EmailComposer } from "@ionic-native/email-composer";
     SplashScreen,
     SocialSharing,
     EmailComposer,
+    LocalNotifications,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

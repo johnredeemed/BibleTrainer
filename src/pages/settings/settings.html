@@ -35,11 +35,21 @@
   </ion-item>
 
   <ion-item>
+    <ion-label text-wrap>
+      <h2>Daily reminder</h2>
+    </ion-label>
+    <ion-toggle [(ngModel)]="notification" (ionChange)="changeNotification()"></ion-toggle>
+  </ion-item>
+
+  <ion-item *ngIf="notification">
+    <ion-label>Notification time</ion-label>
+    <ion-datetime displayFormat="HH:mm" [(ngModel)]="notificationTime" (ionChange)="changeNotificationTime()"></ion-datetime>
+  </ion-item>
+
+  <ion-item>
     <ion-label floating>Days until review
     </ion-label>
-
     <ion-input type="num" min="0" [(ngModel)]="deadline" (ionBlur)="changeDeadline()"></ion-input>
-
   </ion-item>
 
 </ion-content>

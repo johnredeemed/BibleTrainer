@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { AlertController, Events, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, Events, IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
+import { LocalNotifications } from "@ionic-native/local-notifications";
 
 /**
  * Generated class for the SettingsPage page.
@@ -20,12 +21,16 @@ export class SettingsPage {
   replace: boolean = false;
   ordering: boolean = false;
   deadline;
+  notification: boolean = false;
+  notificationTime;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public events: Events,
               private storage: Storage,
-              public alertCtrl: AlertController) {
+              public alertCtrl: AlertController,
+              private toastCtrl: ToastController,
+              private localNotifications: LocalNotifications) {
     this.storage.get("useSansForgetica").then((value) => {
       this.sansforgetica = value;
     });
@@ -38,6 +43,12 @@ export class SettingsPage {
     this.storage.get("deadline").then((value) => {
       if (value == null) value = "7";
       this.deadline = value;
+    });
+    this.storage.get("reminderNotification").then((value) => {
+      this.notification = value;
+    });
+    this.storage.get("reminderNotificationTime").then((value) => {
+      this.notificationTime = value;
     });
   }
 
@@ -63,5 +74,31 @@ export class SettingsPage {
     this.storage.set("deadline", this.deadline).then( () => {
       this.events.publish('passagesChanged');
     });
+  }
+
+  changeNotification() {
+    this.storage.set("reminderNotification", this.notification);
+    if (!this.notification) {
+      this.localNotifications.clearAll();
+    }
+    else if (this.notificationTime) {
+      this.setNotification();
+    }
+  }
+
+  changeNotificationTime() {
+    this.storage.set("reminderNotificationTime", this.notificationTime);
+    this.setNotification();
+  }
+
+  setNotification() {
+    this.localNotifications.clearAll();
+    var timeSplit = this.notificationTime.split(":");
+    let notification = {
+      id: 1,
+      text: 'Let the word of Christ dwell in you richly',
+      trigger: { every: { hour: parseInt(timeSplit[0]), minute: parseInt(timeSplit[1]) }, count: 1 }
+    };
+    this.localNotifications.schedule(notification);
   }
 }
