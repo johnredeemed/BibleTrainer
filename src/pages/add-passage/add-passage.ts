@@ -159,6 +159,14 @@ export class AddPassagePage {
       });
       toast.present();
     }
+    else if (this.chapter < 1 || (this.startVerse && parseInt(this.startVerse,10) < 1) || (this.endVerse && parseInt(this.endVerse,10) < 1)) {
+      let toast = this.toastCtrl.create({
+        message: 'Cannot have negative numbers',
+        duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+    }
     else {
       if (!this.startVerse) {
         this.reference = this.book + " " + this.chapter

@@ -511,6 +511,9 @@ export class BiblePage {
   }
 
   markPassageAsRead(args) {
+    if (!args.passagesInFolder[args.indexInFolder]) {
+      return; // user deleted the passage before it was marked as read
+    }
     var date = moment().format("MMM Do");
     args.passagesInFolder[args.indexInFolder].date = date;
     args.passagesInFolder[args.indexInFolder].timestamp = moment.now();
