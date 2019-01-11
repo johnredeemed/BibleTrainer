@@ -167,6 +167,14 @@ export class AddPassagePage {
       });
       toast.present();
     }
+    else if (this.chapter.toString().charAt(0) == '0') {
+      let toast = this.toastCtrl.create({
+        message: 'Chapter should not start with "0"',
+        duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+    }
     else {
       if (!this.startVerse) {
         this.reference = this.book + " " + this.chapter
@@ -208,7 +216,20 @@ export class AddPassagePage {
           }
         });
 
-        // check if end verse is off the end
+        // check if specified verse is off the end of the passage
+        if (this.startVerse) {
+          var startVerseNumber = this.formattedPassage.substring(this.formattedPassage.indexOf('[') + 1, this.formattedPassage.indexOf(']'));
+          if (this.startVerse !== startVerseNumber) {
+            console.log("replacing start verse");
+            this.startVerse = startVerseNumber;
+            if (this.endVerse) {
+              this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
+            }
+            else {
+              this.reference = this.book + " " + this.chapter + ":" + this.startVerse;
+            }
+          }
+        }
         if (this.startVerse && this.endVerse) {
           var verses = this.formattedPassage.split('[');
           var lastVerse = verses[verses.length - 1];
@@ -216,6 +237,10 @@ export class AddPassagePage {
           if (this.endVerse !== lastVerseNumber) {
             this.endVerse = lastVerseNumber;
             this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
+          }
+
+          if (this.startVerse == this.endVerse) {
+            this.reference = this.book + " " + this.chapter + ":" + this.startVerse
           }
         }
 
