@@ -38,7 +38,7 @@ export class MyApp {
       title: 'Info',
       message:
         'Feedback would be gratefully received at bibletrainerapp@gmail.com' +
-        '<br/><br/>This screen will have the list of passages you are memorising. There are two ways to add new passages: ' +
+        '<br/><br/>The home screen will have the list of passages you are memorising. There are two ways to add new passages: ' +
         'pick from the list of suggested passages (do this through the menu option in the top left), or choose any passage from the Bible (click the "+" button at the bottom right). ' +
         '<br/><br/>Once you have a passage in your list, you can start to learn it by clicking on it, and in the next screen using the "+" button to reveal the passage bit-by-bit. ' +
         '<br/><br/>Keep practising the passages you\'re memorising to move them into your long-term memory. You have the option to order passages by when they were last read - choose this in the settings page. ' +
@@ -108,12 +108,7 @@ export class MyApp {
 
             if (data.folderName === "folders" ||
                 data.folderName === "Top Level Folder" ||
-                data.folderName === "replaceTheLORDwithYHWH" ||
-                data.folderName === "useSansForgetica" ||
-                data.folderName === "sortByDate" ||
-                data.folderName === "dayStreak" ||
-                data.folderName === "dateFormat" ||
-                data.folderName === "notification") {
+                data.folderName === "stored_settings") {
               let toast = this.toastCtrl.create({
                 message: '\'' + data.folderName + '\' is reserved; please choose another name.',
                 duration: 2000,
@@ -141,8 +136,8 @@ export class MyApp {
 
                 folders.push({ reference: data.folderName, date: moment().format("MMM Do"), timestamp: moment.now() });
 
-                this.storage.get("sortByDate").then((sortByDate) => {
-                  if (sortByDate) {
+                this.storage.get("stored_settings").then((settings) => {
+                  if (settings.sortByDate) {
                     folders.sort(this.compareDates.bind(this));
                   }
                   else {

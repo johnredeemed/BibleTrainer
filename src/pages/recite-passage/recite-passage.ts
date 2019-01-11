@@ -37,8 +37,8 @@ export class RecitePassagePage {
               public events: Events,
               private toastCtrl: ToastController,
               public alertCtrl: AlertController) {
-    this.storage.get("useSansForgetica").then((value) => {
-      if (value) this.contentClass = "recite-passage forgetica-enabled"
+    this.storage.get("stored_settings").then((settings) => {
+      if (settings.sansforgetica) this.contentClass = "recite-passage forgetica-enabled"
     });
 
     this.shown = [];
@@ -79,8 +79,8 @@ export class RecitePassagePage {
       }
 
       this.passage = passage;
-      this.storage.get("replaceTheLORDwithYHWH").then((value) => {
-        if (value) {
+      this.storage.get("stored_settings").then((settings) => {
+        if (settings.replaceTheLORDwithYHWH) {
           this.passage = this.passage.replace(/(([Tt]he |)LORD)|GOD/g, "YHWH");
         }
 

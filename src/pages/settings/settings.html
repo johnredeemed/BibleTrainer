@@ -16,14 +16,14 @@
       <h2>Use Sans Forgetica font</h2>
       <p>Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation</p>
     </ion-label>
-    <ion-toggle [(ngModel)]="sansforgetica" (ionChange)="changeFont()"></ion-toggle>
+    <ion-toggle [(ngModel)]="settings.sansforgetica" (ionChange)="changeFont()"></ion-toggle>
   </ion-item>
 
   <ion-item>
     <ion-label text-wrap>
       <h2>Replace "The LORD"/"GOD" with "YHWH"</h2>
     </ion-label>
-    <ion-toggle [(ngModel)]="replace" (ionChange)="changeReplace()"></ion-toggle>
+    <ion-toggle [(ngModel)]="settings.replaceTheLORDwithYHWH" (ionChange)="changeReplace()"></ion-toggle>
   </ion-item>
 
   <ion-item>
@@ -31,25 +31,25 @@
       <h2>Display passages by last read date</h2>
       <p>Defaults to Biblical order</p>
     </ion-label>
-    <ion-toggle [(ngModel)]="ordering" (ionChange)="changeOrdering()"></ion-toggle>
+    <ion-toggle [(ngModel)]="settings.sortByDate" (ionChange)="changeOrdering()"></ion-toggle>
   </ion-item>
 
   <ion-item>
     <ion-label text-wrap>
       <h2>Daily reminder</h2>
     </ion-label>
-    <ion-toggle [(ngModel)]="notification" (ionChange)="changeNotification()"></ion-toggle>
+    <ion-toggle [(ngModel)]="settings.reminderNotification" (ionChange)="changeNotification()"></ion-toggle>
   </ion-item>
 
-  <ion-item *ngIf="notification">
+  <ion-item *ngIf="settings.reminderNotification">
     <ion-label>Notification time</ion-label>
-    <ion-datetime displayFormat="HH:mm" [(ngModel)]="notificationTime" (ionChange)="changeNotificationTime()"></ion-datetime>
+    <ion-datetime displayFormat="HH:mm" [(ngModel)]="settings.reminderNotificationTime" (ionChange)="changeNotificationTime()"></ion-datetime>
   </ion-item>
 
   <ion-item>
     <ion-label floating>Days until review
     </ion-label>
-    <ion-input type="num" min="0" [(ngModel)]="deadline" (ionBlur)="changeDeadline()"></ion-input>
+    <ion-input type="num" min="0" [(ngModel)]="settings.deadline" (ionBlur)="changeDeadline()"></ion-input>
   </ion-item>
 
 </ion-content>

@@ -122,60 +122,92 @@ export class BiblePage {
   }
 
   private load() {
-    this.storage.get("deadline").then((days) => {
-      var milliseconds = parseInt(days) * 24 * 60 * 60 * 1000;
-      this.deadline = parseInt(moment().format("x")) - milliseconds;
-      this.warning = this.deadline + 86400000; // 1-day warning
+    this.storage.get("stored_settings").then((settings) => {
+      if (settings) {
+        this.loadPassages(settings);
+        return;
+      }
 
-      this.storage.get(this.folder).then((passageList) => {
-        if (passageList == null) {
-          passageList = [];
-        }
+      settings = {};
+      // get old version settings
+      this.storage.get("useSansForgetica").then((value) => {
+        this.storage.remove("useSansForgetica");
+        settings.sansforgetica = value;
 
-        this.storage.get("sortByDate").then((sortByDate) => {
-          if (sortByDate) {
-            passageList.sort(this.compareDates.bind(this));
-          }
-          else {
-            passageList.sort(this.compareReferences.bind(this));
-          }
-          this.passagesInFolder = passageList;
+        this.storage.get("replaceTheLORDwithYHWH").then((value) => {
+          this.storage.remove("replaceTheLORDwithYHWH");
+          settings.replaceTheLORDwithYHWH = value;
 
-          if (this.folder === "Top Level Folder") {
-            this.storage.get("folders").then((folders) => {
-              if (folders == null) {
-                folders = [];
-              }
+          this.storage.get("sortByDate").then((value) => {
+            this.storage.remove("sortByDate");
+            settings.sortByDate = value;
 
-              if (sortByDate) {
-                folders.sort(this.compareDates.bind(this));
-              }
-              else {
-                folders.sort(this.compareNames.bind(this));
-              }
-
-              this.folders = folders;
-              this.passages = this.folders.concat(this.passagesInFolder);
-
-              if (this.passages.length == 0) {
-                this.navCtrl.push(SuggestionsPage).then(() => {
-                  let alert = this.alertCtrl.create();
-                  alert.setTitle('Hello!');
-                  alert.setMessage(
-                    'Welcome to the BibleTrainer app! This screen has some suggestions of passages you may want to memorise - sorted by topic. If you have specific passages in mind, press the back button, and then the "+" at the bottom left to choose a new passage.' +
-                    '<br/><br/>My prayer is that God would use this app to plant his word in your heart.');
-                  alert.addButton('Ok');
-                  alert.present();
-                });
-              }
+            this.storage.get("deadline").then((value) => {
+              this.storage.remove("deadline");
+              if (value == null) value = "7";
+              settings.deadline = value;
+              settings.reminderNotification = false;
+              settings.reminderNotificationTime = "17:00";
+              this.storage.set("stored_settings", settings);
+              this.loadPassages(settings);
             });
-          }
-          else {
-            this.folders = [];
-            this.passages = this.passagesInFolder;
-          }
+          });
         });
       });
+    });
+  }
+
+  private loadPassages(settings) {
+    var milliseconds = parseInt(settings.deadline) * 24 * 60 * 60 * 1000;
+    this.deadline = parseInt(moment().format("x")) - milliseconds;
+    this.warning = this.deadline + 86400000; // 1-day warning
+
+    this.storage.get(this.folder).then((passageList) => {
+      if (passageList == null) {
+        passageList = [];
+      }
+
+      if (settings.sortByDate) {
+        passageList.sort(this.compareDates.bind(this));
+      }
+      else {
+        passageList.sort(this.compareReferences.bind(this));
+      }
+      this.passagesInFolder = passageList;
+
+      if (this.folder === "Top Level Folder") {
+        this.storage.get("folders").then((folders) => {
+          if (folders == null) {
+            folders = [];
+          }
+
+          if (settings.sortByDate) {
+            folders.sort(this.compareDates.bind(this));
+          }
+          else {
+            folders.sort(this.compareNames.bind(this));
+          }
+
+          this.folders = folders;
+          this.passages = this.folders.concat(this.passagesInFolder);
+
+          if (this.passages.length == 0) {
+            this.navCtrl.push(SuggestionsPage).then(() => {
+              let alert = this.alertCtrl.create();
+              alert.setTitle('Hello!');
+              alert.setMessage(
+                'Welcome to the BibleTrainer app! This screen has some suggestions of passages you may want to memorise - sorted by topic. If you have specific passages in mind, press the back button, and then the "+" at the bottom left to choose a new passage.' +
+                '<br/><br/>My prayer is that God would use this app to plant his word in your heart.');
+              alert.addButton('Ok');
+              alert.present();
+            });
+          }
+        });
+      }
+      else {
+        this.folders = [];
+        this.passages = this.passagesInFolder;
+      }
     });
   }
 
@@ -407,12 +439,7 @@ export class BiblePage {
 
             if (data.folderName === "folders" ||
               data.folderName === "Top Level Folder" ||
-              data.folderName === "replaceTheLORDwithYHWH" ||
-              data.folderName === "useSansForgetica" ||
-              data.folderName === "sortByDate" ||
-              data.folderName === "dayStreak" ||
-              data.folderName === "dateFormat" ||
-              data.folderName === "notification") {
+              data.folderName === "stored_settings") {
               let toast = this.toastCtrl.create({
                 message: '\'' + data.folderName + '\' is reserved; please choose another name.',
                 duration: 2000,
@@ -473,8 +500,8 @@ export class BiblePage {
       // Then update the folder
       this.folders[index].date = date;
       this.folders[index].timestamp = timestamp;
-      this.storage.get("sortByDate").then((sortByDate) => {
-        if (sortByDate) {
+      this.storage.get("stored_settings").then((settings) => {
+        if (settings.sortByDate) {
           this.folders.sort(this.compareDates.bind(this));
         }
         this.storage.set("folders", this.folders);
@@ -529,8 +556,8 @@ export class BiblePage {
       if (indexOfFolder > -1) {
         folders[indexOfFolder].timestamp = oldestTimestamp;
         folders[indexOfFolder].date = oldestDate;
-        this.storage.get("sortByDate").then((sortByDate) => {
-          if (sortByDate) {
+        this.storage.get("stored_settings").then((settings) => {
+          if (settings.sortByDate) {
             folders.sort(this.compareDates.bind(this));
           }
 

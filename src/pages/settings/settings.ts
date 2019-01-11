@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, Events, IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { AlertController, Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { LocalNotifications } from "@ionic-native/local-notifications";
 
@@ -17,38 +17,17 @@ import { LocalNotifications } from "@ionic-native/local-notifications";
 })
 export class SettingsPage {
 
-  sansforgetica: boolean = false;
-  replace: boolean = false;
-  ordering: boolean = false;
-  deadline;
-  notification: boolean = false;
-  notificationTime;
+  settings;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public events: Events,
               private storage: Storage,
               public alertCtrl: AlertController,
-              private toastCtrl: ToastController,
               private localNotifications: LocalNotifications) {
-    this.storage.get("useSansForgetica").then((value) => {
-      this.sansforgetica = value;
-    });
-    this.storage.get("replaceTheLORDwithYHWH").then((value) => {
-      this.replace = value;
-    });
-    this.storage.get("sortByDate").then((value) => {
-      this.ordering = value;
-    });
-    this.storage.get("deadline").then((value) => {
-      if (value == null) value = "7";
-      this.deadline = value;
-    });
-    this.storage.get("reminderNotification").then((value) => {
-      this.notification = value;
-    });
-    this.storage.get("reminderNotificationTime").then((value) => {
-      this.notificationTime = value;
+    this.settings = {};
+    this.storage.get("stored_settings").then((settings) => {
+      this.settings = settings;
     });
   }
 
@@ -56,44 +35,44 @@ export class SettingsPage {
   }
 
   changeFont() {
-    this.storage.set("useSansForgetica", this.sansforgetica);
+    this.storage.set("stored_settings", this.settings);
   }
 
   changeReplace() {
-    this.storage.set("replaceTheLORDwithYHWH", this.replace);
+    this.storage.set("stored_settings", this.settings);
   }
 
   changeOrdering() {
-    this.storage.set("sortByDate", this.ordering).then( () => {
+    this.storage.set("stored_settings", this.settings).then( () => {
       this.events.publish('passagesChanged');
     });
   }
 
   changeDeadline() {
-    if (!this.deadline || parseInt(this.deadline) < 0) this.deadline = 7;
-    this.storage.set("deadline", this.deadline).then( () => {
+    if (!this.settings.deadline || parseInt(this.settings.deadline) < 0) this.settings.deadline = 7;
+    this.storage.set("stored_settings", this.settings).then( () => {
       this.events.publish('passagesChanged');
     });
   }
 
   changeNotification() {
-    this.storage.set("reminderNotification", this.notification);
-    if (!this.notification) {
+    this.storage.set("stored_settings", this.settings);
+    if (!this.settings.reminderNotification) {
       this.localNotifications.clearAll();
     }
-    else if (this.notificationTime) {
+    else if (this.settings.reminderNotificationTime) {
       this.setNotification();
     }
   }
 
   changeNotificationTime() {
-    this.storage.set("reminderNotificationTime", this.notificationTime);
+    this.storage.set("stored_settings", this.settings);
     this.setNotification();
   }
 
   setNotification() {
     this.localNotifications.clearAll();
-    var timeSplit = this.notificationTime.split(":");
+    var timeSplit = this.settings.reminderNotificationTime.split(":");
     let notification = {
       id: 1,
       text: 'Let the word of Christ dwell in you richly',

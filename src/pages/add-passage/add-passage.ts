@@ -194,8 +194,8 @@ export class AddPassagePage {
           .replace(/\n/g, '#');
         this.formattedPassage = this.passage
           .replace(/#/g, '<br/>');
-        this.storage.get("replaceTheLORDwithYHWH").then((value) => {
-          if (value) {
+        this.storage.get("stored_settings").then((settings) => {
+          if (settings.replaceTheLORDwithYHWH) {
             this.formattedPassage = this.formattedPassage.replace(/(([Tt]he |)LORD)|GOD/g, "YHWH");
           }
         });
