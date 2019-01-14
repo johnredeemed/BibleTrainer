@@ -18,14 +18,14 @@
 <ion-content padding>
   <ion-item>
     <ion-label floating>Book</ion-label>
-    <ion-select [selectOptions]="bookSelectOptions" [(ngModel)]="book" interface="action-sheet" (ionChange)="onBookSelect()">
+    <ion-select [selectOptions]="bookSelectOptions" [(ngModel)]="book" interface="action-sheet">
       <ion-option *ngFor="let key of objectKeys(bookChapters)">{{key}}</ion-option>
     </ion-select>
   </ion-item>
 
   <ion-item>
     <ion-label floating>Chapter</ion-label>
-    <ion-input min="1" type="number" [(ngModel)]="chapter" value="1"></ion-input>
+    <ion-input min="1" type="number" [(ngModel)]="chapter"></ion-input>
   </ion-item>
 
   <ion-grid>

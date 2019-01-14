@@ -28,7 +28,7 @@ export class AddPassagePage {
   bookSelectOptions;
   folder;
   folders;
-  chapter = 1;
+  chapter = "";
   startVerse = "";
   endVerse = "";
   bookChapters = {
@@ -53,7 +53,7 @@ export class AddPassagePage {
     "Psalm": 150,
     "Proverbs": 31,
     "Ecclesiastes": 12,
-    "Song of Songs": 8,
+    "Song of Solomon": 8,
     "Isaiah": 66,
     "Jeremiah": 52,
     "Lamentations": 5,
@@ -109,8 +109,24 @@ export class AddPassagePage {
               public alertCtrl: AlertController,
               private socialSharing: SocialSharing) {
     this.folder = this.navParams.data.folder;
+    if (!this.folder) {
+      this.folder = "Top Level Folder";
+    }
+    if (this.navParams.data.reference) {
+      this.reference = this.navParams.data.reference;
+      var words = this.reference.split(" ");
+      var chapterAndVerse = words[words.length - 1];
+      this.book = this.reference.replace(" " + chapterAndVerse, "");
+      var chapterAndVerseNumber = chapterAndVerse.split(":");
+      this.chapter = chapterAndVerseNumber[0];
+      this.startVerse = chapterAndVerseNumber[1];
+    }
+    else {
+      this.book = "Psalm";
+      this.chapter = "1";
+    }
+
     this.bookSelectOptions = {title: 'Book'};
-    this.book = "Psalm";
     this.storage.get("folders").then((folders) => {
       if (folders == null) {
         folders = [];
@@ -123,8 +139,6 @@ export class AddPassagePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddPassagePage');
   }
-
-  onBookSelect() {}
 
   getPassage() {
     if (!this.book) {
@@ -143,7 +157,7 @@ export class AddPassagePage {
       });
       toast.present();
     }
-    else if (this.chapter > this.bookChapters[this.book]) {
+    else if (parseInt(this.chapter) > this.bookChapters[this.book]) {
       let toast = this.toastCtrl.create({
         message: 'There are only ' + this.bookChapters[this.book] + ' chapters in ' + this.book,
         duration: 2000,
@@ -159,7 +173,7 @@ export class AddPassagePage {
       });
       toast.present();
     }
-    else if (this.chapter < 1 || (this.startVerse && parseInt(this.startVerse,10) < 1) || (this.endVerse && parseInt(this.endVerse,10) < 1)) {
+    else if (parseInt(this.chapter) < 1 || (this.startVerse && parseInt(this.startVerse,10) < 1) || (this.endVerse && parseInt(this.endVerse,10) < 1)) {
       let toast = this.toastCtrl.create({
         message: 'Cannot have negative numbers',
         duration: 2000,
@@ -167,7 +181,7 @@ export class AddPassagePage {
       });
       toast.present();
     }
-    else if (this.chapter.toString().charAt(0) == '0') {
+    else if (this.chapter.charAt(0) == '0') {
       let toast = this.toastCtrl.create({
         message: 'Chapter should not start with "0"',
         duration: 2000,
@@ -220,7 +234,6 @@ export class AddPassagePage {
         if (this.startVerse) {
           var startVerseNumber = this.formattedPassage.substring(this.formattedPassage.indexOf('[') + 1, this.formattedPassage.indexOf(']'));
           if (this.startVerse !== startVerseNumber) {
-            console.log("replacing start verse");
             this.startVerse = startVerseNumber;
             if (this.endVerse) {
               this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
