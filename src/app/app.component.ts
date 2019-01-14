@@ -8,6 +8,7 @@ import moment from 'moment';
 import { BiblePage } from '../pages/bible/bible';
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
+import { SearchPage } from "../pages/search/search";
 
 @Component({
   templateUrl: 'app.html'
@@ -56,6 +57,10 @@ export class MyApp {
 
   suggestedPassages = () => {
     this.navCtrl.push(SuggestionsPage);
+  }
+
+  search = () => {
+    this.navCtrl.push(SearchPage);
   }
 
   clear = () => {

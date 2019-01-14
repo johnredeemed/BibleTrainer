@@ -14,6 +14,7 @@ import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { EmailComposer } from "@ionic-native/email-composer";
 import {LocalNotifications} from "@ionic-native/local-notifications";
+import {SearchPage} from "../pages/search/search";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {LocalNotifications} from "@ionic-native/local-notifications";
     MenuPage,
     RecitePassagePage,
     SettingsPage,
-    SuggestionsPage
+    SuggestionsPage,
+    SearchPage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import {LocalNotifications} from "@ionic-native/local-notifications";
     MenuPage,
     RecitePassagePage,
     SettingsPage,
-    SuggestionsPage
+    SuggestionsPage,
+    SearchPage
   ],
   providers: [
     StatusBar,
