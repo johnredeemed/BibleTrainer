@@ -119,9 +119,7 @@ export class AddPassagePage {
       this.book = this.reference.replace(" " + chapterAndVerse, "");
       var chapterAndVerseNumber = chapterAndVerse.split(":");
       this.chapter = chapterAndVerseNumber[0];
-      console.log(this.chapter);
       this.startVerse = chapterAndVerseNumber[1];
-      console.log(this.startVerse);
     }
     else {
       this.book = "Psalm";
@@ -143,7 +141,6 @@ export class AddPassagePage {
   }
 
   getPassage() {
-    console.log(this.chapter);
     if (!this.book) {
       let toast = this.toastCtrl.create({
         message: 'Please select a book',

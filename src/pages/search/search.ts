@@ -55,7 +55,6 @@ export class SearchPage {
     xmlHttp.onreadystatechange = (function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
         var jsonResponse = JSON.parse(xmlHttp.responseText);
-        console.log(jsonResponse);
         this.passages = jsonResponse["results"];
         var toastText = "";
         if (jsonResponse["total_results"] == 1) {
