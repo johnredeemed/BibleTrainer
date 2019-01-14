@@ -312,8 +312,8 @@ export class BiblePage {
                 });
                 alert.addButton('Cancel');
                 alert.addButton({
-                    text: 'Ok',
-                    handler: (destinationFolder: any) => {
+                  text: 'Ok',
+                  handler: (destinationFolder: any) => {
                     if (!destinationFolder) return;
 
                     // add to dest folder
