@@ -10,10 +10,18 @@ page-recite-passage {
 
   .recite-passage {
     font-size: 16px;
-    margin: 0 0 0 44px;
-    padding-left: 12px;
+    margin: 0 auto 0 44px;
+    padding: 0 12px;
     position: relative;
     line-height: 32px;
+
+    &:first-child {
+      margin-top: 12px;
+    }
+
+    &:last-child {
+      margin-bottom: 12px;
+    }
 
     &.forgetica-enabled {
       font-family: map-get($font-family, forgettable);
@@ -31,7 +39,7 @@ page-recite-passage {
     left: -44px;
     min-width: 36px;
     position: absolute;
-    text-align: center;
+    text-align: right;
   }
 }
 
