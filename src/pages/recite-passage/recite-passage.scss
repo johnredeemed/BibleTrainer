@@ -1,6 +1,32 @@
 page-recite-passage {
+
+  .btnPlayPause {
+    position: relative;
+
+    &__icon {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+    }
+  }
+  .progressTrack {
+    stroke: #d8d8d8;
+    stroke-opacity: 0.25;
+    stroke-width: 7;
+  }
+  .progressBar {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    stroke: #004d4d;
+    stroke-opacity: 1;
+    stroke-width: 7;
+    transition: stroke-dashoffset 500ms;
+  }
+
   .recite-passage-fab {
     background-color: #004d4d;
+    border: 5px solid white;
+    border-radius: 50%;
   }
 
   .scroll-content {

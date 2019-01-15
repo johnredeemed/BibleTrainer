@@ -13,8 +13,8 @@ import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { EmailComposer } from "@ionic-native/email-composer";
-import {LocalNotifications} from "@ionic-native/local-notifications";
-import {SearchPage} from "../pages/search/search";
+import { LocalNotifications } from "@ionic-native/local-notifications";
+import { SearchPage } from "../pages/search/search";
 
 @NgModule({
   declarations: [
@@ -42,11 +42,11 @@ import {SearchPage} from "../pages/search/search";
     SearchPage
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    SocialSharing,
     EmailComposer,
     LocalNotifications,
+    SocialSharing,
+    SplashScreen,
+    StatusBar,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

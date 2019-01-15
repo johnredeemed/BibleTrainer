@@ -1,17 +1,12 @@
+import { AlertController, Events, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Component, ViewChild } from '@angular/core';
-import {AlertController, Events, NavController, NavParams, ToastController} from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 
-/**
- * Generated class for the RecitePassagePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 @Component({
   selector: 'page-recite-passage',
   templateUrl: 'recite-passage.html'
 })
+
 export class RecitePassagePage {
   @ViewChild('content') content:any;
 
@@ -28,7 +23,10 @@ export class RecitePassagePage {
   passagesInFolder;
   indexInFolder;
   folderObject;
+  speechEnabled = false;
   speechReady = false;
+  passageAudio = null;
+  playPauseIcon = 'play';
   contentClass = "recite-passage";
 
   constructor(public navCtrl: NavController,
@@ -343,6 +341,34 @@ export class RecitePassagePage {
     this.onHideAll();
     this.indexInFolder++;
     this.fetchPassage();
+  }
+
+  onAudioToggle = () => {
+    if (!this.passageAudio) {
+      const progressBar = <HTMLElement>document.querySelector('.progressBar');
+      const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=TEST&output-format=mp3&passage=${ this.reference.replace(' ', '.')}`
+      this.passageAudio = new Audio(passageUrl);
+      this.passageAudio.play();
+      this.playPauseIcon = 'pause';
+
+      this.passageAudio.addEventListener('ended', () => {
+        this.playPauseIcon = 'play';
+      }, false);
+
+      this.passageAudio.addEventListener('timeupdate', function() {
+        let progress = (this.currentTime/this.duration) * 100;
+        progressBar.style.strokeDashoffset = `${(100-progress) * 3}`;
+      }, false);
+    } else {
+      if(this.passageAudio.paused) {
+        this.passageAudio.play();
+        this.playPauseIcon = 'pause';
+      } else {
+        this.passageAudio.pause();
+        this.playPauseIcon = 'play';
+      }
+
+    }
   }
 
 /*

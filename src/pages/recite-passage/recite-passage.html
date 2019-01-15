@@ -1,13 +1,23 @@
-<!--
-  Generated template for the RecitePassagePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
   <ion-navbar>
     <ion-title>{{reference}}</ion-title>
+
+    <ion-buttons end>
+      <span class="btnPlayPause">
+        <button class="btnPlayPause__icon" ion-button (click)="onAudioToggle()" aria-label="Listen to the passage">
+          <ion-icon name="{{ playPauseIcon }}"></ion-icon>
+        </button>
+
+        <svg height="36" version="1.1" viewBox="0 0 100 100" width="36" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle class="progressTrack" cx="50" cy="50" fill="none" r="47.45" stroke-linecap="round" stroke-opacity="0.25" stroke-width="5"></circle>
+            <circle class="progressBar" cx="50" cy="50" fill="none" r="47.45" stroke-linecap="round" stroke-opacity="1" stroke-width="5" transform="rotate(-90 50 50)"></circle>
+          </g>
+        </svg>
+      </span>
+    </ion-buttons>
   </ion-navbar>
+
 </ion-header>
 
 <ion-content #content (click)="onShowPart()">
@@ -21,41 +31,22 @@
 </ion-content>
 
 <ion-footer>
-
   <ion-label ngClass="esv-copylabel" (click)="showESVCopyright()">
     Scripture taken from the ESV. <span>Find out more</span>.
   </ion-label>
 
   <ion-toolbar color="primary">
-    <ion-buttons class="recite-footer">
-      <span>
-        <button ion-button *ngIf="endOfPassage && previousPassageExists" (click)="onPrevious()" aria-label="Go to previous passage">
-          <ion-icon name="arrow-back"></ion-icon>
-        </button>
-      </span>
-      <span class="span-inner-left">
-        <button ion-button (click)="onGoBack()" (press)="onHideAll()" aria-label="Hide previous segment of the passage">
-          <ion-icon name="undo"></ion-icon>
-        </button>
-      </span>
-      <!--<span class="span-inner-right">
-        <button ion-button (click)="onRecite()">
-          <ion-icon name="mic"></ion-icon>
-        </button>
-      </span>-->
-      <span class="span-inner-right">
-        <button ion-button (click)="onShowVerse()" (press)="onShowAll()" aria-label="Show next verse">
-          <ion-icon name="redo"></ion-icon>
-        </button>
-      </span>
-      <span>
-        <button ion-button *ngIf="endOfPassage && nextPassageExists" (click)="onNext()" aria-label="Go to next passage">
-          <ion-icon name="arrow-forward"></ion-icon>
-        </button>
-      </span>
+    <ion-buttons>
+      <button ion-button (click)="onRecite()" *ngIf="speechEnabled" aria-label="Check your memorisation by reciting the passage">
+        <ion-icon name="mic"></ion-icon>
+      </button>
+      <button ion-button (click)="onGoBack()" (press)="onHideAll()" aria-label="Hide previous segment of the passage" *ngIf="shown.length > 0">
+        <ion-icon name="undo"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+
 <ion-fab bottom center>
   <button ion-fab class="recite-passage-fab" (click)="onShowPart()" (press)="onShowAll()" aria-label="Show next segment of the passage">
     <ion-icon name="add"></ion-icon>

@@ -19,20 +19,6 @@
   padding: 8px 16px;
 }
 
-.recite-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  .span-inner-left {
-    text-align: left;
-  }
-  .span-inner-right {
-    text-align: right;
-  }
-  span {
-    text-align: center;
-  }
-}
-
 .toggle-md.toggle-checked .toggle-icon {
   background-color: #76d6d6;
 }
