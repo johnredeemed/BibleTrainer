@@ -33,20 +33,6 @@
   }
 }
 
-.toastBeforeBottomNav {
-  height: auto;
-  position: absolute;
-  bottom: 70px;
-  opacity: 0.95;
-  margin: 0 10px;
-  border-radius: 5px;
-  width: calc(100% - 20px);
-
-  .toast-wrapper {
-    border-radius: 5px;
-  }
-}
-
 .toggle-md.toggle-checked .toggle-icon {
   background-color: #76d6d6;
 }

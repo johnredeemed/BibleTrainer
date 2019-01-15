@@ -271,9 +271,9 @@ export class RecitePassagePage {
     let toast = this.toastCtrl.create({
       message: `${this.reference} marked as read. May it dwell in you richly!`,
       duration: 5000,
-      cssClass: 'toastBeforeBottomNav',
       showCloseButton: true,
-      closeButtonText: 'Undo'
+      closeButtonText: 'Undo',
+      position: 'top',
     });
     toast.onDidDismiss((data, role) => {
       if (role !== "close") {
