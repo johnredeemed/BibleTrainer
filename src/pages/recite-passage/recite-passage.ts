@@ -299,6 +299,7 @@ export class RecitePassagePage {
 
   swipeRightEvent() {
     if (this.previousPassageExists) {
+      this.ionViewWillLeave();
       this.onHideAll();
       this.indexInFolder--;
       this.fetchPassage();
@@ -316,6 +317,7 @@ export class RecitePassagePage {
 
   swipeLeftEvent() {
     if (this.nextPassageExists) {
+      this.ionViewWillLeave();
       this.onHideAll();
       this.indexInFolder++;
       this.fetchPassage();
@@ -368,6 +370,14 @@ export class RecitePassagePage {
         this.playPauseIcon = 'play';
       }
 
+    }
+  }
+
+  ionViewWillLeave() {
+    if (this.passageAudio && !this.passageAudio.paused) {
+      this.passageAudio.pause();
+      this.playPauseIcon = 'play';
+      this.passageAudio = null;
     }
   }
 
