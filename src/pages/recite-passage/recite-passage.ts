@@ -1,6 +1,7 @@
 import { AlertController, Events, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Component, ViewChild } from '@angular/core';
 import { Storage } from "@ionic/storage";
+import { ENV } from '../../environments/environment';
 
 @Component({
   selector: 'page-recite-passage',
@@ -348,7 +349,7 @@ export class RecitePassagePage {
   onAudioToggle = () => {
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.progressBar');
-      const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=TEST&output-format=mp3&passage=${ this.reference.replace(' ', '.')}`
+      const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(' ', '.')}`
       this.passageAudio = new Audio(passageUrl);
       this.passageAudio.play();
       this.playPauseIcon = 'pause';
