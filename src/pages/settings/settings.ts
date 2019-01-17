@@ -34,11 +34,7 @@ export class SettingsPage {
   ionViewDidLoad() {
   }
 
-  changeFont() {
-    this.storage.set("stored_settings", this.settings);
-  }
-
-  changeReplace() {
+  updateStoredSettings() {
     this.storage.set("stored_settings", this.settings);
   }
 
