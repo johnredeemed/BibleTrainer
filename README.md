@@ -13,6 +13,8 @@ To get started…
 3. Install NPM packages: `npm install`
 4. Run the ionic server: `npm serve`
 
+Environment vars are stored in `src/environments`. For deployment you will need to create a file `environment.prod.ts` with relevant keys in it.
+
 ## Test builds
 
 ### Android
@@ -32,5 +34,3 @@ Then on the CLI run: `ionic cordova run android --prod`
 5. Click the play button in Xcode to try to run your app
 
 Get errors? Read the [Ionic documentation](https://ionicframework.com/docs/intro/deploying).
-
-Coming soon…
