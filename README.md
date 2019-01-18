@@ -11,7 +11,7 @@ To get started…
 1. Check out this repo
 2. Install Ionic globally: `npm install -g ionic`
 3. Install NPM packages: `npm install`
-4. Run the ionic server: `npm serve`
+4. Run the ionic server: `npm run start`
 
 Environment vars are stored in `src/environments`. For deployment you will need to create a file `environment.prod.ts` with relevant keys in it.
 
