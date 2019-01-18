@@ -26,6 +26,7 @@ export class MyApp {
               private toastCtrl: ToastController) {
     platform.ready().then(() => {
       //statusBar.backgroundColorByName("white");
+      statusBar.styleDefault();
       splashScreen.hide();
     });
   }
