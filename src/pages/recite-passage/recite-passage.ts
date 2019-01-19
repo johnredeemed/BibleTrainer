@@ -1,5 +1,6 @@
 import { AlertController, Events, NavController, NavParams, ToastController } from 'ionic-angular';
-import { Component, ViewChild } from '@angular/core';
+import { Component, NgZone, ViewChild } from '@angular/core';
+import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
 
@@ -11,6 +12,8 @@ import { ENV } from '../../environments/environment';
 export class RecitePassagePage {
   @ViewChild('content') content:any;
 
+  networkAvailable = false;
+  downloadOverWiFi = false;
   reference;
   passage;
   parts: Array<String>;
@@ -35,9 +38,28 @@ export class RecitePassagePage {
               private storage: Storage,
               public events: Events,
               private toastCtrl: ToastController,
-              public alertCtrl: AlertController) {
+              public alertCtrl: AlertController,
+              private network: Network,
+              private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
       if (settings.sansforgetica) this.contentClass = "recite-passage forgetica-enabled"
+      this.downloadOverWiFi = settings.downloadOverWiFi;
+      this.checkNetworkConnection();
+    });
+
+    this.network.onchange().subscribe(() => {
+      // We just got a connection but we need to wait briefly
+      // before we determine the connection type.
+      // Run in ngZone to make sure UI is updated.
+      setTimeout(() => {
+        this._ngZone.run(() => {
+          this.checkNetworkConnection();
+          if (!this.networkAvailable && this.passageAudio && !this.passageAudio.paused) {
+            this.passageAudio.pause();
+            this.playPauseIcon = 'play';
+          }
+        });
+      }, 3000);
     });
 
     this.shown = [];
@@ -47,6 +69,15 @@ export class RecitePassagePage {
     this.passagesInFolder = this.navParams.data.passagesInFolder;
     this.indexInFolder = this.navParams.data.index;
     this.fetchPassage();
+  }
+
+  checkNetworkConnection() {
+    if (this.downloadOverWiFi) {
+      this.networkAvailable = this.network.type && this.network.type == 'wifi';
+    }
+    else {
+      this.networkAvailable = this.network.type && this.network.type !== 'unknown' && this.network.type !== 'none';
+    }
   }
 
   fetchPassage() {
@@ -378,8 +409,8 @@ export class RecitePassagePage {
     if (this.passageAudio && !this.passageAudio.paused) {
       this.passageAudio.pause();
       this.playPauseIcon = 'play';
-      this.passageAudio = null;
     }
+    this.passageAudio = null;
   }
 
 /*

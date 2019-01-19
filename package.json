@@ -24,6 +24,7 @@
     "@ionic-native/core": "^4.15.0",
     "@ionic-native/email-composer": "^4.18.0",
     "@ionic-native/local-notifications": "^4.19.0",
+    "@ionic-native/network": "^4.19.0",
     "@ionic-native/social-sharing": "^4.18.0",
     "@ionic-native/splash-screen": "~4.15.0",
     "@ionic-native/status-bar": "~4.15.0",
@@ -69,7 +70,8 @@
         "ANDROID_SUPPORT_V4_VERSION": "24.1.1+"
       },
       "cordova-plugin-email-composer": {},
-      "cordova-plugin-local-notification": {}
+      "cordova-plugin-local-notification": {},
+      "cordova-plugin-network-information": {}
     },
     "platforms": [
       "android",

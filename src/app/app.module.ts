@@ -2,6 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
+import { Network } from "@ionic-native/network";
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from "@ionic-native/social-sharing";
@@ -44,6 +45,7 @@ import { SearchPage } from "../pages/search/search";
   providers: [
     EmailComposer,
     LocalNotifications,
+    Network,
     SocialSharing,
     SplashScreen,
     StatusBar,

@@ -4,7 +4,7 @@
 
     <ion-buttons end>
       <span class="btnPlayPause">
-        <button class="btnPlayPause__icon" ion-button (click)="onAudioToggle()" aria-label="Listen to the passage">
+        <button class="btnPlayPause__icon" [disabled]="!networkAvailable" ion-button (click)="onAudioToggle()" aria-label="Listen to the passage">
           <ion-icon name="{{ playPauseIcon }}"></ion-icon>
         </button>
 

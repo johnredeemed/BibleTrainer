@@ -16,14 +16,14 @@
       <h2>Use Sans Forgetica font</h2>
       <p>Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation</p>
     </ion-label>
-    <ion-toggle [(ngModel)]="settings.sansforgetica" (ionChange)="changeFont()"></ion-toggle>
+    <ion-toggle [(ngModel)]="settings.sansforgetica" (ionChange)="updateStoredSettings()"></ion-toggle>
   </ion-item>
 
   <ion-item>
     <ion-label text-wrap>
       <h2>Replace "The LORD"/"GOD" with "YHWH"</h2>
     </ion-label>
-    <ion-toggle [(ngModel)]="settings.replaceTheLORDwithYHWH" (ionChange)="changeReplace()"></ion-toggle>
+    <ion-toggle [(ngModel)]="settings.replaceTheLORDwithYHWH" (ionChange)="updateStoredSettings()"></ion-toggle>
   </ion-item>
 
   <ion-item>
@@ -32,6 +32,13 @@
       <p>Defaults to Biblical order</p>
     </ion-label>
     <ion-toggle [(ngModel)]="settings.sortByDate" (ionChange)="changeOrdering()"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label text-wrap>
+      <h2>Download audio only over WiFi</h2>
+    </ion-label>
+    <ion-toggle [(ngModel)]="settings.downloadOverWiFi" (ionChange)="updateStoredSettings()"></ion-toggle>
   </ion-item>
 
   <ion-item>
