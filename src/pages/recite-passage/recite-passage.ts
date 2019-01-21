@@ -128,7 +128,11 @@ export class RecitePassagePage {
           verses.forEach(this.splitVerse.bind(this));
         }
 
-        this.parts = this.parts.map((part) => this.replaceVerseMarker(part));
+        this.parts = this.parts.map(part => {
+          part = this.replaceVerseMarker(part);
+          part = this.replaceIndents(part);
+          return part;
+        })
       });
     });
   }
@@ -148,6 +152,13 @@ export class RecitePassagePage {
     const wrappedVerse = `<span class="verse-num">${verseNumber}</span>`;
 
     return line.replace(verseNumbers[0], wrappedVerse);
+  }
+
+  replaceIndents(line) {
+    if (line.search("&nbsp;&nbsp;&nbsp;&nbsp;") != -1) {
+      line = `<span class="verse-indent">${ line.replace(/&nbsp;/g, "") }</span>`
+    }
+    return line;
   }
 
   splitVerse(verse) {

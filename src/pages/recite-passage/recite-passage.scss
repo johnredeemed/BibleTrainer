@@ -51,10 +51,6 @@ page-recite-passage {
 
     &.forgetica-enabled {
       font-family: map-get($font-family, forgettable);
-
-      span {
-        font-family: map-get($font-family, default);
-      }
     }
   }
 
@@ -66,6 +62,12 @@ page-recite-passage {
     min-width: 36px;
     position: absolute;
     text-align: right;
+    font-family: map-get($font-family, default);
+  }
+
+  .verse-indent {
+    margin-left: 20px;
+    display: inline-block;
   }
 }
 
