@@ -28,6 +28,14 @@
 
   <ion-item>
     <ion-label text-wrap>
+      <h2>Emoji mode</h2>
+      <p>Adds emoji (👋) to help memorise (🧠) with pictures (🎑).</p>
+    </ion-label>
+    <ion-toggle [(ngModel)]="settings.emojiMode" (ionChange)="updateStoredSettings()"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label text-wrap>
       <h2>Display passages by last read date</h2>
       <p>Defaults to Biblical order</p>
     </ion-label>

@@ -3,6 +3,7 @@ import { Component, NgZone, ViewChild } from '@angular/core';
 import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
+import { Emoji } from './emoji';
 
 @Component({
   selector: 'page-recite-passage',
@@ -131,6 +132,9 @@ export class RecitePassagePage {
         this.parts = this.parts.map(part => {
           part = this.replaceVerseMarker(part);
           part = this.replaceIndents(part);
+          if (settings.emojiMode) {
+            part = this.addEmoji(part);
+          }
           return part;
         })
       });
@@ -157,6 +161,18 @@ export class RecitePassagePage {
   replaceIndents(line) {
     if (line.search("&nbsp;&nbsp;&nbsp;&nbsp;") != -1) {
       line = `<span class="verse-indent">${ line.replace(/&nbsp;/g, "") }</span>`
+    }
+    return line;
+  }
+
+  addEmoji(line) {
+    const keys = Object.keys(Emoji);
+    for (const k of keys) {
+      const re = new RegExp(`${k}[\\s|\\W]|${k}$`,'gi');
+      line = line.replace(re, (match, offset, string) => {
+        const split = match.toLowerCase().split(k);
+        return `${match.replace(split[1], '')} ${Emoji[k]}${split[1]}`;
+      });
     }
     return line;
   }
