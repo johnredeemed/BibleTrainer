@@ -4,6 +4,7 @@ import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
 import { Emoji } from './emoji';
+import { EmojiSingles } from './emoji-singles';
 
 @Component({
   selector: 'page-recite-passage',
@@ -130,11 +131,11 @@ export class RecitePassagePage {
         }
 
         this.parts = this.parts.map(part => {
+          if (settings.emojiMode) {
+            part = this.addEmojiAlternative(part);
+          }
           part = this.replaceVerseMarker(part);
           part = this.replaceIndents(part);
-          if (settings.emojiMode) {
-            part = this.addEmoji(part);
-          }
           return part;
         })
       });
@@ -172,6 +173,20 @@ export class RecitePassagePage {
       line = line.replace(re, (match, offset, string) => {
         const split = match.toLowerCase().split(k);
         return `${match.replace(split[1], '')} ${Emoji[k]}${split[1]}`;
+      });
+    }
+    return line;
+  }
+
+  // Will match even when the key only forms part of the word
+  // i.e. 'walk' will match 'walk' and 'walks'
+  // TODO one problem is that e.g. 'eye' matches 'obeyed'
+  addEmojiAlternative(line) {
+    const keys = Object.keys(EmojiSingles);
+    for (const k of keys) {
+      const regex = new RegExp(`${k}[^ \\n]*`,"gi");
+      line = line.replace(regex, function (match) {
+        return `${match} ${EmojiSingles[k]}`;
       });
     }
     return line;
