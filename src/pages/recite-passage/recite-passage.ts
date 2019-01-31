@@ -180,11 +180,10 @@ export class RecitePassagePage {
 
   // Will match even when the key only forms part of the word
   // i.e. 'walk' will match 'walk' and 'walks'
-  // TODO one problem is that e.g. 'eye' matches 'obeyed'
   addEmojiAlternative(line) {
     const keys = Object.keys(EmojiSingles);
     for (const k of keys) {
-      const regex = new RegExp(`${k}[^ \\n]*`,"gi");
+      const regex = new RegExp(`(\\s|\\W)${k}[^ \\n]*`,"gi");
       line = line.replace(regex, function (match) {
         return `${match} ${EmojiSingles[k]}`;
       });
