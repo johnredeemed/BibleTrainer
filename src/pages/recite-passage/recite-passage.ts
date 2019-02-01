@@ -130,6 +130,9 @@ export class RecitePassagePage {
           verses.forEach(this.splitVerse.bind(this));
         }
 
+        // debug
+        var start = new Date();
+        console.log("start: " + start.getTime());
         this.parts = this.parts.map(part => {
           if (settings.emojiMode) {
             part = this.addEmojiAlternative(part);
@@ -137,7 +140,16 @@ export class RecitePassagePage {
           part = this.replaceVerseMarker(part);
           part = this.replaceIndents(part);
           return part;
-        })
+        });
+        var end = new Date();
+        console.log("end: " + end.getTime());
+        console.log("Milliseconds duration: " + (end.getTime() - start.getTime()));
+        let toast = this.toastCtrl.create({
+          message: 'Loaded in ' + (end.getTime() - start.getTime()) + ' milliseconds',
+          duration: 2000,
+          position: 'bottom'
+        });
+        toast.present();
       });
     });
   }
@@ -181,9 +193,22 @@ export class RecitePassagePage {
   // Will match even when the key only forms part of the word
   // i.e. 'walk' will match 'walk' and 'walks'
   addEmojiAlternative(line) {
+    // First do 'light' and 'hear', as they match other words
+    var regex = new RegExp(`(\\s|\\W)light[^ \\n]*`,"gi");
+    line = line.replace(regex, function (match) {
+      if (match.includes("lightning")) return `${match} ⚡`;
+      return `${match} 💡`;
+    });
+
+    regex = new RegExp(`(\\s|\\W)hear[^ \\n]*`,"gi");
+    line = line.replace(regex, function (match) {
+      if (match.includes("heart")) return `${match} 💛`;
+      return `${match} 👂`;
+    });
+
     const keys = Object.keys(EmojiSingles);
     for (const k of keys) {
-      const regex = new RegExp(`(\\s|\\W)${k}[^ \\n]*`,"gi");
+      regex = new RegExp(`(\\s|\\W)${k}[^ \\n]*`,"gi");
       line = line.replace(regex, function (match) {
         return `${match} ${EmojiSingles[k]}`;
       });
