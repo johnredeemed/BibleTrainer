@@ -3,6 +3,10 @@
     <ion-title>{{reference}}</ion-title>
 
     <ion-buttons end>
+      <button (click)="onRepeatToggle()" aria-label="Repeat">
+        <ion-icon name="repeat"></ion-icon>
+      </button>
+
       <span class="btnPlayPause">
         <button class="btnPlayPause__icon" [disabled]="!networkAvailable" ion-button (click)="onAudioToggle()" aria-label="Listen to the passage">
           <ion-icon name="{{ playPauseIcon }}"></ion-icon>

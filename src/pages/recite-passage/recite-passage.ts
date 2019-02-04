@@ -33,6 +33,7 @@ export class RecitePassagePage {
   speechReady = false;
   passageAudio = null;
   playPauseIcon = 'play';
+  settings;
   contentClass = "recite-passage";
 
   constructor(public navCtrl: NavController,
@@ -44,6 +45,7 @@ export class RecitePassagePage {
               private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
+      this.settings = settings;
       if (settings.sansforgetica) this.contentClass = "recite-passage forgetica-enabled"
       this.downloadOverWiFi = settings.downloadOverWiFi;
       this.checkNetworkConnection();
@@ -130,9 +132,6 @@ export class RecitePassagePage {
           verses.forEach(this.splitVerse.bind(this));
         }
 
-        // debug
-        var start = new Date();
-        console.log("start: " + start.getTime());
         this.parts = this.parts.map(part => {
           if (settings.emojiMode) {
             part = this.addEmojiAlternative(part);
@@ -141,15 +140,6 @@ export class RecitePassagePage {
           part = this.replaceIndents(part);
           return part;
         });
-        var end = new Date();
-        console.log("end: " + end.getTime());
-        console.log("Milliseconds duration: " + (end.getTime() - start.getTime()));
-        let toast = this.toastCtrl.create({
-          message: 'Loaded in ' + (end.getTime() - start.getTime()) + ' milliseconds',
-          duration: 2000,
-          position: 'bottom'
-        });
-        toast.present();
       });
     });
   }
@@ -443,6 +433,26 @@ export class RecitePassagePage {
     this.fetchPassage();
   }
 
+  onRepeatToggle = () => {
+    if (!this.settings.repeatAudio) {
+      this.settings.repeatAudio = "repeat";
+    }
+    else if (this.settings.repeatAudio == "repeat") {
+      this.settings.repeatAudio = "continue";
+    }
+    else {
+      this.settings.repeatAudio = false;
+    }
+    this.storage.set("stored_settings", this.settings);
+
+    let toast = this.toastCtrl.create({
+      message: 'this.settings.repeatAudio: ' + this.settings.repeatAudio,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
   onAudioToggle = () => {
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.progressBar');
@@ -452,7 +462,17 @@ export class RecitePassagePage {
       this.playPauseIcon = 'pause';
 
       this.passageAudio.addEventListener('ended', () => {
-        this.playPauseIcon = 'play';
+        if (this.settings.repeatAudio == "repeat") {
+          this.passageAudio.play();
+        }
+        else if (this.settings.repeatAudio == "continue" && this.nextPassageExists) {
+          this.passageAudio = null;
+          this.swipeLeftEvent();
+          this.onAudioToggle();
+        }
+        else {
+          this.playPauseIcon = 'play';
+        }
       }, false);
 
       this.passageAudio.addEventListener('timeupdate', function() {
