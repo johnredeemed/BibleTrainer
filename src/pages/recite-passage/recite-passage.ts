@@ -577,6 +577,8 @@ export class RecitePassagePage {
             break;
           case 'music-controls-headset-plugged':
             break;
+          case 'music-controls-media-button':
+            break;
 
           case 'music-controls-stop-listening':
             break;
