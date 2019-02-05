@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { Network } from "@ionic-native/network";
+import { MusicControls } from '@ionic-native/music-controls';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from "@ionic-native/social-sharing";
@@ -46,6 +47,7 @@ import { SearchPage } from "../pages/search/search";
     EmailComposer,
     LocalNotifications,
     Network,
+    MusicControls,
     SocialSharing,
     SplashScreen,
     StatusBar,

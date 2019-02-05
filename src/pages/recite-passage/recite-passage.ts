@@ -1,6 +1,7 @@
 import { AlertController, Events, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Network } from "@ionic-native/network";
+import { MusicControls } from '@ionic-native/music-controls';
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
 import { Emoji } from './emoji';
@@ -43,6 +44,7 @@ export class RecitePassagePage {
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
               private network: Network,
+              private musicControls: MusicControls,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
       this.settings = settings;
@@ -61,6 +63,7 @@ export class RecitePassagePage {
           if (!this.networkAvailable && this.passageAudio && !this.passageAudio.paused) {
             this.passageAudio.pause();
             this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
           }
         });
       }, 3000);
@@ -392,15 +395,6 @@ export class RecitePassagePage {
       this.indexInFolder--;
       this.fetchPassage();
     }
-    else {
-      let toast = this.toastCtrl.create({
-        message: 'This is the first passage',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();
-      return;
-    }
   }
 
   swipeLeftEvent() {
@@ -409,15 +403,6 @@ export class RecitePassagePage {
       this.onHideAll();
       this.indexInFolder++;
       this.fetchPassage();
-    }
-    else {
-      let toast = this.toastCtrl.create({
-        message: 'This is the last passage',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();
-      return;
     }
   }
 
@@ -466,12 +451,12 @@ export class RecitePassagePage {
           this.passageAudio.play();
         }
         else if (this.settings.repeatAudio == "continue" && this.nextPassageExists) {
-          this.passageAudio = null;
           this.swipeLeftEvent();
           this.onAudioToggle();
         }
         else {
           this.playPauseIcon = 'play';
+          this.musicControls.updateIsPlaying(false);
         }
       }, false);
 
@@ -479,29 +464,159 @@ export class RecitePassagePage {
         let progress = (this.currentTime/this.duration) * 100;
         progressBar.style.strokeDashoffset = `${(100-progress) * 3}`;
       }, false);
+
+      this.subscribeToMusicControls();
     } else {
-      if(this.passageAudio.paused) {
+      if (this.passageAudio.paused) {
         this.passageAudio.play();
         this.playPauseIcon = 'pause';
+        this.musicControls.updateIsPlaying(true);
       } else {
         this.passageAudio.pause();
         this.playPauseIcon = 'play';
+        this.musicControls.updateIsPlaying(false);
       }
-
     }
+  }
+
+  subscribeToMusicControls() {
+    this.musicControls.destroy();
+    this.musicControls.create({
+      track       : this.reference,           // optional, default : ''
+      artist      : '',                       // optional, default : ''
+      isPlaying   : true,                     // optional, default : true
+      dismissable : true,                     // optional, default : false
+      cover       : 'assets/imgs/logo.png',   // optional, default : nothing
+
+      // previous/next/close buttons:
+      hasPrev   : this.previousPassageExists, // show previous button, optional, default: true
+      hasNext   : this.nextPassageExists,     // show next button, optional, default: true
+      hasClose  : true,                       // show close button, optional, default: false
+
+      // iOS only, optional
+      album: '',                            // optional, default: ''
+      duration: this.passageAudio.duration, // optional, default: 0
+      elapsed: 0,                           // optional, default: 0
+      hasSkipForward: true,                 // show skip forward button, optional, default: false
+      hasSkipBackward: true,                // show skip backward button, optional, default: false
+      skipForwardInterval: 10,              // display number for skip forward, optional, default: 0
+      skipBackwardInterval: 10,             // display number for skip backward, optional, default: 0
+
+      // Android only, optional
+      // text displayed in the status bar when the notification (and the ticker) are updated, optional
+      ticker: 'Now playing ' + this.reference,
+    });
+
+    this.musicControls.subscribe().subscribe((action) => {
+      this._ngZone.run(() => { // ensures the UI is updated
+        const message = JSON.parse(action).message;
+        switch (message) {
+          case 'music-controls-media-button-next' :
+          case 'music-controls-next':
+            if (this.nextPassageExists) {
+              this.swipeLeftEvent();
+              this.onAudioToggle();
+            }
+            break;
+          case 'music-controls-media-button-previous' :
+          case 'music-controls-previous':
+            if (this.passageAudio.currentTime < 3 && this.previousPassageExists) {
+              this.swipeRightEvent();
+              this.onAudioToggle();
+            }
+            else {
+              this.passageAudio.currentTime = 0
+            }
+            break;
+          case 'music-controls-media-button-pause' :
+          case 'music-controls-pause':
+            this.passageAudio.pause();
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
+            break;
+          case 'music-controls-media-button-play' :
+          case 'music-controls-play':
+            this.passageAudio.play();
+            this.playPauseIcon = 'pause';
+            this.musicControls.updateIsPlaying(true);
+            break;
+          case 'music-controls-destroy':
+            this.passageAudio.pause();
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
+            break;
+
+          // External controls (iOS only)
+          case 'music-controls-toggle-play-pause' : // TODO - test this on iOS
+            if (this.passageAudio.paused) {
+              this.passageAudio.play();
+              this.playPauseIcon = 'pause';
+              this.musicControls.updateIsPlaying(true);
+            } else {
+              this.passageAudio.pause();
+              this.playPauseIcon = 'play';
+              this.musicControls.updateIsPlaying(false);
+            }
+            break;
+          case 'music-controls-seek-to': // TODO - test this on iOS
+            const seekToInSeconds = JSON.parse(action).position;
+            this.passageAudio.currentTime = seekToInSeconds;
+            break;
+          case 'music-controls-skip-forward': // TODO - test this on iOS
+            this.passageAudio.currentTime += 10;
+            break;
+          case 'music-controls-skip-backward': // TODO - test this on iOS
+            if (this.passageAudio.currentTime < 11) {
+              this.passageAudio.currentTime = 0;
+            }
+            else {
+              this.passageAudio.currentTime -= 10;
+            }
+            break;
+
+          // Headset events (Android only)
+          case 'music-controls-headset-unplugged':
+            this.passageAudio.pause();
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
+            break;
+          case 'music-controls-headset-plugged':
+            break;
+
+          case 'music-controls-stop-listening':
+            break;
+          default:
+            // TODO - remove before publishing
+            let toast = this.toastCtrl.create({
+              message: "Unhandled event: " + message,
+              duration: 2000,
+              position: 'bottom'
+            });
+            toast.present();
+        }
+      });
+    });
+
+    this.musicControls.listen();
+    this.musicControls.updateIsPlaying(true);
   }
 
   ionViewWillLeave() {
     if (this.passageAudio && !this.passageAudio.paused) {
       this.passageAudio.pause();
       this.playPauseIcon = 'play';
+      this.musicControls.updateIsPlaying(false);
     }
-    this.passageAudio = null;
+    if (this.passageAudio) {
+      this.passageAudio.currentTime = 0;
+      this.passageAudio = null;
+      this.musicControls.destroy();
+    }
   }
 
 /*
   onRecite = () => {
-    if (this.speechReady){
+    if (this.speechReady) {
       this.startRecognition();
       return;
     }
