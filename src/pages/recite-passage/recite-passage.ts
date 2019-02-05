@@ -493,7 +493,7 @@ export class RecitePassagePage {
       hasNext   : this.nextPassageExists,     // show next button, optional, default: true
       hasClose  : true,                       // show close button, optional, default: false
 
-      // iOS only, optional
+      // iOS only
       album: '',                            // optional, default: ''
       duration: this.passageAudio.duration, // optional, default: 0
       elapsed: 0,                           // optional, default: 0
@@ -502,7 +502,7 @@ export class RecitePassagePage {
       skipForwardInterval: 10,              // display number for skip forward, optional, default: 0
       skipBackwardInterval: 10,             // display number for skip backward, optional, default: 0
 
-      // Android only, optional
+      // Android only
       // text displayed in the status bar when the notification (and the ticker) are updated, optional
       ticker: 'Now playing ' + this.reference,
     });
@@ -528,23 +528,18 @@ export class RecitePassagePage {
               this.passageAudio.currentTime = 0
             }
             break;
-          case 'music-controls-media-button-pause' :
-          case 'music-controls-pause':
-            this.passageAudio.pause();
-            this.playPauseIcon = 'play';
-            this.musicControls.updateIsPlaying(false);
-            break;
-          case 'music-controls-media-button-play' :
-          case 'music-controls-play':
-            this.passageAudio.play();
-            this.playPauseIcon = 'pause';
-            this.musicControls.updateIsPlaying(true);
-            break;
           case 'music-controls-destroy':
             this.passageAudio.pause();
             this.playPauseIcon = 'play';
             this.musicControls.updateIsPlaying(false);
             break;
+
+          case 'music-controls-media-button-play' :
+          case 'music-controls-play':
+          case 'music-controls-media-button-pause' :
+          case 'music-controls-pause':
+          case 'music-controls-media-button-play-pause' :
+          case 'music-controls-play-pause' :
 
           // External controls (iOS only)
           case 'music-controls-toggle-play-pause' : // TODO - test this on iOS
@@ -575,7 +570,7 @@ export class RecitePassagePage {
             break;
 
           // Headset events (Android only)
-          case 'music-controls-headset-unplugged':
+          case 'music-controls-headset-unplugged': // TODO - this doesn't fire
             this.passageAudio.pause();
             this.playPauseIcon = 'play';
             this.musicControls.updateIsPlaying(false);
@@ -586,7 +581,7 @@ export class RecitePassagePage {
           case 'music-controls-stop-listening':
             break;
           default:
-            // TODO - remove before publishing
+            // TODO - remove before publishing app
             let toast = this.toastCtrl.create({
               message: "Unhandled event: " + message,
               duration: 2000,
