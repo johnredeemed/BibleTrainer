@@ -534,10 +534,16 @@ export class RecitePassagePage {
             this.musicControls.updateIsPlaying(false);
             break;
 
+          case 'music-controls-media-button-pause' :
+            if (this.passageAudio.currentTime < 6) {
+              this.passageAudio.currentTime = 0;
+            }
+            else {
+              this.passageAudio.currentTime -= 5;
+            }
+          case 'music-controls-pause':
           case 'music-controls-media-button-play' :
           case 'music-controls-play':
-          case 'music-controls-media-button-pause' :
-          case 'music-controls-pause':
           case 'music-controls-media-button-play-pause' :
           case 'music-controls-play-pause' :
 
