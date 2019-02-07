@@ -325,6 +325,7 @@ export const EmojiMap = {
   strength: "🏋",
   strong: "🏋",
   strife: "🤜",
+  sweet: "🍬",
   sword: "🗡",
   suffer: "😢",
   sun: "☀️",
