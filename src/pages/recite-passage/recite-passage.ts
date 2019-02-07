@@ -3,8 +3,7 @@ import { Component, NgZone, ViewChild } from '@angular/core';
 import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
-import { Emoji } from './emoji';
-import { EmojiSingles } from './emoji-singles';
+import { EmojiMap } from './emoji-map';
 
 @Component({
   selector: 'page-recite-passage',
@@ -130,9 +129,6 @@ export class RecitePassagePage {
           verses.forEach(this.splitVerse.bind(this));
         }
 
-        // debug
-        var start = new Date();
-        console.log("start: " + start.getTime());
         this.parts = this.parts.map(part => {
           if (settings.emojiMode) {
             part = this.addEmojiAlternative(part);
@@ -141,15 +137,6 @@ export class RecitePassagePage {
           part = this.replaceIndents(part);
           return part;
         });
-        var end = new Date();
-        console.log("end: " + end.getTime());
-        console.log("Milliseconds duration: " + (end.getTime() - start.getTime()));
-        let toast = this.toastCtrl.create({
-          message: 'Loaded in ' + (end.getTime() - start.getTime()) + ' milliseconds',
-          duration: 2000,
-          position: 'bottom'
-        });
-        toast.present();
       });
     });
   }
@@ -178,18 +165,6 @@ export class RecitePassagePage {
     return line;
   }
 
-  addEmoji(line) {
-    const keys = Object.keys(Emoji);
-    for (const k of keys) {
-      const re = new RegExp(`${k}[\\s|\\W]|${k}$`,'gi');
-      line = line.replace(re, (match, offset, string) => {
-        const split = match.toLowerCase().split(k);
-        return `${match.replace(split[1], '')} ${Emoji[k]}${split[1]}`;
-      });
-    }
-    return line;
-  }
-
   // Will match even when the key only forms part of the word
   // i.e. 'walk' will match 'walk' and 'walks'
   addEmojiAlternative(line) {
@@ -206,11 +181,11 @@ export class RecitePassagePage {
       return `${match} 👂`;
     });
 
-    const keys = Object.keys(EmojiSingles);
+    const keys = Object.keys(EmojiMap);
     for (const k of keys) {
       regex = new RegExp(`(\\s|\\W)${k}[^ \\n]*`,"gi");
       line = line.replace(regex, function (match) {
-        return `${match} ${EmojiSingles[k]}`;
+        return `${match} ${EmojiMap[k]}`;
       });
     }
     return line;
