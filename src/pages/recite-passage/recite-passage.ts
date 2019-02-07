@@ -131,7 +131,7 @@ export class RecitePassagePage {
 
         this.parts = this.parts.map(part => {
           if (settings.emojiMode) {
-            part = this.addEmojiAlternative(part);
+            part = this.addEmojis(part);
           }
           part = this.replaceVerseMarker(part);
           part = this.replaceIndents(part);
@@ -167,7 +167,7 @@ export class RecitePassagePage {
 
   // Will match even when the key only forms part of the word
   // i.e. 'walk' will match 'walk' and 'walks'
-  addEmojiAlternative(line) {
+  addEmojis(line) {
     // First do 'light' and 'hear', as they match other words
     var regex = new RegExp(`(\\s|\\W)light[^ \\n]*`,"gi");
     line = line.replace(regex, function (match) {
