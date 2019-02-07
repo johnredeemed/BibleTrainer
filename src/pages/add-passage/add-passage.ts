@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
-import { Network } from "@ionic-native/network";
+// import { Network } from "@ionic-native/network";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { Events } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
@@ -109,7 +109,8 @@ export class AddPassagePage {
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
               private socialSharing: SocialSharing,
-              private network: Network) {
+              // private network: Network
+              ) {
     this.folder = this.navParams.data.folder;
     if (!this.folder) {
       this.folder = "Top Level Folder";
@@ -143,15 +144,16 @@ export class AddPassagePage {
   }
 
   getPassage() {
-    if (!this.network.type || this.network.type == 'unknown' || this.network.type == 'none') {
-      let toast = this.toastCtrl.create({
-        message: 'Please enable a data connection to get passage',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();
-    }
-    else if (!this.book) {
+    // if (!this.network.type || this.network.type == 'unknown' || this.network.type == 'none') {
+    //   let toast = this.toastCtrl.create({
+    //     message: 'Please enable a data connection to get passage',
+    //     duration: 2000,
+    //     position: 'bottom'
+    //   });
+    //   toast.present();
+    // }
+    // else
+    if (!this.book) {
       let toast = this.toastCtrl.create({
         message: 'Please select a book',
         duration: 2000,
