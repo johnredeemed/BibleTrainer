@@ -13,7 +13,7 @@ import { EmojiMap } from './emoji-map';
 export class RecitePassagePage {
   @ViewChild('content') content:any;
 
-  // networkAvailable = false;
+  networkAvailable = true;
   downloadOverWiFi = false;
   reference;
   passage;
