@@ -3,6 +3,7 @@ import { Component, NgZone, ViewChild } from '@angular/core';
 // import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
+import { EmojiMap } from './emoji-map';
 
 @Component({
   selector: 'page-recite-passage',
@@ -129,10 +130,13 @@ export class RecitePassagePage {
         }
 
         this.parts = this.parts.map(part => {
+          if (settings.emojiMode) {
+            part = this.addEmojis(part);
+          }
           part = this.replaceVerseMarker(part);
           part = this.replaceIndents(part);
           return part;
-        })
+        });
       });
     });
   }
@@ -157,6 +161,32 @@ export class RecitePassagePage {
   replaceIndents(line) {
     if (line.search("&nbsp;&nbsp;&nbsp;&nbsp;") != -1) {
       line = `<span class="verse-indent">${ line.replace(/&nbsp;/g, "") }</span>`
+    }
+    return line;
+  }
+
+  // Will match even when the key only forms part of the word
+  // i.e. 'walk' will match 'walk' and 'walks'
+  addEmojis(line) {
+    // First do 'light' and 'hear', as they match other words
+    var regex = new RegExp(`(\\s|\\W)light[^ \\n]*`,"gi");
+    line = line.replace(regex, function (match) {
+      if (match.includes("lightning")) return `${match} ⚡`;
+      return `${match} 💡`;
+    });
+
+    regex = new RegExp(`(\\s|\\W)hear[^ \\n]*`,"gi");
+    line = line.replace(regex, function (match) {
+      if (match.includes("heart")) return `${match} 💛`;
+      return `${match} 👂`;
+    });
+
+    const keys = Object.keys(EmojiMap);
+    for (const k of keys) {
+      regex = new RegExp(`(\\s|\\W)${k}[^ \\n]*`,"gi");
+      line = line.replace(regex, function (match) {
+        return `${match} ${EmojiMap[k]}`;
+      });
     }
     return line;
   }
