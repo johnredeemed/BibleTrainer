@@ -42,7 +42,7 @@ export class RecitePassagePage {
               public events: Events,
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
-              private musicControls: MusicControls
+              private musicControls: MusicControls,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
