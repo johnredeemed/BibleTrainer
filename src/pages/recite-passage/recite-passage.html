@@ -3,10 +3,6 @@
     <ion-title>{{reference}}</ion-title>
 
     <ion-buttons end>
-      <button (click)="onRepeatToggle()" aria-label="Repeat">
-        <ion-icon name="repeat"></ion-icon>
-      </button>
-
       <span class="btnPlayPause">
         <button class="btnPlayPause__icon" [disabled]="!networkAvailable" ion-button (click)="onAudioToggle()" aria-label="Listen to the passage">
           <ion-icon name="{{ playPauseIcon }}"></ion-icon>
@@ -21,6 +17,17 @@
       </span>
     </ion-buttons>
   </ion-navbar>
+
+  <div class='audioPlayer {{ playPauseIcon === "pause" ? "audioPlayer--open" : "audioPlayer--closed" }}'>
+    <button class='audioPlayer__repeat {{ repeatIcon !== false ? "audioPlayer__repeat--active" : "audioPlayer__repeat--inactive" }}' (click)="onRepeatToggle()" aria-label="Repeat">
+      <ion-icon class="audioPlayer__repeat__btn" name="repeat"></ion-icon>
+      {{ repeatIcon === false ? "Repeat" : repeatIcon }}
+    </button>
+
+    <div class="audioPlayer__scrubber">
+      <span class="audioPlayer__scrubber__location"></span>
+    </div>
+  </div>
 
 </ion-header>
 
