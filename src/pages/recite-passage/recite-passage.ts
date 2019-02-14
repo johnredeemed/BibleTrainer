@@ -32,7 +32,7 @@ export class RecitePassagePage {
   speechEnabled = false;
   speechReady = false;
   passageAudio = null;
-  playPauseIcon = 'play';
+  playPauseIcon: String = 'play';
   repeatIcon = false;
   settings;
   contentClass = "recite-passage";
@@ -40,11 +40,11 @@ export class RecitePassagePage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private storage: Storage,
+              private platform: Platform,
               public events: Events,
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
               private musicControls: MusicControls,
-              private platform: Platform,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
@@ -60,10 +60,8 @@ export class RecitePassagePage {
     //   // Run in ngZone to make sure UI is updated.
     //   setTimeout(() => {
     //     this._ngZone.run(() => {
-    //       this.checkNetworkConnection();
-    //       if (!this.networkAvailable && this.passageAudio && !this.passageAudio.paused) {
-    //         this.passageAudio.pause();
-    //         this.playPauseIcon = 'play';
+    //       if (!this.networkAvailable) { // only check for connection, not disconnection
+    //         this.checkNetworkConnection();
     //       }
     //     });
     //   }, 3000);
@@ -574,17 +572,8 @@ export class RecitePassagePage {
             break;
           case 'music-controls-media-button':
             break;
-
           case 'music-controls-stop-listening':
             break;
-          default:
-            // TODO - remove before publishing app
-            let toast = this.toastCtrl.create({
-              message: "Unhandled event: " + message,
-              duration: 2000,
-              position: 'bottom'
-            });
-            toast.present();
         }
       });
     });
