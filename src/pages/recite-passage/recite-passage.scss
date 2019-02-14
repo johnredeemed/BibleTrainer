@@ -1,28 +1,5 @@
 page-recite-passage {
 
-  .btnPlayPause {
-    position: relative;
-
-    &__icon {
-      position: absolute;
-      width: 36px;
-      height: 36px;
-    }
-  }
-  .progressTrack {
-    stroke: #d8d8d8;
-    stroke-opacity: 0.25;
-    stroke-width: 7;
-  }
-  .progressBar {
-    stroke-dasharray: 300;
-    stroke-dashoffset: 300;
-    stroke: #004d4d;
-    stroke-opacity: 1;
-    stroke-width: 7;
-    transition: stroke-dashoffset 500ms;
-  }
-
   .recite-passage-fab {
     background-color: #004d4d;
     border: 5px solid white;
@@ -37,7 +14,7 @@ page-recite-passage {
   .recite-passage {
     font-size: 16px;
     margin: 0 auto 0 44px;
-    padding: 0 12px;
+    padding: 0;
     position: relative;
     line-height: 32px;
 
@@ -68,6 +45,48 @@ page-recite-passage {
   .verse-indent {
     margin-left: 20px;
     display: inline-block;
+  }
+
+  .audioPlayer {
+    align-items: center;
+    background-color: #ddfff7;
+    display: none;
+    justify-content: space-around;
+    min-height: 44px;
+    padding: 8px 4px;
+    position: relative;
+    margin: -16px -16px 0;
+
+    &--open {
+      display: flex;
+    }
+
+    &__repeat {
+      text-transform: capitalize;
+      display: block;
+      background: none;
+      font-family: inherit;
+      min-width: 60px;
+
+      &--active {
+        color: #008464;
+      }
+    }
+
+    &__scrubber {
+      background: #004d4d;
+      height: 4px;
+      width: 100%;
+      margin: 0 4px 0 20px;
+      position: relative;
+
+      &__location {
+        background-color: #008464;
+        height: 4px;
+        width: 0;
+        position: absolute;
+      }
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { AlertController, Events, NavController, NavParams, ToastController } from 'ionic-angular';
+import { AlertController, Events, NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { MusicControls } from '@ionic-native/music-controls';
 // import { Network } from "@ionic-native/network";
@@ -33,6 +33,7 @@ export class RecitePassagePage {
   speechReady = false;
   passageAudio = null;
   playPauseIcon = 'play';
+  repeatIcon = false;
   settings;
   contentClass = "recite-passage";
 
@@ -43,6 +44,7 @@ export class RecitePassagePage {
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
               private musicControls: MusicControls,
+              private platform: Platform,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
@@ -415,22 +417,17 @@ export class RecitePassagePage {
       this.settings.repeatAudio = false;
     }
     this.storage.set("stored_settings", this.settings);
-
-    let toast = this.toastCtrl.create({
-      message: 'this.settings.repeatAudio: ' + this.settings.repeatAudio,
-      duration: 2000,
-      position: 'bottom'
-    });
-    toast.present();
+    this.repeatIcon = this.settings.repeatAudio
   }
 
   onAudioToggle = () => {
     if (!this.passageAudio) {
-      const progressBar = <HTMLElement>document.querySelector('.progressBar');
+      const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
       const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(' ', '.')}`
       this.passageAudio = new Audio(passageUrl);
       this.passageAudio.play();
       this.playPauseIcon = 'pause';
+      this.repeatIcon = this.settings.repeatAudio;
 
       this.passageAudio.addEventListener('ended', () => {
         if (this.settings.repeatAudio == "repeat") {
@@ -448,19 +445,25 @@ export class RecitePassagePage {
 
       this.passageAudio.addEventListener('timeupdate', function() {
         let progress = (this.currentTime/this.duration) * 100;
-        progressBar.style.strokeDashoffset = `${(100-progress) * 3}`;
+        progressBar.style.width = `${progress}%`;
       }, false);
 
-      this.subscribeToMusicControls();
+      if (this.platform.is('cordova')) {
+        this.subscribeToMusicControls();
+      }
     } else {
       if (this.passageAudio.paused) {
         this.passageAudio.play();
         this.playPauseIcon = 'pause';
-        this.musicControls.updateIsPlaying(true);
+        if (this.platform.is('cordova')) {
+          this.musicControls.updateIsPlaying(true);
+        }
       } else {
         this.passageAudio.pause();
         this.playPauseIcon = 'play';
-        this.musicControls.updateIsPlaying(false);
+        if (this.platform.is('cordova')) {
+          this.musicControls.updateIsPlaying(false);
+        }
       }
     }
   }
