@@ -17,9 +17,8 @@
 <ion-content #content>
 
   <div class='audioPlayer {{ playPauseIcon === "pause" ? "audioPlayer--open" : "audioPlayer--closed" }}'>
-    <button class='audioPlayer__repeat {{ repeatIcon !== false ? "audioPlayer__repeat--active" : "audioPlayer__repeat--inactive" }}' (click)="onRepeatToggle()" aria-label="Repeat">
+    <button class='audioPlayer__repeat {{ repeatIcon == 1 ? "audioPlayer__repeat--active" : "audioPlayer__repeat--inactive" }}' (click)="onRepeatToggle()" aria-label="Repeat">
       <ion-icon class="audioPlayer__repeat__btn" name="repeat"></ion-icon>
-      {{ repeatIcon === false ? "Repeat" : repeatIcon }}
     </button>
 
     <div class="audioPlayer__scrubber">

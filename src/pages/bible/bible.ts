@@ -147,6 +147,7 @@ export class BiblePage {
               this.storage.remove("deadline");
               if (value == null) value = "7";
               settings.deadline = value;
+              settings.repeatAudio = 0;
               settings.downloadOverWiFi = false;
               settings.reminderNotification = false;
               settings.reminderNotificationTime = "17:00";

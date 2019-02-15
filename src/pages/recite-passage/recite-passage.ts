@@ -33,7 +33,7 @@ export class RecitePassagePage {
   speechReady = false;
   passageAudio = null;
   playPauseIcon: String = 'play';
-  repeatIcon = false;
+  repeatIcon = 0;
   settings;
   contentClass = "recite-passage";
 
@@ -49,6 +49,10 @@ export class RecitePassagePage {
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
       this.settings = settings;
+      if (!this.settings.repeatAudio) {
+        this.settings.repeatAudio = 0;
+      }
+
       if (settings.sansforgetica) this.contentClass = "recite-passage forgetica-enabled"
       this.downloadOverWiFi = settings.downloadOverWiFi;
       // this.checkNetworkConnection();
@@ -417,17 +421,13 @@ export class RecitePassagePage {
   }
 
   onRepeatToggle = () => {
-    if (!this.settings.repeatAudio) {
-      this.settings.repeatAudio = "repeat";
+    this.settings.repeatAudio++;
+    if (this.settings.repeatAudio > 1) {
+      this.settings.repeatAudio = 0;
     }
-    else if (this.settings.repeatAudio == "repeat") {
-      this.settings.repeatAudio = "continue";
-    }
-    else {
-      this.settings.repeatAudio = false;
-    }
+
     this.storage.set("stored_settings", this.settings);
-    this.repeatIcon = this.settings.repeatAudio
+    this.repeatIcon = this.settings.repeatAudio;
   }
 
   onAudioToggle = () => {
@@ -440,16 +440,18 @@ export class RecitePassagePage {
       this.repeatIcon = this.settings.repeatAudio;
 
       this.passageAudio.addEventListener('ended', () => {
-        if (this.settings.repeatAudio == "repeat") {
-          this.passageAudio.play();
-        }
-        else if (this.settings.repeatAudio == "continue" && this.nextPassageExists) {
-          this.swipeLeftEvent();
-          this.onAudioToggle();
-        }
-        else {
-          this.playPauseIcon = 'play';
-          this.musicControls.updateIsPlaying(false);
+        switch(this.settings.repeatAudio) {
+          case 1: // repeat
+            this.passageAudio.play();
+            break;
+          case 2: // continue
+            if (this.nextPassageExists) {
+              this.swipeLeftEvent();
+              this.onAudioToggle();
+            }
+          default: // stop
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
         }
       }, false);
 
