@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
-import { Network } from "@ionic-native/network";
+//import { Network } from "@ionic-native/network";
 
 /**
  * Generated class for the SearchPage page.
@@ -22,8 +22,8 @@ export class SearchPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private toastCtrl: ToastController,
-              public alertCtrl: AlertController,
-              private network: Network) {
+              //private network: Network,
+              public alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -49,6 +49,7 @@ export class SearchPage {
       return;
     }
 
+    /*
     if (!this.network.type || this.network.type == 'unknown' || this.network.type == 'none') {
       let toast = this.toastCtrl.create({
         message: 'Please enable a data connection to search',
@@ -58,6 +59,7 @@ export class SearchPage {
       toast.present();
       return
     }
+    */
 
     // The ESV API doesn't handle punctuation
     this.searchText = this.searchText.replace(/[.,\/#!£$%\^&\*;:@{}=\-_`~()]/g,"");

@@ -185,6 +185,18 @@ export class RecitePassagePage {
       return `${match} 👂`;
     });
 
+    regex = new RegExp(`(\\s|\\W)holy( spirit)?[^ \\n]*`,"gi");
+    line = line.replace(regex, function (match) {
+      if (match.includes("Spirit")) return `${match} 🕊`;
+      return `${match} 😇`;
+    });
+
+    // only match lower-case spirit - not Holy Spirit
+    regex = new RegExp(`(\\s|\\W)spirit[^ \\n]*`,"g");
+    line = line.replace(regex, function (match) {
+      return `${match} 👻`;
+    });
+
     const keys = Object.keys(EmojiMap);
     for (const k of keys) {
       regex = new RegExp(`(\\s|\\W)${k}[^ \\n]*`,"gi");
