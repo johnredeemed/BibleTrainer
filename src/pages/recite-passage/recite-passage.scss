@@ -1,4 +1,11 @@
 page-recite-passage {
+  .passageContainer {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+
   .recite-passage-fab {
     background-color: #004d4d;
     border: 5px solid white;
@@ -6,7 +13,7 @@ page-recite-passage {
   }
 
   .scroll-content {
-    padding: 16px;
+    padding: 0;
     margin-bottom: 130px;
   }
 
@@ -47,17 +54,24 @@ page-recite-passage {
   }
 
   .audioPlayer {
-    align-items: center;
-    background-color: #ddfff7;
+    margin: 0;
+    padding: 0;
+    width: 100%;
     display: none;
-    justify-content: space-around;
+    grid-column-gap: 10px;
+    grid-template-columns: 75px 1fr;
+    align-items: center;
     min-height: 44px;
-    padding: 8px 4px;
-    position: relative;
-    margin: -16px -16px 0;
+    background-color: #ccc;
+    position: fixed;
+    z-index: 1;
 
     &--open {
-      display: flex;
+      display: grid;
+
+      & + .passageContainer {
+        margin-top: 44px;
+      }
     }
 
     &__repeat {
@@ -75,7 +89,6 @@ page-recite-passage {
     &__scrubber {
       background: #004d4d;
       height: 4px;
-      width: 100%;
       margin: 0 4px 0 20px;
       position: relative;
 

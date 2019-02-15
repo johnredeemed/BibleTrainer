@@ -14,7 +14,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content #content (click)="onShowPart()">
+<ion-content #content>
 
   <div class='audioPlayer {{ playPauseIcon === "pause" ? "audioPlayer--open" : "audioPlayer--closed" }}'>
     <button class='audioPlayer__repeat {{ repeatIcon !== false ? "audioPlayer__repeat--active" : "audioPlayer__repeat--inactive" }}' (click)="onRepeatToggle()" aria-label="Repeat">
@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <div (swipeleft)="swipeLeftEvent($event)" (swiperight)="swipeRightEvent($event)" style="">
+  <div (click)="onShowPart()" class="passageContainer" (swipeleft)="swipeLeftEvent($event)" (swiperight)="swipeRightEvent($event)">
     <p
       [class]="contentClass"
       *ngFor="let part of shown"
