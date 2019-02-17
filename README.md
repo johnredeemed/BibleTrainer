@@ -1,6 +1,13 @@
 # Bible Trainer
 
-Scripture memorization mobile application
+Scripture memorization mobile application.
+
+Find out more at [www.bibletrainer.co.uk](https://www.bibletrainer.co.uk).
+
+## Download the app
+
+- [iOS](https://itunes.apple.com/us/app/bibletrainer/id1447626377)
+- [Android](https://play.google.com/store/apps/details?id=io.bibletrainer.scripture)
 
 ## Development
 
