@@ -1,9 +1,10 @@
 page-recite-passage {
   .passageContainer {
-    height: 100%;
+    top: 0;
+    bottom: 0;
     left: 0;
+    right: 0;
     position: absolute;
-    width: 100%;
   }
 
   .recite-passage-fab {
@@ -19,7 +20,7 @@ page-recite-passage {
 
   .recite-passage {
     font-size: 16px;
-    margin: 0 auto 0 44px;
+    margin: 0 4px 0 44px;
     padding: 0;
     position: relative;
     line-height: 32px;
@@ -55,24 +56,14 @@ page-recite-passage {
 
   .audioPlayer {
     margin: 0;
-    padding: 0;
+    padding: 4px;
     width: 100%;
     display: none;
     grid-column-gap: 10px;
-    grid-template-columns: 75px 1fr;
+    grid-template-columns: 44px 1fr;
     align-items: center;
     min-height: 44px;
-    background-color: #ccc;
-    position: fixed;
-    z-index: 1;
-
-    &--open {
-      display: grid;
-
-      & + .passageContainer {
-        margin-top: 44px;
-      }
-    }
+    background-color: #ddfff7;
 
     &__repeat {
       text-transform: capitalize;
@@ -89,7 +80,7 @@ page-recite-passage {
     &__scrubber {
       background: #004d4d;
       height: 4px;
-      margin: 0 4px 0 20px;
+      margin: 4px;
       position: relative;
 
       &__location {
@@ -98,6 +89,16 @@ page-recite-passage {
         width: 0;
         position: absolute;
       }
+    }
+  }
+
+  .audioPlayerOpen {
+    .audioPlayer {
+      display: grid;
+    }
+
+    .passageContainer {
+      margin-top: 44px;
     }
   }
 }
