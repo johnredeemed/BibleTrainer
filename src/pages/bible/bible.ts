@@ -219,23 +219,30 @@ export class BiblePage {
     return 'verse verse--normal';
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BiblePage');
-  }
+  ionViewDidLoad() {}
 
   addPassage() {
-    this.navCtrl.push('AddPassagePage', { folder : this.folder });
+    this.navCtrl.push(AddPassagePage, {
+      folder : this.folder
+    });
   }
 
   selectPassage = (passage) => {
     var index = this.passagesInFolder.indexOf(passage);
+
     if (index > -1) {
-      this.navCtrl.push(RecitePassagePage, { folder : this.folder, passagesInFolder : this.passagesInFolder, index : index });
+      this.navCtrl.push(RecitePassagePage, {
+        folder : this.folder,
+        passagesInFolder : this.passagesInFolder,
+        index : index
+      });
       return;
     }
 
     // Open folder
-    this.navCtrl.push(BiblePage, { folder: passage.reference });
+    this.navCtrl.push(BiblePage, {
+      folder: passage.reference
+    });
   }
 
   deleteFolder = (passage) => {

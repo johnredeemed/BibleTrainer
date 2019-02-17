@@ -8,6 +8,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from "@ionic-native/social-sharing";
 
 import { MyApp } from './app.component';
+import { AddPassagePage } from '../pages/add-passage/add-passage';
 import { BiblePage } from '../pages/bible/bible';
 import { MenuPage } from '../pages/menu/menu';
 import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
@@ -20,6 +21,7 @@ import { SearchPage } from "../pages/search/search";
 @NgModule({
   declarations: [
     MyApp,
+    AddPassagePage,
     BiblePage,
     MenuPage,
     RecitePassagePage,
@@ -35,6 +37,7 @@ import { SearchPage } from "../pages/search/search";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    AddPassagePage,
     BiblePage,
     MenuPage,
     RecitePassagePage,
