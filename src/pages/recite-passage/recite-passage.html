@@ -8,20 +8,25 @@
           <ion-icon name="{{ playPauseIcon }}"></ion-icon>
         </button>
 
-        <svg height="36" version="1.1" viewBox="0 0 100 100" width="36" xmlns="http://www.w3.org/2000/svg">
-          <g>
-            <circle class="progressTrack" cx="50" cy="50" fill="none" r="47.45" stroke-linecap="round" stroke-opacity="0.25" stroke-width="5"></circle>
-            <circle class="progressBar" cx="50" cy="50" fill="none" r="47.45" stroke-linecap="round" stroke-opacity="1" stroke-width="5" transform="rotate(-90 50 50)"></circle>
-          </g>
-        </svg>
+
       </span>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-<ion-content #content (click)="onShowPart()">
-  <div (swipeleft)="swipeLeftEvent($event)" (swiperight)="swipeRightEvent($event)" style="position: absolute;top:0;left:0;height:100%;width:100%;">
+<ion-content #content class='{{ playPauseIcon === "pause" ? "audioPlayerOpen" : "audioPlayerClose" }}'>
+
+  <div ion-fixed class='audioPlayer {{ playPauseIcon === "pause" ? "audioPlayer--open" : "audioPlayer--closed" }}'>
+    <button class='audioPlayer__repeat {{ repeatIcon == 1 ? "audioPlayer__repeat--active" : "audioPlayer__repeat--inactive" }}' (click)="onRepeatToggle()" aria-label="Repeat">
+      <ion-icon class="audioPlayer__repeat__btn" name="repeat"></ion-icon>
+    </button>
+
+    <div class="audioPlayer__scrubber">
+      <span class="audioPlayer__scrubber__location"></span>
+    </div>
+  </div>
+
+  <div (click)="onShowPart()" class="passageContainer" (swipeleft)="swipeLeftEvent($event)" (swiperight)="swipeRightEvent($event)">
     <p
       [class]="contentClass"
       *ngFor="let part of shown"

@@ -1,5 +1,6 @@
-import { AlertController, Events, NavController, NavParams, ToastController } from 'ionic-angular';
+import { AlertController, Events, NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 import { Component, NgZone, ViewChild } from '@angular/core';
+import { MusicControls } from '@ionic-native/music-controls';
 // import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
@@ -31,18 +32,27 @@ export class RecitePassagePage {
   speechEnabled = false;
   speechReady = false;
   passageAudio = null;
-  playPauseIcon = 'play';
+  playPauseIcon: String = 'play';
+  repeatIcon = 0;
+  settings;
   contentClass = "recite-passage";
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private storage: Storage,
+              private platform: Platform,
               public events: Events,
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
+              private musicControls: MusicControls,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
+      this.settings = settings;
+      if (!this.settings.repeatAudio) {
+        this.settings.repeatAudio = 0;
+      }
+
       if (settings.sansforgetica) this.contentClass = "recite-passage forgetica-enabled"
       this.downloadOverWiFi = settings.downloadOverWiFi;
       // this.checkNetworkConnection();
@@ -54,10 +64,8 @@ export class RecitePassagePage {
     //   // Run in ngZone to make sure UI is updated.
     //   setTimeout(() => {
     //     this._ngZone.run(() => {
-    //       this.checkNetworkConnection();
-    //       if (!this.networkAvailable && this.passageAudio && !this.passageAudio.paused) {
-    //         this.passageAudio.pause();
-    //         this.playPauseIcon = 'play';
+    //       if (!this.networkAvailable) { // only check for connection, not disconnection
+    //         this.checkNetworkConnection();
     //       }
     //     });
     //   }, 3000);
@@ -179,6 +187,18 @@ export class RecitePassagePage {
     line = line.replace(regex, function (match) {
       if (match.includes("heart")) return `${match} 💛`;
       return `${match} 👂`;
+    });
+
+    regex = new RegExp(`(\\s|\\W)holy( spirit)?[^ \\n]*`,"gi");
+    line = line.replace(regex, function (match) {
+      if (match.includes("Spirit")) return `${match} 🕊`;
+      return `${match} 😇`;
+    });
+
+    // only match lower-case spirit - not Holy Spirit
+    regex = new RegExp(`(\\s|\\W)spirit[^ \\n]*`,"g");
+    line = line.replace(regex, function (match) {
+      return `${match} 👻`;
     });
 
     const keys = Object.keys(EmojiMap);
@@ -377,15 +397,6 @@ export class RecitePassagePage {
       this.indexInFolder--;
       this.fetchPassage();
     }
-    else {
-      let toast = this.toastCtrl.create({
-        message: 'This is the first passage',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();
-      return;
-    }
   }
 
   swipeLeftEvent() {
@@ -394,15 +405,6 @@ export class RecitePassagePage {
       this.onHideAll();
       this.indexInFolder++;
       this.fetchPassage();
-    }
-    else {
-      let toast = this.toastCtrl.create({
-        message: 'This is the last passage',
-        duration: 2000,
-        position: 'bottom'
-      });
-      toast.present();
-      return;
     }
   }
 
@@ -418,45 +420,198 @@ export class RecitePassagePage {
     this.fetchPassage();
   }
 
+  onRepeatToggle = () => {
+    this.settings.repeatAudio++;
+    if (this.settings.repeatAudio > 1) {
+      this.settings.repeatAudio = 0;
+    }
+
+    this.storage.set("stored_settings", this.settings);
+    this.repeatIcon = this.settings.repeatAudio;
+  }
+
   onAudioToggle = () => {
     if (!this.passageAudio) {
-      const progressBar = <HTMLElement>document.querySelector('.progressBar');
+      const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
       const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(' ', '.')}`
       this.passageAudio = new Audio(passageUrl);
       this.passageAudio.play();
       this.playPauseIcon = 'pause';
+      this.repeatIcon = this.settings.repeatAudio;
 
       this.passageAudio.addEventListener('ended', () => {
-        this.playPauseIcon = 'play';
+        switch(this.settings.repeatAudio) {
+          case 1: // repeat
+            this.passageAudio.play();
+            break;
+          case 2: // continue
+            if (this.nextPassageExists) {
+              this.swipeLeftEvent();
+              this.onAudioToggle();
+            }
+          default: // stop
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
+        }
       }, false);
 
       this.passageAudio.addEventListener('timeupdate', function() {
         let progress = (this.currentTime/this.duration) * 100;
-        progressBar.style.strokeDashoffset = `${(100-progress) * 3}`;
+        progressBar.style.width = `${progress}%`;
       }, false);
+
+      if (this.platform.is('cordova')) {
+        this.subscribeToMusicControls();
+      }
     } else {
-      if(this.passageAudio.paused) {
+      if (this.passageAudio.paused) {
         this.passageAudio.play();
         this.playPauseIcon = 'pause';
+        if (this.platform.is('cordova')) {
+          this.musicControls.updateIsPlaying(true);
+        }
       } else {
         this.passageAudio.pause();
         this.playPauseIcon = 'play';
+        if (this.platform.is('cordova')) {
+          this.musicControls.updateIsPlaying(false);
+        }
       }
-
     }
+  }
+
+  subscribeToMusicControls() {
+    this.musicControls.destroy();
+    this.musicControls.create({
+      track       : this.reference,           // optional, default : ''
+      artist      : '',                       // optional, default : ''
+      isPlaying   : true,                     // optional, default : true
+      dismissable : true,                     // optional, default : false
+      cover       : 'assets/imgs/logo.png',   // optional, default : nothing
+
+      // previous/next/close buttons:
+      hasPrev   : this.previousPassageExists, // show previous button, optional, default: true
+      hasNext   : this.nextPassageExists,     // show next button, optional, default: true
+      hasClose  : true,                       // show close button, optional, default: false
+
+      // iOS only
+      album: '',                            // optional, default: ''
+      duration: this.passageAudio.duration, // optional, default: 0
+      elapsed: 0,                           // optional, default: 0
+      hasSkipForward: true,                 // show skip forward button, optional, default: false
+      hasSkipBackward: true,                // show skip backward button, optional, default: false
+      skipForwardInterval: 10,              // display number for skip forward, optional, default: 0
+      skipBackwardInterval: 10,             // display number for skip backward, optional, default: 0
+
+      // Android only
+      // text displayed in the status bar when the notification (and the ticker) are updated, optional
+      ticker: 'Now playing ' + this.reference,
+    });
+
+    this.musicControls.subscribe().subscribe((action) => {
+      this._ngZone.run(() => { // ensures the UI is updated
+        const message = JSON.parse(action).message;
+        switch (message) {
+          case 'music-controls-media-button-next' :
+          case 'music-controls-next':
+            if (this.nextPassageExists) {
+              this.swipeLeftEvent();
+              this.onAudioToggle();
+            }
+            break;
+          case 'music-controls-media-button-previous' :
+          case 'music-controls-previous':
+            if (this.passageAudio.currentTime < 3 && this.previousPassageExists) {
+              this.swipeRightEvent();
+              this.onAudioToggle();
+            }
+            else {
+              this.passageAudio.currentTime = 0
+            }
+            break;
+          case 'music-controls-destroy':
+            this.passageAudio.pause();
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
+            break;
+
+          case 'music-controls-media-button-pause' :
+            if (this.passageAudio.currentTime < 6) {
+              this.passageAudio.currentTime = 0;
+            }
+            else {
+              this.passageAudio.currentTime -= 5;
+            }
+          case 'music-controls-pause':
+          case 'music-controls-media-button-play' :
+          case 'music-controls-play':
+          case 'music-controls-media-button-play-pause' :
+          case 'music-controls-play-pause' :
+
+          // External controls (iOS only)
+          case 'music-controls-toggle-play-pause' : // TODO - test this on iOS
+            if (this.passageAudio.paused) {
+              this.passageAudio.play();
+              this.playPauseIcon = 'pause';
+              this.musicControls.updateIsPlaying(true);
+            } else {
+              this.passageAudio.pause();
+              this.playPauseIcon = 'play';
+              this.musicControls.updateIsPlaying(false);
+            }
+            break;
+          case 'music-controls-seek-to': // TODO - test this on iOS
+            const seekToInSeconds = JSON.parse(action).position;
+            this.passageAudio.currentTime = seekToInSeconds;
+            break;
+          case 'music-controls-skip-forward': // TODO - test this on iOS
+            this.passageAudio.currentTime += 10;
+            break;
+          case 'music-controls-skip-backward': // TODO - test this on iOS
+            if (this.passageAudio.currentTime < 11) {
+              this.passageAudio.currentTime = 0;
+            }
+            else {
+              this.passageAudio.currentTime -= 10;
+            }
+            break;
+
+          // Headset events (Android only)
+          case 'music-controls-headset-unplugged': // TODO - this doesn't fire
+            this.passageAudio.pause();
+            this.playPauseIcon = 'play';
+            this.musicControls.updateIsPlaying(false);
+            break;
+          case 'music-controls-headset-plugged':
+            break;
+          case 'music-controls-media-button':
+            break;
+          case 'music-controls-stop-listening':
+            break;
+        }
+      });
+    });
+
+    this.musicControls.listen();
+    this.musicControls.updateIsPlaying(true);
   }
 
   ionViewWillLeave() {
     if (this.passageAudio && !this.passageAudio.paused) {
       this.passageAudio.pause();
       this.playPauseIcon = 'play';
+      this.musicControls.updateIsPlaying(false);
     }
-    this.passageAudio = null;
+    if (this.passageAudio) {
+      this.passageAudio.currentTime = 0;
+      this.passageAudio = null;
+      this.musicControls.destroy();
+    }
   }
 
 /*
   onRecite = () => {
-    if (this.speechReady){
+    if (this.speechReady) {
       this.startRecognition();
       return;
     }

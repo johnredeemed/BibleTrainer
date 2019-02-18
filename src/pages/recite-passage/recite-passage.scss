@@ -1,26 +1,10 @@
 page-recite-passage {
-
-  .btnPlayPause {
-    position: relative;
-
-    &__icon {
-      position: absolute;
-      width: 36px;
-      height: 36px;
-    }
-  }
-  .progressTrack {
-    stroke: #d8d8d8;
-    stroke-opacity: 0.25;
-    stroke-width: 7;
-  }
-  .progressBar {
-    stroke-dasharray: 300;
-    stroke-dashoffset: 300;
-    stroke: #004d4d;
-    stroke-opacity: 1;
-    stroke-width: 7;
-    transition: stroke-dashoffset 500ms;
+  .passageContainer {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
   }
 
   .recite-passage-fab {
@@ -30,14 +14,14 @@ page-recite-passage {
   }
 
   .scroll-content {
-    padding: 16px;
+    padding: 0;
     margin-bottom: 130px;
   }
 
   .recite-passage {
     font-size: 16px;
-    margin: 0 auto 0 44px;
-    padding: 0 12px;
+    margin: 0 4px 0 44px;
+    padding: 0;
     position: relative;
     line-height: 32px;
 
@@ -68,6 +52,54 @@ page-recite-passage {
   .verse-indent {
     margin-left: 20px;
     display: inline-block;
+  }
+
+  .audioPlayer {
+    margin: 0;
+    padding: 4px;
+    width: 100%;
+    display: none;
+    grid-column-gap: 10px;
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    min-height: 44px;
+    background-color: #ddfff7;
+
+    &__repeat {
+      text-transform: capitalize;
+      display: block;
+      background: none;
+      font-family: inherit;
+      min-width: 60px;
+
+      &--active {
+        color: #008464;
+      }
+    }
+
+    &__scrubber {
+      background: #004d4d;
+      height: 4px;
+      margin: 4px;
+      position: relative;
+
+      &__location {
+        background-color: #008464;
+        height: 4px;
+        width: 0;
+        position: absolute;
+      }
+    }
+  }
+
+  .audioPlayerOpen {
+    .audioPlayer {
+      display: grid;
+    }
+
+    .passageContainer {
+      margin-top: 44px;
+    }
   }
 }
 
