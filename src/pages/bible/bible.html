@@ -3,15 +3,14 @@
     <button ion-button icon-only menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-  <ion-title>{{screenTitle}}</ion-title>
+
+    <ion-title>
+      {{screenTitle}}
+    </ion-title>
   </ion-navbar>
 </ion-header>
+
 <ion-content padding id="bible">
-  <ion-fab bottom right>
-    <button ion-fab (click)="addPassage()" (press)="onPressFAB()">
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </ion-fab>
   <ion-list>
     <button ion-item ngClass={{overdue(passage.timestamp)}} *ngFor="let passage of passages" (press)="pressPassage(passage)" (click)="selectPassage(passage)">
       <h2 class="verse__reference">{{passage.reference}}</h2>
@@ -19,3 +18,9 @@
     </button>
   </ion-list>
 </ion-content>
+
+<ion-fab bottom right>
+  <button ion-fab (click)="addPassage()">
+    <ion-icon name="add"></ion-icon>
+  </button>
+</ion-fab>
