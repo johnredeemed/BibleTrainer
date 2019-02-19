@@ -123,6 +123,7 @@ export const EmojiMap = {
   father: "👨‍👦",
   farm: "🚜",
   fear: "😨",
+  feast: "🍗",
   feet: "👣",
   fell: "🤕",
   fight: "🤜",

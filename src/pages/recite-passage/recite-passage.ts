@@ -361,7 +361,7 @@ export class RecitePassagePage {
     this.endOfPassage = true;
     let toast = this.toastCtrl.create({
       message: `${this.reference} marked as read. May it dwell in you richly!`,
-      duration: 5000,
+      duration: 4000,
       showCloseButton: true,
       closeButtonText: 'Undo',
       position: 'top',
@@ -514,6 +514,7 @@ export class RecitePassagePage {
         switch (message) {
           case 'music-controls-media-button-next' :
           case 'music-controls-next':
+            this.finishPassage(); // mark as read when user moves forward
             if (this.nextPassageExists) {
               this.swipeLeftEvent();
               this.onAudioToggle();
