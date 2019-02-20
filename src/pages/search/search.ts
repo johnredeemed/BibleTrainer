@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { AddPassagePage } from "../add-passage/add-passage";
+
 //import { Network } from "@ionic-native/network";
 
 /**
@@ -26,9 +28,7 @@ export class SearchPage {
               public alertCtrl: AlertController) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SearchPage');
-  }
+  ionViewDidLoad() {}
 
   info() {
     let alert = this.alertCtrl.create();
@@ -101,7 +101,7 @@ export class SearchPage {
     alert.addButton({
       text: 'Open',
       handler: () => {
-        this.navCtrl.push('AddPassagePage', { reference: passage.reference });
+        this.navCtrl.push(AddPassagePage, { reference: passage.reference });
       }
     });
     alert.addButton('Cancel');
