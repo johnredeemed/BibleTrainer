@@ -1,3 +1,9 @@
-page-search {
+.searchContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 
+  button {
+    height: 42px;
+  }
 }

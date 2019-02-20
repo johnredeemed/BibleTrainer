@@ -1,9 +1,3 @@
-<!--
-  Generated template for the SearchPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
   <ion-navbar>
     <ion-title>Search</ion-title>
@@ -16,16 +10,20 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-label floating>Search text</ion-label>
-    <ion-input [(ngModel)]="searchText"></ion-input>
-  </ion-item>
-  <button ion-button (click)="search()">Search</button>
+  <div class="searchContainer">
+    <ion-searchbar [(ngModel)]="searchText"></ion-searchbar>
 
-  <ion-list>
-    <button ion-item *ngFor="let passage of passages" (click)="selectPassage(passage)">
-      <h2 class="verse__reference">{{passage.reference}}</h2>
-      <p class="verse__lastRead">{{passage.content}}</p>
+    <button ion-button (click)="search()">
+      Search
     </button>
+  </div>
+
+  <ion-list *ngIf="passages">
+    <ion-item *ngFor="let passage of passages" (click)="selectPassage(passage)">
+      <h2>{{passage.reference}}</h2>
+      <p>{{passage.content}}</p>
+      <ion-icon name="add" item-end></ion-icon>
+    </ion-item>
   </ion-list>
+
 </ion-content>

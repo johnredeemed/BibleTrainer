@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { AddPassagePage } from "../add-passage/add-passage";
+
 //import { Network } from "@ionic-native/network";
 
 /**
@@ -26,9 +28,7 @@ export class SearchPage {
               public alertCtrl: AlertController) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SearchPage');
-  }
+  ionViewDidLoad() {}
 
   info() {
     let alert = this.alertCtrl.create();
@@ -49,6 +49,12 @@ export class SearchPage {
       return;
     }
 
+    const toastLoading = this.toastCtrl.create({
+      message: 'Searching…',
+      position: 'bottom'
+    });
+    toastLoading.present();
+
     /*
     if (!this.network.type || this.network.type == 'unknown' || this.network.type == 'none') {
       let toast = this.toastCtrl.create({
@@ -68,6 +74,9 @@ export class SearchPage {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = (function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+
+        toastLoading.dismiss();
+
         var jsonResponse = JSON.parse(xmlHttp.responseText);
         this.passages = jsonResponse["results"];
         var toastText = "";
@@ -101,7 +110,7 @@ export class SearchPage {
     alert.addButton({
       text: 'Open',
       handler: () => {
-        this.navCtrl.push('AddPassagePage', { reference: passage.reference });
+        this.navCtrl.push(AddPassagePage, { reference: passage.reference });
       }
     });
     alert.addButton('Cancel');
