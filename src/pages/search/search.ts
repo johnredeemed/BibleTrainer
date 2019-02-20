@@ -49,6 +49,12 @@ export class SearchPage {
       return;
     }
 
+    const toastLoading = this.toastCtrl.create({
+      message: 'Searching…',
+      position: 'bottom'
+    });
+    toastLoading.present();
+
     /*
     if (!this.network.type || this.network.type == 'unknown' || this.network.type == 'none') {
       let toast = this.toastCtrl.create({
@@ -68,6 +74,9 @@ export class SearchPage {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = (function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+
+        toastLoading.dismiss();
+
         var jsonResponse = JSON.parse(xmlHttp.responseText);
         this.passages = jsonResponse["results"];
         var toastText = "";
