@@ -433,7 +433,7 @@ export class RecitePassagePage {
   onAudioToggle = () => {
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
-      const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(' ', '.')}`
+      const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
       this.passageAudio = new Audio(passageUrl);
       this.passageAudio.play();
       this.playPauseIcon = 'pause';
