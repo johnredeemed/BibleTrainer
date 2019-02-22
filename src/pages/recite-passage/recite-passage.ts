@@ -451,7 +451,9 @@ export class RecitePassagePage {
             }
           default: // stop
             this.playPauseIcon = 'play';
-            this.musicControls.updateIsPlaying(false);
+            if (this.platform.is('android')) {
+              this.musicControls.updateIsPlaying(false);
+            }
         }
       }, false);
 
@@ -460,20 +462,20 @@ export class RecitePassagePage {
         progressBar.style.width = `${progress}%`;
       }, false);
 
-      if (this.platform.is('cordova')) {
+      if (this.platform.is('android')) {
         this.subscribeToMusicControls();
       }
     } else {
       if (this.passageAudio.paused) {
         this.passageAudio.play();
         this.playPauseIcon = 'pause';
-        if (this.platform.is('cordova')) {
+        if (this.platform.is('android')) {
           this.musicControls.updateIsPlaying(true);
         }
       } else {
         this.passageAudio.pause();
         this.playPauseIcon = 'play';
-        if (this.platform.is('cordova')) {
+        if (this.platform.is('android')) {
           this.musicControls.updateIsPlaying(false);
         }
       }
@@ -481,6 +483,8 @@ export class RecitePassagePage {
   }
 
   subscribeToMusicControls() {
+    if (!this.platform.is('android')) { return; }
+
     this.musicControls.destroy();
     this.musicControls.create({
       track       : this.reference,           // optional, default : ''
@@ -601,12 +605,16 @@ export class RecitePassagePage {
     if (this.passageAudio && !this.passageAudio.paused) {
       this.passageAudio.pause();
       this.playPauseIcon = 'play';
-      this.musicControls.updateIsPlaying(false);
+      if (this.platform.is('android')) {
+        this.musicControls.updateIsPlaying(false);
+      }
     }
     if (this.passageAudio) {
       this.passageAudio.currentTime = 0;
       this.passageAudio = null;
-      this.musicControls.destroy();
+      if (this.platform.is('android')) {
+        this.musicControls.destroy();
+      }
     }
   }
 

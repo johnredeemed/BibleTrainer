@@ -3,13 +3,11 @@
     <ion-title>{{reference}}</ion-title>
 
     <ion-buttons end>
-      <span class="btnPlayPause">
-        <button class="btnPlayPause__icon" [disabled]="!networkAvailable" ion-button (click)="onAudioToggle()" aria-label="Listen to the passage">
-          <ion-icon name="{{ playPauseIcon }}"></ion-icon>
-        </button>
 
+      <button ion-button class="btnPlayPause__icon" (click)="onAudioToggle()" aria-label="Listen to the passage">
+        <ion-icon name="{{ playPauseIcon }}"></ion-icon>
+      </button>
 
-      </span>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
