@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content padding id="passage-list">
-  <ion-list>
+  <ion-list class="passage-list">
     <button ion-item ngClass={{overdue(passage.timestamp)}} *ngFor="let passage of passages" (press)="pressPassage(passage)" (click)="selectPassage(passage)">
       <h2 class="verse__reference">{{passage.reference}}</h2>
       <p class="verse__lastRead">Last read on {{passage.date}}</p>
@@ -19,8 +19,9 @@
   </ion-list>
 </ion-content>
 
-<ion-fab bottom right>
+<ion-fab bottom class="passage-list-fab">
   <button ion-fab (click)="addPassage()">
     <ion-icon name="add"></ion-icon>
+    Add Passage
   </button>
 </ion-fab>

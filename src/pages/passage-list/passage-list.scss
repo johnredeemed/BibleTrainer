@@ -11,3 +11,24 @@ page-passage-list {
     }
   }
 }
+
+.passage-list {
+  margin-bottom: 112px;
+}
+
+.passage-list-fab {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+
+  button {
+    border-radius: 28px;
+    margin: 0 auto;
+    padding: 0 28px;
+    width: auto;
+
+    ion-icon {
+      margin-right: 10px
+    }
+  }
+}
