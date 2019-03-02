@@ -28,6 +28,7 @@ export class AddPassagePage {
   endVerse = "";
   bookChapters = bookChapters;
   objectKeys = Object.keys;
+  loadingToast;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -140,6 +141,12 @@ export class AddPassagePage {
         this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
       }
 
+      this.loadingToast = this.toastCtrl.create({
+        message: 'Looking up passage…',
+        position: 'bottom'
+      });
+      this.loadingToast.present();
+
       this.sendRequest();
     }
   }
@@ -197,7 +204,10 @@ export class AddPassagePage {
           }
         }
 
-        if (this.passage) this.showAlertToAddPassage();
+        if (this.passage) {
+          this.loadingToast.dismiss();
+          this.showAlertToAddPassage();
+        }
       }
     }).bind(this);
     xmlHttp.open( "GET", URL, true );
