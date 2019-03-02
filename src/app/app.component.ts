@@ -9,6 +9,7 @@ import { PassageListPage } from '../pages/passage-list/passage-list';
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { SearchPage } from "../pages/search/search";
+import { AddPassagePage } from '../pages/add-passage/add-passage';
 
 @Component({
   templateUrl: 'app.html'
@@ -54,6 +55,10 @@ export class MyApp {
       ]
     });
     alert.present();
+  }
+
+  addPassage = () => {
+    this.navCtrl.push(AddPassagePage);
   }
 
   suggestedPassages = () => {

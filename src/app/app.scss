@@ -22,3 +22,15 @@
 .toggle-md.toggle-checked .toggle-icon {
   background-color: #76d6d6;
 }
+
+
+.bt-drawer {
+  background-color: #fff;
+
+  &__item {
+    &--settings {
+      bottom: 0;
+      position: absolute;
+    }
+  }
+}
