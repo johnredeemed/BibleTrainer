@@ -10,7 +10,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 
 import { MyApp } from './app.component';
 import { AddPassagePage } from '../pages/add-passage/add-passage';
-import { BiblePage } from '../pages/bible/bible';
+import { PassageListPage } from '../pages/passage-list/passage-list';
 import { MenuPage } from '../pages/menu/menu';
 import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
 import { SettingsPage } from "../pages/settings/settings";
@@ -23,7 +23,7 @@ import { SearchPage } from "../pages/search/search";
   declarations: [
     MyApp,
     AddPassagePage,
-    BiblePage,
+    PassageListPage,
     MenuPage,
     RecitePassagePage,
     SettingsPage,
@@ -39,7 +39,7 @@ import { SearchPage } from "../pages/search/search";
   entryComponents: [
     MyApp,
     AddPassagePage,
-    BiblePage,
+    PassageListPage,
     MenuPage,
     RecitePassagePage,
     SettingsPage,

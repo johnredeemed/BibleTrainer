@@ -10,7 +10,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding id="bible">
+<ion-content padding id="passage-list">
   <ion-list>
     <button ion-item ngClass={{overdue(passage.timestamp)}} *ngFor="let passage of passages" (press)="pressPassage(passage)" (click)="selectPassage(passage)">
       <h2 class="verse__reference">{{passage.reference}}</h2>
