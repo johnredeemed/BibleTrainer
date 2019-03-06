@@ -9,6 +9,10 @@ Find out more at [www.bibletrainer.co.uk](https://www.bibletrainer.co.uk).
 - [iOS](https://itunes.apple.com/us/app/bibletrainer/id1447626377)
 - [Android](https://play.google.com/store/apps/details?id=io.bibletrainer.scripture)
 
+## Contributing and feature requests
+
+There are an increasing number of requests, bug fixes and feature ideas. We're aiming to put something (small) our each month on a cycle of month one: feature, month two improvement. Please see the [project board](https://github.com/johnraftery/BibleTrainer/projects/1) for more information.
+
 ## Development
 
 Bible Trainer is built on top of the [Ionic Framework](https://ionicframework.com).
