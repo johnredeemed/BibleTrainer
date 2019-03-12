@@ -5,17 +5,18 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from "@ionic/storage";
 import moment from 'moment';
 
-import { BiblePage } from '../pages/bible/bible';
+import { PassageListPage } from '../pages/passage-list/passage-list';
 import { SettingsPage } from "../pages/settings/settings";
 import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { SearchPage } from "../pages/search/search";
+import { AddPassagePage } from '../pages/add-passage/add-passage';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) navCtrl: Nav;
-    rootPage:any = BiblePage;
+    rootPage:any = PassageListPage;
 
   constructor(private platform: Platform,
               private statusBar: StatusBar,
@@ -54,6 +55,10 @@ export class MyApp {
       ]
     });
     alert.present();
+  }
+
+  addPassage = () => {
+    this.navCtrl.push(AddPassagePage);
   }
 
   suggestedPassages = () => {

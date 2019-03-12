@@ -1,4 +1,5 @@
 <ion-menu [content]="mainContent">
+
   <ion-header>
     <ion-toolbar>
       <ion-title>
@@ -6,27 +7,45 @@
       </ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content id="side-menu21" style="background-color:#FFFFFF;">
-    <ion-label class="nav-label" menuClose block (click)="showInfo()">
-      About
-    </ion-label>
-    <ion-label class="nav-label" menuClose block (click)="suggestedPassages()">
+
+  <ion-content class="bt-drawer">
+
+    <button ion-item menuClose (click)="addPassage()" class="bt-drawer__item">
+      <ion-icon name="add" item-start></ion-icon>
+      Add Passage
+    </button>
+
+    <button ion-item menuClose (click)="suggestedPassages()" class="bt-drawer__item">
+      <ion-icon name="color-wand" item-start></ion-icon>
       Suggested Passages
-    </ion-label>
-    <ion-label class="nav-label" menuClose block (click)="addFolder()">
+    </button>
+
+    <button ion-item menuClose (click)="addFolder()" class="bt-drawer__item">
+      <ion-icon name="folder" item-start></ion-icon>
       Add Folder
-    </ion-label>
-    <ion-label class="nav-label" menuClose block (click)="search()">
+    </button>
+
+    <button ion-item menuClose (click)="search()" class="bt-drawer__item">
+      <ion-icon name="search" item-start></ion-icon>
       Search
-    </ion-label>
-    <ion-label class="nav-label" menuClose block (click)="settings()">
-      Settings
-    </ion-label>
-    <!--<ion-label class="nav-label" menuClose block (click)="clear()">
+    </button>
+
+    <button ion-item menuClose (click)="showInfo()" class="bt-drawer__item">
+      <ion-icon name="help" item-start></ion-icon>
+      About
+    </button>
+
+    <!--
+    <button ion-item menuClose (click)="clear()" class="bt-drawer__item">
+      <ion-icon name="alert" item-start></ion-icon>
       Clear Storage
-    </ion-label>
-    Only for debug
+    </button>
     -->
+
+    <button ion-item menuClose (click)="settings()" class="bt-drawer__item bt-drawer__item--settings">
+      <ion-icon name="options" item-start></ion-icon>
+      Settings
+    </button>
   </ion-content>
 </ion-menu>
 

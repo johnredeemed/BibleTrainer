@@ -7,11 +7,11 @@ import { SuggestionsPage } from "../suggestions/suggestions";
 import moment from 'moment';
 
 @Component({
-  selector: 'page-bible',
-  templateUrl: 'bible.html'
+  selector: 'page-passage-list',
+  templateUrl: 'passage-list.html'
 })
 
-export class BiblePage {
+export class PassageListPage {
   screenTitle = "BibleTrainer";
   deadline;
   warning;
@@ -241,7 +241,7 @@ export class BiblePage {
     }
 
     // Open folder
-    this.navCtrl.push(BiblePage, {
+    this.navCtrl.push(PassageListPage, {
       folder: passage.reference
     });
   }
