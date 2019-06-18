@@ -7,62 +7,72 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-label floating>Book</ion-label>
-    <ion-select [selectOptions]="bookSelectOptions" [(ngModel)]="book" interface="action-sheet">
-      <ion-option *ngFor="let key of objectKeys(bookChapters)">{{key}}</ion-option>
-    </ion-select>
-  </ion-item>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label floating>Chapter</ion-label>
-          <ion-input min="1" type="number" [(ngModel)]="chapter"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-label floating>Start Verse</ion-label>
-          <ion-input min="1" type="number" [(ngModel)]="startVerse"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-label floating>End Verse</ion-label>
-          <ion-input min="1" type="number" [(ngModel)]="endVerse"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-label>
+    Lookup passage
+  </ion-label>
 
-  <button ion-button (click)="getPassage()">Load Passage</button>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label floating>Book</ion-label>
+        <ion-select [selectOptions]="bookSelectOptions" [(ngModel)]="book" interface="action-sheet">
+          <ion-option *ngFor="let key of objectKeys(bookChapters)">{{key}}</ion-option>
+        </ion-select>
+      </ion-item>
 
-  <ion-list>
-    <ion-item ion-item *ngFor="let t of topics">
-      <ion-row>
-        <!-- Parent Pages  -->
-        <ion-col col-9 class="menu-name">
-            <span ion-text (click)="openTopic(t.reference);">
-              {{t.reference}}
-              <ion-icon [name]="selectedTopic == t.reference? 'arrow-dropdown' : 'arrow-dropright'" *ngIf="t.passages" float-right></ion-icon>
-            </span>
-
-          <!-- Child Pages  -->
-          <ion-list no-lines [hidden]="selectedTopic != t.reference">
-            <ion-item no-border *ngFor="let passage of t.passages" (click)="openPassage(passage)">
-              <ion-row>
-                <ion-col col-10 class="menu-name"><span ion-text color="color2">
-                  &nbsp;<h2>{{passage.reference}}</h2>
-                  &nbsp;<p>{{passage.text}}</p></span></ion-col>
-              </ion-row>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label floating>Chapter</ion-label>
+              <ion-input min="1" type="number" [(ngModel)]="chapter"></ion-input>
             </ion-item>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-    </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label floating>Start Verse</ion-label>
+              <ion-input min="1" type="number" [(ngModel)]="startVerse"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label floating>End Verse</ion-label>
+              <ion-input min="1" type="number" [(ngModel)]="endVerse"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-  </ion-list>
+      <button ion-button (click)="getPassage()">Add Passage</button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-label>
+    Suggested topics
+  </ion-label>
+
+  <ion-card>
+    <ion-list>
+      <ion-item ion-item *ngFor="let t of topics" (click)="openTopic(t.reference);">
+        <span ion-text>
+          {{t.reference}}
+          <ion-icon [name]="selectedTopic == t.reference? 'arrow-dropdown' : 'arrow-dropright'" *ngIf="t.passages" float-right></ion-icon>
+        </span>
+
+            <!-- Child Pages  -->
+            <ion-list lines-full [hidden]="selectedTopic != t.reference">
+              <ion-item no-border *ngFor="let passage of t.passages" (click)="openPassage(passage)">
+                <ion-row>
+                  <ion-col col-10 class="menu-name"><span ion-text color="color2">
+                    &nbsp;<h2>{{passage.reference}}</h2>
+                    &nbsp;<p>{{passage.text}}</p></span></ion-col>
+                </ion-row>
+              </ion-item>
+            </ion-list>
+      </ion-item>
+
+    </ion-list>
+  </ion-card>
 </ion-content>
 
