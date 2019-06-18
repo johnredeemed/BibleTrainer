@@ -79,8 +79,8 @@
       "cordova-plugin-music-controls": {}
     },
     "platforms": [
-      "android ",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
