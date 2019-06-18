@@ -14,7 +14,6 @@ import { PassageListPage } from '../pages/passage-list/passage-list';
 import { MenuPage } from '../pages/menu/menu';
 import { RecitePassagePage } from "../pages/recite-passage/recite-passage";
 import { SettingsPage } from "../pages/settings/settings";
-import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { EmailComposer } from "@ionic-native/email-composer";
 import { LocalNotifications } from "@ionic-native/local-notifications";
 import { SearchPage } from "../pages/search/search";
@@ -27,7 +26,6 @@ import { SearchPage } from "../pages/search/search";
     MenuPage,
     RecitePassagePage,
     SettingsPage,
-    SuggestionsPage,
     SearchPage
   ],
   imports: [
@@ -43,7 +41,6 @@ import { SearchPage } from "../pages/search/search";
     MenuPage,
     RecitePassagePage,
     SettingsPage,
-    SuggestionsPage,
     SearchPage
   ],
   providers: [
