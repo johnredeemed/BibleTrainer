@@ -7,6 +7,7 @@ import { Events } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import moment from 'moment';
 import { bookChapters } from './bookChapters';
+import * as SuggestedPassages from './suggested-passages';
 
 @IonicPage()
 @Component({
@@ -29,6 +30,8 @@ export class AddPassagePage {
   bookChapters = bookChapters;
   objectKeys = Object.keys;
   loadingToast;
+  topics;
+  selectedTopic;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -54,7 +57,6 @@ export class AddPassagePage {
     }
     else {
       this.book = "Psalm";
-      this.chapter = "1";
     }
 
     this.bookSelectOptions = {title: 'Book'};
@@ -65,6 +67,8 @@ export class AddPassagePage {
       var folderNames = folders.map( (folder) => { return folder.reference; })
       this.folders = ["Top Level Folder"].concat(folderNames);
     });
+
+    this.topics = SuggestedPassages.topics;
   }
 
   ionViewDidLoad() {
@@ -151,6 +155,22 @@ export class AddPassagePage {
     }
   }
 
+  correctFormatting(rawPassage, showAlert) {
+    this.passage = rawPassage
+      .replace(/  /g, '&nbsp;&nbsp;')
+      .replace(/\n/g, '#');
+    this.formattedPassage = this.passage
+      .replace(/#/g, '<br/>');
+    this.storage.get("stored_settings").then((settings) => {
+      if (settings.replaceTheLORDwithYHWH) {
+        this.formattedPassage = this.formattedPassage.replace(/(([Tt]he |)LORD)|GOD/g, "YHWH");
+      }
+      if (showAlert) {
+        this.showAlertToAddPassage();
+      }
+    });
+  }
+
   sendRequest() {
     var URL = "https://api.esv.org/v3/passage/text/?q=" + this.reference + "&include-passage-references=false&include-first-verse-numbers=true&include-verse-numbers=true&include-footnotes=false&include-footnote-body=false&include-short-copyright=false&include-copyright=false&include-passage-horizontal-lines=false&include-heading-horizontal-lines=false&include-headings=false&include-selahs=true&indent-using=space&indent-paragraphs=0&indent-poetry=true&indent-poetry-lines=4&indent-declares=4&indent-psalm-doxology=30&line-length=0";
     var xmlHttp = new XMLHttpRequest();
@@ -166,16 +186,7 @@ export class AddPassagePage {
           .replace(/\n *\n/g, '\n')
           .replace(/\n    /g, '\n')
           .replace(/^ +/g, '');
-        this.passage = this.originalPassage
-          .replace(/  /g, '&nbsp;&nbsp;')
-          .replace(/\n/g, '#');
-        this.formattedPassage = this.passage
-          .replace(/#/g, '<br/>');
-        this.storage.get("stored_settings").then((settings) => {
-          if (settings.replaceTheLORDwithYHWH) {
-            this.formattedPassage = this.formattedPassage.replace(/(([Tt]he |)LORD)|GOD/g, "YHWH");
-          }
-        });
+        this.correctFormatting(this.originalPassage, false);
 
         // check if specified verse is off the end of the passage
         if (this.startVerse) {
@@ -256,7 +267,7 @@ export class AddPassagePage {
               }
 
               let folderChooser = this.alertCtrl.create();
-              folderChooser.setTitle('Which folder should this passage be in?');
+              folderChooser.setTitle('Pick Folder');
               this.folders.forEach((item) => {
                 folderChooser.addInput({
                   type: 'radio',
@@ -305,5 +316,18 @@ export class AddPassagePage {
         toast.present();
       });
     });
+  }
+
+  openTopic(topicName) {
+    if (this.selectedTopic == topicName) {
+      this.selectedTopic = null;
+    } else {
+      this.selectedTopic = topicName;
+    }
+  }
+
+  openPassage(passage) {
+    this.reference = passage.reference;
+    this.correctFormatting(passage.text, true);
   }
 }

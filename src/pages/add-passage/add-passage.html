@@ -14,13 +14,14 @@
     </ion-select>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Chapter</ion-label>
-    <ion-input min="1" type="number" [(ngModel)]="chapter"></ion-input>
-  </ion-item>
-
   <ion-grid>
     <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label floating>Chapter</ion-label>
+          <ion-input min="1" type="number" [(ngModel)]="chapter"></ion-input>
+        </ion-item>
+      </ion-col>
       <ion-col>
         <ion-item>
           <ion-label floating>Start Verse</ion-label>
@@ -36,6 +37,32 @@
     </ion-row>
   </ion-grid>
 
-  <button ion-button (click)="getPassage()">Get Passage</button>
+  <button ion-button (click)="getPassage()">Load Passage</button>
+
+  <ion-list>
+    <ion-item ion-item *ngFor="let t of topics">
+      <ion-row>
+        <!-- Parent Pages  -->
+        <ion-col col-9 class="menu-name">
+            <span ion-text (click)="openTopic(t.reference);">
+              {{t.reference}}
+              <ion-icon [name]="selectedTopic == t.reference? 'arrow-dropdown' : 'arrow-dropright'" *ngIf="t.passages" float-right></ion-icon>
+            </span>
+
+          <!-- Child Pages  -->
+          <ion-list no-lines [hidden]="selectedTopic != t.reference">
+            <ion-item no-border *ngFor="let passage of t.passages" (click)="openPassage(passage)">
+              <ion-row>
+                <ion-col col-10 class="menu-name"><span ion-text color="color2">
+                  &nbsp;<h2>{{passage.reference}}</h2>
+                  &nbsp;<p>{{passage.text}}</p></span></ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+
+  </ion-list>
 </ion-content>
 
