@@ -54,8 +54,8 @@
 
   <ion-card>
     <ion-list>
-      <ion-item ion-item *ngFor="let t of topics" (click)="openTopic(t.reference);">
-        <span ion-text>
+      <ion-item ion-item *ngFor="let t of topics">
+        <span ion-text (click)="openTopic(t.reference);">
           {{t.reference}}
           <ion-icon [name]="selectedTopic == t.reference? 'arrow-dropdown' : 'arrow-dropright'" *ngIf="t.passages" float-right></ion-icon>
         </span>
