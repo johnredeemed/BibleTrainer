@@ -110,7 +110,23 @@ export class SearchPage {
     alert.addButton({
       text: 'Open',
       handler: () => {
-        this.navCtrl.push(AddPassagePage, { reference: passage.reference });
+        // Fix the reference for single chapter books e.g. Philemon, 2 John, 3 John...
+        let refToSend;
+        if (
+          passage.reference.startsWith("Obadiah") ||
+          passage.reference.startsWith("Philemon") ||
+          passage.reference.startsWith("Jude")) {
+          refToSend = passage.reference.replace(' ', ' 1:');
+        }
+        else if (
+          passage.reference.startsWith("2 John") ||
+          passage.reference.startsWith("3 John")) {
+          refToSend = passage.reference.slice(0, 7) + '1:' + passage.reference.slice(7);
+        }
+        else {
+          refToSend = passage.reference;
+        }
+        this.navCtrl.push(AddPassagePage, { reference: refToSend });
       }
     });
     alert.addButton('Cancel');

@@ -136,7 +136,17 @@ export class AddPassagePage {
     }
     else {
       if (!this.startVerse) {
-        this.reference = this.book + " " + this.chapter
+        this.reference = this.book + " " + this.chapter;
+        if (
+          this.reference.startsWith("Obadiah") ||
+          this.reference.startsWith("Philemon") ||
+          this.reference.startsWith("Jude") ||
+          this.reference.startsWith("2 John") ||
+          this.reference.startsWith("3 John")) {
+          this.startVerse = '1';
+          this.endVerse = '100';
+          this.reference += ":1-100";
+        }
       }
       else if (!this.endVerse || this.endVerse === this.startVerse) {
         this.reference = this.book + " " + this.chapter + ":" + this.startVerse;
@@ -207,10 +217,16 @@ export class AddPassagePage {
           var lastVerseNumber = lastVerse.substring(0, lastVerse.indexOf(']'));
           if (this.endVerse !== lastVerseNumber) {
             this.endVerse = lastVerseNumber;
-            this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
+            if (this.startVerse == '1') { // whole chapter is selected
+              this.reference = this.book + " " + this.chapter;
+              this.startVerse = '';
+              this.endVerse = '';
+            }
+            else {
+              this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
+            }
           }
-
-          if (this.startVerse == this.endVerse) {
+          else if (this.startVerse == this.endVerse) {
             this.reference = this.book + " " + this.chapter + ":" + this.startVerse
           }
         }
