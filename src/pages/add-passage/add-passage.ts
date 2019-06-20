@@ -226,7 +226,8 @@ export class AddPassagePage {
               this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
             }
           }
-          else if (this.startVerse == this.endVerse) {
+
+          if (this.startVerse && this.startVerse == this.endVerse) {
             this.reference = this.book + " " + this.chapter + ":" + this.startVerse
           }
         }
