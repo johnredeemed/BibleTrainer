@@ -64,9 +64,10 @@
             <ion-list lines-full [hidden]="selectedTopic != t.reference">
               <ion-item no-border *ngFor="let passage of t.passages" (click)="openPassage(passage)">
                 <ion-row>
-                  <ion-col col-10 class="menu-name"><span ion-text color="color2">
+                  <ion-col col-10 class="menu-name"><div ion-text color="color2">
                     &nbsp;<h2>{{passage.reference}}</h2>
-                    &nbsp;<p>{{passage.text}}</p></span></ion-col>
+                    &nbsp;<p>{{passage.text}}</p></div>
+                  </ion-col>
                 </ion-row>
               </ion-item>
             </ion-list>
