@@ -307,6 +307,25 @@ export class RecitePassagePage {
     this.onShowPart();
   }
 
+  onClickText(event) {
+    if (this.settings.leftHanded) {
+      if (event.offsetX/this.platform.width() < 0.66) {
+        this.onShowPart();
+      }
+      else {
+        this.onGoBack();
+      }
+    }
+    else {
+      if (event.offsetX/this.platform.width() > 0.33) {
+        this.onShowPart();
+      }
+      else {
+        this.onGoBack();
+      }
+    }
+  }
+
   onShowPart = () => {
     if (this.counter >= this.parts.length) {
       return;
@@ -354,24 +373,21 @@ export class RecitePassagePage {
   }
 
   finishPassage() {
-    // store this information locally in case the user has moved to a new passage by the time the toast goes away
+    // store this information locally in case the user has moved to a new passage
     var folderToUpdate = this.folder;
     var passagesInFolderToUpdate = this.passagesInFolder;
     var indexInFolderToUpdate = this.indexInFolder;
     this.endOfPassage = true;
-    let toast = this.toastCtrl.create({
-      message: `${this.reference} marked as read. May it dwell in you richly!`,
-      duration: 4000,
-      showCloseButton: true,
-      closeButtonText: 'Undo',
-      position: 'top',
-    });
-    toast.onDidDismiss((data, role) => {
-      if (role !== "close") {
-        this.events.publish('passageRead', { folder : folderToUpdate, passagesInFolder : passagesInFolderToUpdate, indexInFolder : indexInFolderToUpdate });
+
+    // Mark passage as read
+    this.events.publish(
+      'passageRead',
+      {
+        folder: folderToUpdate,
+        passagesInFolder: passagesInFolderToUpdate,
+        indexInFolder: indexInFolderToUpdate
       }
-    });
-    toast.present();
+    );
   }
 
   onGoBack = () => {

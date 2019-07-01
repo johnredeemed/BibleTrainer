@@ -7,6 +7,7 @@ import { Events } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import moment from 'moment';
 import { bookChapters } from './bookChapters';
+import * as SuggestedPassages from './suggested-passages';
 
 @IonicPage()
 @Component({
@@ -28,6 +29,9 @@ export class AddPassagePage {
   endVerse = "";
   bookChapters = bookChapters;
   objectKeys = Object.keys;
+  loadingToast;
+  topics;
+  selectedTopic;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -53,7 +57,6 @@ export class AddPassagePage {
     }
     else {
       this.book = "Psalm";
-      this.chapter = "1";
     }
 
     this.bookSelectOptions = {title: 'Book'};
@@ -64,6 +67,8 @@ export class AddPassagePage {
       var folderNames = folders.map( (folder) => { return folder.reference; })
       this.folders = ["Top Level Folder"].concat(folderNames);
     });
+
+    this.topics = SuggestedPassages.topics;
   }
 
   ionViewDidLoad() {
@@ -131,7 +136,17 @@ export class AddPassagePage {
     }
     else {
       if (!this.startVerse) {
-        this.reference = this.book + " " + this.chapter
+        this.reference = this.book + " " + this.chapter;
+        if (
+          this.reference.startsWith("Obadiah") ||
+          this.reference.startsWith("Philemon") ||
+          this.reference.startsWith("Jude") ||
+          this.reference.startsWith("2 John") ||
+          this.reference.startsWith("3 John")) {
+          this.startVerse = '1';
+          this.endVerse = '100';
+          this.reference += ":1-100";
+        }
       }
       else if (!this.endVerse || this.endVerse === this.startVerse) {
         this.reference = this.book + " " + this.chapter + ":" + this.startVerse;
@@ -140,8 +155,30 @@ export class AddPassagePage {
         this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
       }
 
+      this.loadingToast = this.toastCtrl.create({
+        message: 'Looking up passage…',
+        position: 'bottom'
+      });
+      this.loadingToast.present();
+
       this.sendRequest();
     }
+  }
+
+  correctFormatting(rawPassage, showAlert) {
+    this.passage = rawPassage
+      .replace(/  /g, '&nbsp;&nbsp;')
+      .replace(/\n/g, '#');
+    this.formattedPassage = this.passage
+      .replace(/#/g, '<br/>');
+    this.storage.get("stored_settings").then((settings) => {
+      if (settings.replaceTheLORDwithYHWH) {
+        this.formattedPassage = this.formattedPassage.replace(/(([Tt]he |)LORD)|GOD/g, "YHWH");
+      }
+      if (showAlert) {
+        this.showAlertToAddPassage();
+      }
+    });
   }
 
   sendRequest() {
@@ -159,16 +196,7 @@ export class AddPassagePage {
           .replace(/\n *\n/g, '\n')
           .replace(/\n    /g, '\n')
           .replace(/^ +/g, '');
-        this.passage = this.originalPassage
-          .replace(/  /g, '&nbsp;&nbsp;')
-          .replace(/\n/g, '#');
-        this.formattedPassage = this.passage
-          .replace(/#/g, '<br/>');
-        this.storage.get("stored_settings").then((settings) => {
-          if (settings.replaceTheLORDwithYHWH) {
-            this.formattedPassage = this.formattedPassage.replace(/(([Tt]he |)LORD)|GOD/g, "YHWH");
-          }
-        });
+        this.correctFormatting(this.originalPassage, false);
 
         // check if specified verse is off the end of the passage
         if (this.startVerse) {
@@ -189,15 +217,25 @@ export class AddPassagePage {
           var lastVerseNumber = lastVerse.substring(0, lastVerse.indexOf(']'));
           if (this.endVerse !== lastVerseNumber) {
             this.endVerse = lastVerseNumber;
-            this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
+            if (this.startVerse == '1') { // whole chapter is selected
+              this.reference = this.book + " " + this.chapter;
+              this.startVerse = '';
+              this.endVerse = '';
+            }
+            else {
+              this.reference = this.book + " " + this.chapter + ":" + this.startVerse + "-" + this.endVerse;
+            }
           }
 
-          if (this.startVerse == this.endVerse) {
+          if (this.startVerse && this.startVerse == this.endVerse) {
             this.reference = this.book + " " + this.chapter + ":" + this.startVerse
           }
         }
 
-        if (this.passage) this.showAlertToAddPassage();
+        if (this.passage) {
+          this.loadingToast.dismiss();
+          this.showAlertToAddPassage();
+        }
       }
     }).bind(this);
     xmlHttp.open( "GET", URL, true );
@@ -246,7 +284,7 @@ export class AddPassagePage {
               }
 
               let folderChooser = this.alertCtrl.create();
-              folderChooser.setTitle('Which folder should this passage be in?');
+              folderChooser.setTitle('Pick Folder');
               this.folders.forEach((item) => {
                 folderChooser.addInput({
                   type: 'radio',
@@ -295,5 +333,18 @@ export class AddPassagePage {
         toast.present();
       });
     });
+  }
+
+  openTopic(topicName) {
+    if (this.selectedTopic == topicName) {
+      this.selectedTopic = null;
+    } else {
+      this.selectedTopic = topicName;
+    }
+  }
+
+  openPassage(passage) {
+    this.reference = passage.reference;
+    this.correctFormatting(passage.text, true);
   }
 }

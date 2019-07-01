@@ -3,15 +3,14 @@ import { NavController, NavParams, Events, ActionSheetController, ToastControlle
 import { Storage } from "@ionic/storage";
 import { AddPassagePage } from "../add-passage/add-passage";
 import { RecitePassagePage } from "../recite-passage/recite-passage";
-import { SuggestionsPage } from "../suggestions/suggestions";
 import moment from 'moment';
 
 @Component({
-  selector: 'page-bible',
-  templateUrl: 'bible.html'
+  selector: 'page-passage-list',
+  templateUrl: 'passage-list.html'
 })
 
-export class BiblePage {
+export class PassageListPage {
   screenTitle = "BibleTrainer";
   deadline;
   warning;
@@ -195,11 +194,11 @@ export class BiblePage {
           this.passages = this.folders.concat(this.passagesInFolder);
 
           if (this.passages.length == 0) {
-            this.navCtrl.push(SuggestionsPage).then(() => {
+            this.navCtrl.push(AddPassagePage).then(() => {
               let alert = this.alertCtrl.create();
               alert.setTitle('Hello!');
               alert.setMessage(
-                'Welcome to the BibleTrainer app! This screen has some suggestions of passages you may want to memorise - sorted by topic. If you have specific passages in mind, press the back button, and then the "+" at the bottom left to choose a new passage.' +
+                'Welcome to the BibleTrainer app! In this screen, you can add passages to your memory list - either by choosing a specific passage by book, chapter and verse; or you can select suggested passages from the topics listed below. Once you\'ve added a passage, press the back button to see it in your list.' +
                 '<br/><br/>My prayer is that God would use this app to plant his word in your heart.');
               alert.addButton('Ok');
               alert.present();
@@ -241,7 +240,7 @@ export class BiblePage {
     }
 
     // Open folder
-    this.navCtrl.push(BiblePage, {
+    this.navCtrl.push(PassageListPage, {
       folder: passage.reference
     });
   }

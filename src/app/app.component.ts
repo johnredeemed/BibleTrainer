@@ -5,17 +5,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from "@ionic/storage";
 import moment from 'moment';
 
-import { BiblePage } from '../pages/bible/bible';
+import { PassageListPage } from '../pages/passage-list/passage-list';
 import { SettingsPage } from "../pages/settings/settings";
-import { SuggestionsPage } from "../pages/suggestions/suggestions";
 import { SearchPage } from "../pages/search/search";
+import { AddPassagePage } from '../pages/add-passage/add-passage';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) navCtrl: Nav;
-    rootPage:any = BiblePage;
+    rootPage:any = PassageListPage;
 
   constructor(private platform: Platform,
               private statusBar: StatusBar,
@@ -40,9 +40,9 @@ export class MyApp {
       title: 'Info',
       message:
         'Feedback would be gratefully received at bibletrainerapp@gmail.com' +
-        '<br/><br/>The home screen will have the list of passages you are memorising. There are two ways to add new passages: ' +
-        'pick from the list of suggested passages (do this through the menu option in the top left), or choose any passage from the Bible (click the "+" button at the bottom right). ' +
-        '<br/><br/>Once you have a passage in your list, you can start to learn it by clicking on it, and in the next screen using the "+" button to reveal the passage bit-by-bit. ' +
+        '<br/><br/>The home screen will have the list of passages you are memorising. To add passages, click the Add Passage button on the home screen.' +
+        '<br/><br/>Then you can choose any passage from the Bible...or pick one from the list of suggested passages.' +
+        '<br/><br/>Once you have a passage in your list, you can start to learn it by clicking on it, and in the next screen use the "+" button to reveal the passage bit-by-bit. ' +
         '<br/><br/>Keep practising the passages you\'re memorising to move them into your long-term memory. You have the option to order passages by when they were last read - choose this in the settings page. ' +
         '<br/><br/>You can organise your passages into folders; add a new folder through the menu option and then either ' +
         'move existing passages into the folder (by long-pressing on a passage and choosing "Move to folder"), or add passages directly to the folder with the drop-down menu in the Add Passage screen. ',
@@ -56,8 +56,8 @@ export class MyApp {
     alert.present();
   }
 
-  suggestedPassages = () => {
-    this.navCtrl.push(SuggestionsPage);
+  addPassage = () => {
+    this.navCtrl.push(AddPassagePage);
   }
 
   search = () => {
