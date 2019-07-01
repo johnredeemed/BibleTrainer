@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.bibletrainer.scripture" version="0.1.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.bibletrainer.scripture" version="0.1.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BibleTrainer</name>
     <description>An app to put God's word in your heart</description>
     <author email="bibletrainerapp@gmail.com" href="https://www.bibletrainer.co.uk/">BibleTrainer Team</author>
