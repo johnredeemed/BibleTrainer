@@ -307,6 +307,25 @@ export class RecitePassagePage {
     this.onShowPart();
   }
 
+  onClickText(event) {
+    if (this.settings.leftHanded) {
+      if (event.offsetX/this.platform.width() < 0.66) {
+        this.onShowPart();
+      }
+      else {
+        this.onGoBack();
+      }
+    }
+    else {
+      if (event.offsetX/this.platform.width() > 0.33) {
+        this.onShowPart();
+      }
+      else {
+        this.onGoBack();
+      }
+    }
+  }
+
   onShowPart = () => {
     if (this.counter >= this.parts.length) {
       return;

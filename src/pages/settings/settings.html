@@ -14,7 +14,7 @@
   <ion-item>
     <ion-label text-wrap>
       <h2>Use Sans Forgetica font</h2>
-      <p>Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation</p>
+      <p>Sans Forgetica is a font designed using the principles of cognitive psychology to help memorisation.</p>
     </ion-label>
     <ion-toggle [(ngModel)]="settings.sansforgetica" (ionChange)="updateStoredSettings()"></ion-toggle>
   </ion-item>
@@ -32,6 +32,14 @@
       <p>Adds emoji (👋) to help memorise (🧠) with pictures (🎑).</p>
     </ion-label>
     <ion-toggle [(ngModel)]="settings.emojiMode" (ionChange)="updateStoredSettings()"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label text-wrap>
+      <h2>Left handed</h2>
+      <p>*NEW* introducing instagram-style forwards and backwards control when reciting a passage. Enable left-handed mode to make the left side of the screen the forwards section; otherwise by default the left will mean backwards.</p>
+    </ion-label>
+    <ion-toggle [(ngModel)]="settings.leftHanded" (ionChange)="updateStoredSettings()"></ion-toggle>
   </ion-item>
 
   <ion-item>

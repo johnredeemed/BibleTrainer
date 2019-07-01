@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <div (click)="onShowPart()" class="passageContainer" (swipeleft)="swipeLeftEvent($event)" (swiperight)="swipeRightEvent($event)">
+  <div (click)="onClickText($event)" class="passageContainer" (swipeleft)="swipeLeftEvent($event)" (swiperight)="swipeRightEvent($event)">
     <p
       [class]="contentClass"
       *ngFor="let part of shown"
