@@ -56,6 +56,12 @@ page-recite-passage {
     display: inline-block;
   }
 
+  .skipped-word {
+    color: #FF0000;
+    display: inline-block;
+    font-weight: bold;
+  }
+
   .audioPlayer {
     margin: 0;
     padding: 4px;

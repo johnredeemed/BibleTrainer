@@ -6,6 +6,11 @@ import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
 import { EmojiMap } from './emoji-map';
 
+const _SpeechRecognition =
+  (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+const _SpeechGrammarList =
+  (window as any).SpeechGrammarList || (window as any).webkitSpeechGrammarList;
+
 @Component({
   selector: 'page-recite-passage',
   templateUrl: 'recite-passage.html'
@@ -22,6 +27,9 @@ export class RecitePassagePage {
   shown: Array<String>;
   counter: number;
   currentPhrase: String;
+  nextPhrase: String = "";
+  nextPhraseStripped: String = "";
+  nextWord: String = "";
   endOfPassage: boolean = false;
   previousPassageExists;
   nextPassageExists;
@@ -29,13 +37,18 @@ export class RecitePassagePage {
   passagesInFolder;
   indexInFolder;
   folderObject;
-  speechEnabled = false;
+  speechEnabled = true;
   speechReady = false;
   passageAudio = null;
   playPauseIcon: String = 'play';
   repeatIcon = 0;
   settings;
   contentClass = "recite-passage";
+
+  recognition;
+  autoRestartCount = 0;
+  isListening = false;
+  lastStartedAt;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -145,6 +158,8 @@ export class RecitePassagePage {
           part = this.replaceIndents(part);
           return part;
         });
+
+        this.registerSpeechRecognition();
       });
     });
   }
@@ -333,11 +348,11 @@ export class RecitePassagePage {
 
     this.counter++;
     this.shown = this.parts.slice(0, this.counter);
+    this.getNextPhrase();
+    this.scrollDown();
     if (this.counter >= this.parts.length) {
       this.finishPassage();
     }
-
-    this.scrollDown();
   }
 
   onShowVerse = () => {
@@ -397,6 +412,7 @@ export class RecitePassagePage {
 
     this.counter--;
     this.shown = this.parts.slice(0, this.counter);
+    this.getNextPhrase();
     this.endOfPassage = false;
   }
 
@@ -449,7 +465,9 @@ export class RecitePassagePage {
   onAudioToggle = () => {
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
-      const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
+      //const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
+      const passageUrl = `http://www.esvapi.org/v3/passage/audio/key=${ ENV.esvApiKey }?q=${ this.reference.replace(/\s/g, '+')}`
+      console.log("passageUrl: " + passageUrl)
       this.passageAudio = new Audio(passageUrl);
       this.passageAudio.play();
       this.playPauseIcon = 'pause';
@@ -499,7 +517,7 @@ export class RecitePassagePage {
   }
 
   subscribeToMusicControls() {
-    if (!this.platform.is('android')) { return; }
+    if (!this.platform.is('android')) return;
 
     this.musicControls.destroy();
     this.musicControls.create({
@@ -618,6 +636,10 @@ export class RecitePassagePage {
   }
 
   ionViewWillLeave() {
+    if (this.isListening) {
+      this.isListening = false;
+      this.recognition.stop();
+    }
     if (this.passageAudio && !this.passageAudio.paused) {
       this.passageAudio.pause();
       this.playPauseIcon = 'play';
@@ -634,10 +656,215 @@ export class RecitePassagePage {
     }
   }
 
-/*
+  registerSpeechRecognition() {
+    this.recognition = new _SpeechRecognition();
+    this.recognition.continuous = true;
+    this.recognition.interimResults = true;
+    this.recognition.lang = "en-US";
+    this.recognition.maxAlternatives = 1;
+    //var speechRecognitionList = new _SpeechGrammarList();
+    //speechRecognitionList.addFromString(this.passage.replace(/<.*>/g,''), 1);
+    var _self = this;
+
+    this.recognition.onresult = (event: any) => {
+      if (this.nextPhrase == null) return;
+      const transcript = event.results[event.results.length - 1][0].transcript;
+      const transcriptWords = transcript.toLowerCase().trim().split(" ");
+      for (const word of transcriptWords) {
+        if (this.nextPhraseStripped.startsWith(word)) { // Word is matched to start of next phrase
+          this.consumeWord(word, "");
+        } else if (this.nextPhraseStripped.startsWith(this.nextWord + word) // If the spoken word comes after this.nextWord
+          && !this.shown[this.shown.length - 1].includes(word)) // Only skip a word if it not present in the words already spoken
+        {
+          this.consumeWord(word, this.nextWord);
+        }
+
+        if (this.nextPhraseStripped === "") {
+          this.onShowPart();
+        }
+      }
+    };
+
+    this.recognition.onend = function (event: any) {
+      // Only restart the speech recognition if this.isListening == true
+      if (!_self.isListening) return;
+
+      // play nicely with the browser, and never restart anything automatically more than once per second
+      var timeSinceLastStart = Date.now() - _self.lastStartedAt;
+      _self.autoRestartCount += 1;
+      if (_self.autoRestartCount % 10 === 0) {
+        console.log("Speech Recognition is repeatedly stopping and starting. See http://is.gd/annyang_restarts for tips.");
+      }
+
+      if (timeSinceLastStart < 1000) {
+        setTimeout(function () {
+          console.log("restarting speech recognition after delay");
+          _self.lastStartedAt = Date.now();
+          try {
+            _self.recognition.start();
+          } catch {
+            console.log("restarting failed");
+          }
+        }, 1000 - timeSinceLastStart);
+      } else {
+        console.log("restarting speech recognition");
+        _self.lastStartedAt = Date.now();
+        try {
+          _self.recognition.start();
+        } catch {
+          console.log("restarting failed");
+        }
+      }
+    };
+
+    this.recognition.onerror = (event: any) => {
+      console.log(`Error occurred in recognition: ${event.error}`);
+    };
+  }
+
   onRecite = () => {
+    if (this.isListening) {
+      this.isListening = false;
+      this.recognition.stop();
+      return;
+    }
+
+    if (this.counter >= this.parts.length) {
+      let toast = this.toastCtrl.create({
+        message: 'Already at end of passage',
+        duration: 1000,
+        position: 'bottom'
+      });
+      toast.present();
+      return;
+    }
+
+    this.isListening = true;
+    this.getNextPhrase();
+    this.lastStartedAt = Date.now();
+    try{
+      this.recognition.start();
+    } catch {
+      console.log("Starting speech recognition failed");
+      this.isListening = false;
+    }
+  }
+
+  consumeWord(word, skipped) {
+    const newNextPhraseStripped = this.nextPhraseStripped.substring(skipped.length + word.length);
+
+    // Check if the word cuts a word in two, e.g. if word is 'a', and next phrase starts with 'abundantly'
+    if (newNextPhraseStripped.length > 0 && !newNextPhraseStripped.startsWith(" ")) return;
+
+    this.nextPhraseStripped = newNextPhraseStripped.trim();
+    const indexOfSpace = this.nextPhraseStripped.indexOf(' ');
+    if (indexOfSpace >= 0) {
+      this.nextWord = this.nextPhraseStripped.substring(0, indexOfSpace + 1);
+    }
+
+    var toShow = [];
+    // Consume any verse number span at the start of nextPhrase
+    if (this.nextPhrase.startsWith('<span class="verse-num">')) {
+      const i = this.nextPhrase.indexOf("</span>");
+      if (i >= 0) {
+        const verseString = this.nextPhrase.substring(0, i + '</span>'.length);
+        toShow.push(verseString);
+        this.nextPhrase = this.nextPhrase.substring(i + '</span>'.length);
+      }
+    }
+
+    if (skipped.length > 0) {
+      toShow.push(this.searchForPunctuationAndThenWord(skipped, true));
+    }
+    toShow.push(this.searchForPunctuationAndThenWord(word, false));
+
+    this._ngZone.run(() => {
+      this.shown[this.shown.length - 1] = this.shown[this.shown.length - 1] + toShow.join("");
+      this.scrollDown();
+    });
+  }
+
+  searchForPunctuationAndThenWord(word, addWrapper) {
+    var result = [];
+    var indexOfPunctuation = this.nextPhrase.search(/[^a-zA-Z]/);
+    while (indexOfPunctuation == 0) {
+      result.push(this.nextPhrase[0]);
+      this.nextPhrase = this.nextPhrase.substring(1);
+      indexOfPunctuation = this.nextPhrase.search(/[^a-zA-Z]/);
+    }
+
+    word = word.trim();
+    // Now we will look up what the next word is, in this.nextPhrase
+    // This is so we retain all original punctuation and capitalised letters.
+    if (this.nextPhrase.toLowerCase().startsWith(word)) {
+      word = this.nextPhrase.substring(0, word.length);
+      this.nextPhrase = this.nextPhrase.substring(word.length);
+    } else if (this.nextPhrase.toLowerCase().replace(/[^a-zA-Z\d\s]*/g,"").startsWith(word)) {
+      // There is probably an apostrophe in the word, so search up to the next space
+      const i = this.nextPhrase.indexOf(' ');
+      word = this.nextPhrase.substring(0, i);
+      this.nextPhrase = this.nextPhrase.substring(i);
+    } else {
+      let toast = this.toastCtrl.create({
+        message: "Error: word not found at start of nextPhrase: '" + word + "'",
+        duration: 1000,
+        position: 'bottom'
+      });
+      toast.present();
+      console.log("*** word: '" + word + "'");
+      console.log("*** this.nextPhrase: '" + this.nextPhrase + "'");
+      const j = this.nextPhrase.toLowerCase().indexOf(word);
+      this.nextPhrase = this.nextPhrase.substring(j + word.length);
+      console.log("&&& this.nextPhrase: '" + this.nextPhrase + "'");
+    }
+
+    if (addWrapper) {
+      // save the new wrapped word string to this.parts, so it is retained in the screen
+      var part = this.parts[this.counter];
+      var part1 = part.substring(0, part.length - this.nextPhrase.length - word.length);
+      var part2 = part.substring(part.length - this.nextPhrase.length);
+      word = `<span class="skipped-word">${word}</span>`;
+      this.parts[this.counter] = part1 + word + part2
+    }
+
+    result.push(word);
+    return result.join("");
+  }
+
+  getNextPhrase() {
+    if (this.isListening && this.parts.length > this.counter) {
+      this.shown.push("");
+      this.parts[this.counter] = this.removeSkippedWordSpans(this.parts[this.counter]);
+      this.nextPhrase = this.parts[this.counter];
+      this.nextPhraseStripped = this.nextPhrase
+        .toLowerCase()
+        .replace(/<span class="verse-num">.*?span>/g,'')
+        .replace(/[^a-zA-Z\d\s]*/g,"")
+        .trim();
+      const indexOfSpace = this.nextPhraseStripped.indexOf(' ');
+      if (indexOfSpace >= 0) {
+        this.nextWord = this.nextPhraseStripped.substring(0, indexOfSpace + 1);
+      }
+    }
+  }
+
+  removeSkippedWordSpans(phrase) {
+    var i = phrase.indexOf('<span class="skipped-word">');
+    while (i >= 0) {
+      const phrase1 = phrase.substring(0, i);
+      const phrase2 = phrase.substring(i + '<span class="skipped-word">'.length);
+      phrase = phrase1 + phrase2.replace('</span>', '');
+      i = phrase.indexOf('<span class="skipped-word">');
+    }
+    return phrase;
+  }
+
+/*
+  POC September 2022 - using cordova speech recognition
+  onRecite = () => {
+    var initialPrompt = "Speak the phrase; I'll correct you if you go wrong."
     if (this.speechReady) {
-      this.startRecognition();
+      this.startRecognition(initialPrompt, 0);
       return;
     }
 
@@ -655,19 +882,19 @@ export class RecitePassagePage {
       this.speechRecognition.hasPermission().then((hasPermission: boolean) => {
         if (!hasPermission) {
           this.speechRecognition.requestPermission().then(() => {
-            this.startRecognition();
+            this.startRecognition(initialPrompt, 0);
           });
         }
         else {
           this.speechReady = true;
-          this.startRecognition();
+          this.startRecognition(initialPrompt, 0);
         }
       });
     });
   }
 
-  startRecognition() {
-    this.speechRecognition.startListening({ matches: 8, prompt: "Speak the phrase; I'll correct you if you go wrong." })
+  startRecognition(prompt, retryCount) {
+    this.speechRecognition.startListening({ matches: 12, prompt: prompt })
       .subscribe(
       (matches: Array<string>) => {
         if (this.counter >= this.parts.length) {
@@ -680,42 +907,67 @@ export class RecitePassagePage {
           return;
         }
 
-        this.onShowPart();
-        var nextPhrase = this.shown[this.shown.length - 1]
+        if (this.nextPhrase === "") this.nextPhrase = this.parts[this.counter]
           .toLowerCase()
-          .replace(/\[[0-9]+\] /g,'')
-          .replace(/  /g,' ')
-          .replace(/&nbsp;/g,'')
-          .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+          .replace(/<.*?>/g,'')
+          //.replace(/\[[0-9]+\] /g,'')
+          //.replace(/  /g,' ')
+          //.replace(/&nbsp;/g,'')
+          //.replace(/[.,'"\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+          .replace(/[^a-zA-Z\d\s]* /g,"")
           .trim();
-        var matched = false;
+        var matched = "";
         matches.forEach((match) => {
-          if (matched) return;
-          if (match.toLowerCase() === nextPhrase) {
+          if (matched !== "") return;
+          match = match.toLowerCase().trim();
+          if (match === this.nextPhrase) {
+            matched = match;
+            this.nextPhrase = "";
+            this.onShowPart();
+          }
+          if (this.nextPhrase.startsWith(match)) {
+            this.nextPhrase = this.nextPhrase.substring(match.length);
+
+            // Need to check if the match cuts a word in two, e.g. if match has 'know', and the next phrase is 'known'
+            if (!this.nextPhrase.startsWith(" ")) {
+              var len = this.nextPhrase.indexOf(" ")
+              if (len <= 2) {
+                match = match + this.nextPhrase.substring(0, len)
+                this.nextPhrase = this.nextPhrase.substring(len);
+              }
+            }
+            this.nextPhrase = this.nextPhrase.trim();
+            matched = match;
+            this.shown.push(match);
+            this.scrollDown();
+          }
+        });
+        if (matched === "") {
+          if (retryCount > 1) { // prompt the user verbally
+            var words = this.nextPhrase.split(/ /)
+            var help = ""
+            if (words.length > 2) help = words[0] + " " + words[1] + " " + words[2];
+            else help = "" + this.nextPhrase;
             let toast = this.toastCtrl.create({
-              message: "Correct!",
+              message: help,
               duration: 2000,
               position: 'bottom'
             });
             toast.present();
-            matched = true;
+            this.tts.speak(help)
+              .then(() => this.startRecognition("Try again", retryCount + 1))
+              .catch((reason: any) => console.log(reason));
+            return;
           }
-        });
-        if (!matched) {
-          let toast = this.toastCtrl.create({
-            message: "The phrase we were looking for was '" + nextPhrase + "'",
-            duration: 8000,
-            position: 'bottom'
-          });
-          toast.present();
-          //this.shown = matches;
-          //for debug
+          this.startRecognition("Try again", retryCount + 1);
         }
+        else this.startRecognition(matched + "...", 0);
       },
       (onerror) => {
+        if (onerror == "0") return // dialog cancelled by user
         let toast = this.toastCtrl.create({
           message: 'error: ' + onerror,
-          duration: 8000,
+          duration: 2000,
           position: 'bottom'
         });
         toast.present();
@@ -723,7 +975,6 @@ export class RecitePassagePage {
     );
   }
 */
-
   showESVCopyright() {
     let alert = this.alertCtrl.create();
     alert.setTitle('ESV');
