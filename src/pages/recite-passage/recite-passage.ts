@@ -1,6 +1,7 @@
 import { AlertController, Events, NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { MusicControls } from '@ionic-native/music-controls';
+import { HTTP } from '@ionic-native/http';
 // import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
@@ -58,6 +59,7 @@ export class RecitePassagePage {
               private toastCtrl: ToastController,
               public alertCtrl: AlertController,
               private musicControls: MusicControls,
+              private http: HTTP,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
@@ -466,8 +468,61 @@ export class RecitePassagePage {
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
       //const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
-      const passageUrl = `http://www.esvapi.org/v3/passage/audio/key=${ ENV.esvApiKey }?q=${ this.reference.replace(/\s/g, '+')}`
-      console.log("passageUrl: " + passageUrl)
+      const passageUrl = `https://api.esv.org/v3/passage/audio/?q=${ this.reference.replace(/\s/g, '+')}`
+      console.log("passageUrl: " + passageUrl);
+
+      this.http.get(passageUrl, {}, {'Authorization': 'Token 332b2b26bf6328da3e8d2b4aaf99155600668fcc'})
+        .then(response => {
+          console.log('valid response');
+          console.log(response.status);
+          console.log(response.headers);
+          console.log(response.url);
+          console.log(response.data);
+          var binaryData = [];
+          binaryData.push(response.data);
+          var url = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mpeg"}))
+          console.log(url)
+          const w = new Audio(url);
+          console.log(w)
+          //w.src = url;
+          w.play().then(function() {
+            console.log('playing')
+          }).catch(function(error) {
+            console.log('error');
+            console.log(error);
+          });
+        })
+        .catch(error => {
+          console.log('error');
+          console.log(error);
+        });
+    }
+  }
+
+  /*
+
+
+      var request = new XMLHttpRequest();
+      request.open( "GET", passageUrl, true );
+      request.responseType = 'arraybuffer';
+      request.onreadystatechange = (function() {
+        if (request.readyState == XMLHttpRequest.DONE) {
+          console.log("done");
+        }
+        console.log("http response1: " + request);
+      }).bind(this);
+      //request.setRequestHeader("Accept", "application/json");
+      request.setRequestHeader('Authorization', "Token 332b2b26bf6328da3e8d2b4aaf99155600668fcc");
+      request.send();
+
+  */
+
+  onAudioToggleOld = () => {
+    if (!this.passageAudio) {
+      const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
+      //const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
+      const passageUrl = `http://www.esvapi.org/v3/passage/audio/Authorization=${ ENV.esvApiKey }?q=${ this.reference.replace(/\s/g, '+')}`
+
       this.passageAudio = new Audio(passageUrl);
       this.passageAudio.play();
       this.playPauseIcon = 'pause';
@@ -983,3 +1038,4 @@ export class RecitePassagePage {
     alert.present();
   }
 }
+

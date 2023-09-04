@@ -64,5 +64,5 @@ export const bookChapters = {
   "2 John": 1,
   "3 John": 1,
   "Jude": 1,
-  "Revelation": 21
+  "Revelation": 22
 };
