@@ -8,7 +8,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { HTTP } from '@ionic-native/http';
-//import { EmailComposer } from "@ionic-native/email-composer";
+import { File } from '@ionic-native/file';
+import { Media } from '@ionic-native/media';
 
 import { MyApp } from './app.component';
 import { AddPassagePage } from '../pages/add-passage/add-passage';
@@ -50,6 +51,8 @@ import { SearchPage } from "../pages/search/search";
     SplashScreen,
     StatusBar,
     HTTP,
+    File,
+    Media,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -2,6 +2,8 @@ import { AlertController, Events, NavController, NavParams, ToastController, Pla
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { MusicControls } from '@ionic-native/music-controls';
 import { HTTP } from '@ionic-native/http';
+import { File } from '@ionic-native/file';
+import { Media, MediaObject } from '@ionic-native/media';
 // import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
@@ -60,6 +62,8 @@ export class RecitePassagePage {
               public alertCtrl: AlertController,
               private musicControls: MusicControls,
               private http: HTTP,
+              private file: File,
+              private media: Media,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
@@ -326,7 +330,7 @@ export class RecitePassagePage {
 
   onClickText(event) {
     if (this.settings.leftHanded) {
-      if (event.offsetX/this.platform.width() < 0.66) {
+      if (event.offsetX/this.platform.width() < 0.8) {
         this.onShowPart();
       }
       else {
@@ -334,7 +338,7 @@ export class RecitePassagePage {
       }
     }
     else {
-      if (event.offsetX/this.platform.width() > 0.33) {
+      if (event.offsetX/this.platform.width() > 0.2) {
         this.onShowPart();
       }
       else {
@@ -467,7 +471,6 @@ export class RecitePassagePage {
   onAudioToggle = () => {
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
-      //const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
       const passageUrl = `https://api.esv.org/v3/passage/audio/?q=${ this.reference.replace(/\s/g, '+')}`
       console.log("passageUrl: " + passageUrl);
 
@@ -477,25 +480,53 @@ export class RecitePassagePage {
           console.log(response.status);
           console.log(response.headers);
           console.log(response.url);
-          console.log(response.data);
-          var binaryData = [];
-          binaryData.push(response.data);
-          var url = window.URL.createObjectURL(new Blob(binaryData, {type: "audio/mpeg"}))
-          console.log(url)
+          var blob = new Blob([response.data], {type: "audio/mp3"});
+
+          this.file.writeFile(this.file.cacheDirectory, 'downloaded_audio.mp3', blob, {replace: true})
+            .then(res => {
+              var filepath = this.file.cacheDirectory + 'downloaded_audio.mp3'
+              console.log('saved file: ' + filepath);
+              console.log('res: ' + res);
+
+              this.file.checkFile(this.file.cacheDirectory, 'downloaded_audio.mp3')
+                .then((files) => {
+                  console.log("file found: " + files);
+
+                  const file: MediaObject = this.media.create(filepath);
+                  file.onStatusUpdate.subscribe((status : number) => {
+                    console.log('Play media_status :', status);
+                    if (status === 4) {//Media.MEDIA_STOPPED = 4;
+                      file.release();
+                    }
+                  });
+                  file.onSuccess.subscribe(() => console.log('Play successful'));
+                  file.onError.subscribe(error => console.log('Play error: ', error));
+
+                  file.play();
+                  console.log('playing file');
+                })
+                .catch((err) => { console.log("file not found"); });
+
+            })
+            .catch((err) => { console.log("file save error: " + err) });
+
+          /*var url = window.URL.createObjectURL(blob);
+          console.log('window.URL.createObjectURL: ' + url);
           const w = new Audio(url);
-          console.log(w)
-          //w.src = url;
-          w.play().then(function() {
-            console.log('playing')
-          }).catch(function(error) {
-            console.log('error');
-            console.log(error);
-          });
+          console.log('new Audio(url): ' + w);
+          w.src = url;
+          var playPromise = w.play();
+          console.log('playPromise: ' + playPromise);
+          if (playPromise !== undefined) {
+            playPromise.then(function() {
+              console.log('playing')
+            }).catch(function(error) {
+              console.log('play error: ' + error);
+            });
+          }
+          */
         })
-        .catch(error => {
-          console.log('error');
-          console.log(error);
-        });
+        .catch(error => { console.log('HTTP error: ' + error); });
     }
   }
 
