@@ -42,7 +42,6 @@ export class RecitePassagePage {
   speechReady = false;
   passageReceived = false;
   passageAudio = null;
-  audioProgress = '20deg';
   playPauseIcon: String = 'play';
   repeatIcon = 0;
   settings;
