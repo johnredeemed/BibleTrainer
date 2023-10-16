@@ -5,6 +5,7 @@ import { Storage } from "@ionic/storage";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { Events } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
+import { ENV } from '../../environments/environment';
 import moment from 'moment';
 import { bookChapters } from './bookChapters';
 import * as SuggestedPassages from './suggested-passages';
@@ -253,7 +254,7 @@ export class AddPassagePage {
     }).bind(this);
     xmlHttp.open( "GET", URL, true );
     xmlHttp.setRequestHeader("Accept", "application/json");
-    xmlHttp.setRequestHeader('Authorization', "Token 332b2b26bf6328da3e8d2b4aaf99155600668fcc");
+    xmlHttp.setRequestHeader('Authorization', ENV.esvApiKey);
     xmlHttp.send( null );
   }
 

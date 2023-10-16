@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-import { App, MenuController } from 'ionic-angular';
-
 @Component({
   template: `
 <ion-header>
@@ -15,7 +13,7 @@ import { App, MenuController } from 'ionic-angular';
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  
+
 </ion-content>
 `
 })

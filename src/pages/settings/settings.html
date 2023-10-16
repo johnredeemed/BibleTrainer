@@ -37,9 +37,17 @@
   <ion-item>
     <ion-label text-wrap>
       <h2>Left handed</h2>
-      <p>*NEW* introducing instagram-style forwards and backwards control when reciting a passage. Enable left-handed mode to make the left side of the screen the forwards section; otherwise by default the left will mean backwards.</p>
+      <p>Enable left-handed mode to make the left side of the screen the forwards section; otherwise by default the left will mean backwards.</p>
     </ion-label>
     <ion-toggle [(ngModel)]="settings.leftHanded" (ionChange)="updateStoredSettings()"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label text-wrap>
+      <h2>Audio Continuation</h2>
+      <p>When audio is finished, play the next passage in your list</p>
+    </ion-label>
+    <ion-toggle [(ngModel)]="settings.audioContinuation" (ionChange)="updateStoredSettings()"></ion-toggle>
   </ion-item>
 
   <ion-item>

@@ -2,8 +2,6 @@ import { AlertController, Events, NavController, NavParams, ToastController, Pla
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { MusicControls } from '@ionic-native/music-controls';
 import { HTTP } from '@ionic-native/http';
-import { File } from '@ionic-native/file';
-import { Media, MediaObject } from '@ionic-native/media';
 // import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
@@ -42,7 +40,9 @@ export class RecitePassagePage {
   folderObject;
   speechEnabled = true;
   speechReady = false;
+  passageReceived = false;
   passageAudio = null;
+  audioProgress = '20deg';
   playPauseIcon: String = 'play';
   repeatIcon = 0;
   settings;
@@ -62,8 +62,6 @@ export class RecitePassagePage {
               public alertCtrl: AlertController,
               private musicControls: MusicControls,
               private http: HTTP,
-              private file: File,
-              private media: Media,
               // private network: Network,
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
@@ -469,137 +467,95 @@ export class RecitePassagePage {
   }
 
   onAudioToggle = () => {
+    if (this.reference == 'Psalm 150:150') {
+      let toast = this.toastCtrl.create({
+        message: 'Cannot fetch audio for this passage',
+        duration: 1000,
+        position: 'bottom'
+      });
+      toast.present();
+      return;
+    }
+
     if (!this.passageAudio) {
       const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
-      const passageUrl = `https://api.esv.org/v3/passage/audio/?q=${ this.reference.replace(/\s/g, '+')}`
-      console.log("passageUrl: " + passageUrl);
-
-      this.http.get(passageUrl, {}, {'Authorization': 'Token 332b2b26bf6328da3e8d2b4aaf99155600668fcc'})
+      const progressCircle = <HTMLElement>document.querySelector('.btnPlayPause__icon');
+      progressCircle.style.setProperty('--progress', '0deg');
+      this.passageReceived = false;
+      const passageUrl = `https://api.esv.org/v3/passage/audio/?q=${ this.reference.replace(/\s/g, '+')}`;
+      this.http.get(passageUrl, {}, {'Authorization': ENV.esvApiKey})
         .then(response => {
-          console.log('valid response');
+          this.passageReceived = true;
           console.log(response.status);
           console.log(response.headers);
           console.log(response.url);
-          var blob = new Blob([response.data], {type: "audio/mp3"});
+          this.passageAudio = new Audio(response.url);
+          this.passageAudio.play();
+          this.playPauseIcon = 'pause';
+          this.repeatIcon = this.settings.repeatAudio;
 
-          this.file.writeFile(this.file.cacheDirectory, 'downloaded_audio.mp3', blob, {replace: true})
-            .then(res => {
-              var filepath = this.file.cacheDirectory + 'downloaded_audio.mp3'
-              console.log('saved file: ' + filepath);
-              console.log('res: ' + res);
+          this.passageAudio.addEventListener('ended', () => {
+            progressCircle.style.setProperty('--progress', '0deg');
+            if (this.settings.audioContinuation) {
+              if (this.nextPassageExists) {
+                this.swipeLeftEvent();
+                this.onAudioToggle();
+              } else {
+                this.playPauseIcon = 'play';
+              }
+            } else if (this.settings.repeatAudio == 1) {
+              this.passageAudio.play();
+            } else {
+              this.playPauseIcon = 'play';
+            }
+          }, false);
 
-              this.file.checkFile(this.file.cacheDirectory, 'downloaded_audio.mp3')
-                .then((files) => {
-                  console.log("file found: " + files);
+          this.passageAudio.addEventListener('timeupdate', function() {
+            let progress = (this.currentTime/this.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            let progressDegrees = (this.currentTime/this.duration) * 360;
+            progressCircle.style.setProperty('--progress', `${progressDegrees}deg`);
+          }, false);
 
-                  const file: MediaObject = this.media.create(filepath);
-                  file.onStatusUpdate.subscribe((status : number) => {
-                    console.log('Play media_status :', status);
-                    if (status === 4) {//Media.MEDIA_STOPPED = 4;
-                      file.release();
-                    }
-                  });
-                  file.onSuccess.subscribe(() => console.log('Play successful'));
-                  file.onError.subscribe(error => console.log('Play error: ', error));
-
-                  file.play();
-                  console.log('playing file');
-                })
-                .catch((err) => { console.log("file not found"); });
-
-            })
-            .catch((err) => { console.log("file save error: " + err) });
-
-          /*var url = window.URL.createObjectURL(blob);
-          console.log('window.URL.createObjectURL: ' + url);
-          const w = new Audio(url);
-          console.log('new Audio(url): ' + w);
-          w.src = url;
-          var playPromise = w.play();
-          console.log('playPromise: ' + playPromise);
-          if (playPromise !== undefined) {
-            playPromise.then(function() {
-              console.log('playing')
-            }).catch(function(error) {
-              console.log('play error: ' + error);
-            });
+          if (this.platform.is('android')) {
+            //this.subscribeToMusicControls();
           }
-          */
-        })
-        .catch(error => { console.log('HTTP error: ' + error); });
-    }
-  }
+        }).catch(error => { console.log('HTTP error: ' + error); });
 
-  /*
-
-
-      var request = new XMLHttpRequest();
-      request.open( "GET", passageUrl, true );
-      request.responseType = 'arraybuffer';
-      request.onreadystatechange = (function() {
-        if (request.readyState == XMLHttpRequest.DONE) {
-          console.log("done");
-        }
-        console.log("http response1: " + request);
-      }).bind(this);
-      //request.setRequestHeader("Accept", "application/json");
-      request.setRequestHeader('Authorization', "Token 332b2b26bf6328da3e8d2b4aaf99155600668fcc");
-      request.send();
-
-  */
-
-  onAudioToggleOld = () => {
-    if (!this.passageAudio) {
-      const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
-      //const passageUrl = `http://www.esvapi.org/v2/rest/passageQuery?key=${ ENV.esvApiKey }&output-format=mp3&passage=${ this.reference.replace(/\s/g, '%20')}`
-      const passageUrl = `http://www.esvapi.org/v3/passage/audio/Authorization=${ ENV.esvApiKey }?q=${ this.reference.replace(/\s/g, '+')}`
-
-      this.passageAudio = new Audio(passageUrl);
-      this.passageAudio.play();
-      this.playPauseIcon = 'pause';
-      this.repeatIcon = this.settings.repeatAudio;
-
-      this.passageAudio.addEventListener('ended', () => {
-        switch(this.settings.repeatAudio) {
-          case 1: // repeat
-            this.passageAudio.play();
-            break;
-          case 2: // continue
-            if (this.nextPassageExists) {
-              this.swipeLeftEvent();
-              this.onAudioToggle();
-            }
-          default: // stop
-            this.playPauseIcon = 'play';
-            if (this.platform.is('android')) {
-              this.musicControls.updateIsPlaying(false);
-            }
-        }
-      }, false);
-
-      this.passageAudio.addEventListener('timeupdate', function() {
-        let progress = (this.currentTime/this.duration) * 100;
-        progressBar.style.width = `${progress}%`;
-      }, false);
-
-      if (this.platform.is('android')) {
-        this.subscribeToMusicControls();
-      }
+      this.indicateDownloading(0);
     } else {
       if (this.passageAudio.paused) {
         this.passageAudio.play();
         this.playPauseIcon = 'pause';
         if (this.platform.is('android')) {
-          this.musicControls.updateIsPlaying(true);
+          //this.musicControls.updateIsPlaying(true);
         }
       } else {
         this.passageAudio.pause();
         this.playPauseIcon = 'play';
         if (this.platform.is('android')) {
-          this.musicControls.updateIsPlaying(false);
+          //this.musicControls.updateIsPlaying(false);
         }
       }
     }
+  }
+
+  indicateDownloading(waitingProgress) {
+    const progressCircle = <HTMLElement>document.querySelector('.btnPlayPause__icon');
+    setTimeout(() => {
+      this._ngZone.run(() => {
+        if (this.passageReceived) {
+          progressCircle.style.setProperty('--progress', '0deg');
+        } else {
+          waitingProgress = waitingProgress + 5
+          if (waitingProgress > 360) {
+            waitingProgress = 0;
+          }
+          progressCircle.style.setProperty('--progress', `${waitingProgress}deg`);
+          this.indicateDownloading(waitingProgress)
+        }
+      });
+    }, 50);
   }
 
   subscribeToMusicControls() {
@@ -730,14 +686,14 @@ export class RecitePassagePage {
       this.passageAudio.pause();
       this.playPauseIcon = 'play';
       if (this.platform.is('android')) {
-        this.musicControls.updateIsPlaying(false);
+        //this.musicControls.updateIsPlaying(false);
       }
     }
     if (this.passageAudio) {
       this.passageAudio.currentTime = 0;
       this.passageAudio = null;
       if (this.platform.is('android')) {
-        this.musicControls.destroy();
+        //this.musicControls.destroy();
       }
     }
   }

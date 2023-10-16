@@ -62,6 +62,34 @@ page-recite-passage {
     font-weight: bold;
   }
 
+  .btnPlayPause__icon {
+    position: relative;
+    display: flex;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: conic-gradient(#004d4d var(--progress), #ccc 0deg);
+  }
+
+  .btnPlayPause__icon::after {
+    content: "";
+    display: flex;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: white;
+    border-radius: 50%;
+    flex-direction: column;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+
+  .btnPlayPause__icon__play {
+    z-index: 1;
+    margin-left: 2px;
+  }
+
   .audioPlayer {
     margin: 0;
     padding: 4px;
