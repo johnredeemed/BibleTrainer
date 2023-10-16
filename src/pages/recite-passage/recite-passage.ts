@@ -43,7 +43,6 @@ export class RecitePassagePage {
   passageReceived = false;
   passageAudio = null;
   playPauseIcon: String = 'play';
-  repeatIcon = 0;
   settings;
   contentClass = "recite-passage";
 
@@ -65,10 +64,6 @@ export class RecitePassagePage {
               private _ngZone: NgZone) {
     this.storage.get("stored_settings").then((settings) => {
       this.settings = settings;
-      if (!this.settings.repeatAudio) {
-        this.settings.repeatAudio = 0;
-      }
-
       if (settings.sansforgetica) this.contentClass = "recite-passage forgetica-enabled"
       this.downloadOverWiFi = settings.downloadOverWiFi;
       // this.checkNetworkConnection();
@@ -455,16 +450,6 @@ export class RecitePassagePage {
     this.fetchPassage();
   }
 
-  onRepeatToggle = () => {
-    this.settings.repeatAudio++;
-    if (this.settings.repeatAudio > 1) {
-      this.settings.repeatAudio = 0;
-    }
-
-    this.storage.set("stored_settings", this.settings);
-    this.repeatIcon = this.settings.repeatAudio;
-  }
-
   onAudioToggle = () => {
     if (this.reference == 'Psalm 150:150') {
       let toast = this.toastCtrl.create({
@@ -477,7 +462,6 @@ export class RecitePassagePage {
     }
 
     if (!this.passageAudio) {
-      const progressBar = <HTMLElement>document.querySelector('.audioPlayer__scrubber__location');
       const progressCircle = <HTMLElement>document.querySelector('.btnPlayPause__icon');
       progressCircle.style.setProperty('--progress', '0deg');
       this.passageReceived = false;
@@ -491,7 +475,6 @@ export class RecitePassagePage {
           this.passageAudio = new Audio(response.url);
           this.passageAudio.play();
           this.playPauseIcon = 'pause';
-          this.repeatIcon = this.settings.repeatAudio;
 
           this.passageAudio.addEventListener('ended', () => {
             progressCircle.style.setProperty('--progress', '0deg');
@@ -502,16 +485,13 @@ export class RecitePassagePage {
               } else {
                 this.playPauseIcon = 'play';
               }
-            } else if (this.settings.repeatAudio == 1) {
-              this.passageAudio.play();
             } else {
-              this.playPauseIcon = 'play';
+              // Repeat the audio file
+              this.passageAudio.play();
             }
           }, false);
 
           this.passageAudio.addEventListener('timeupdate', function() {
-            let progress = (this.currentTime/this.duration) * 100;
-            progressBar.style.width = `${progress}%`;
             let progressDegrees = (this.currentTime/this.duration) * 360;
             progressCircle.style.setProperty('--progress', `${progressDegrees}deg`);
           }, false);
