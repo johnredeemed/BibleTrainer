@@ -43,6 +43,7 @@ export class RecitePassagePage {
   passageReceived = false;
   passageAudio = null;
   playPauseIcon: String = 'play';
+  willPause = false;
   settings;
   contentClass = "recite-passage";
 
@@ -448,6 +449,37 @@ export class RecitePassagePage {
     this.onHideAll();
     this.indexInFolder++;
     this.fetchPassage();
+  }
+
+  touchStart(event) {
+    if (!this.passageAudio) { return }
+    if (this.passageAudio.paused) { return }
+
+    // The timeout delay allows us to wait and see if it is just a click
+    this.willPause = true;
+    setTimeout(() => {
+      this._ngZone.run(() => {
+        if (!this.willPause) { return }
+        this.passageAudio.pause();
+        this.playPauseIcon = 'play';
+        if (this.platform.is('android')) {
+          //this.musicControls.updateIsPlaying(false);
+        }
+      });
+    }, 200);
+  }
+
+  touchEnd(event) {
+    if (this.willPause) {
+      this.willPause = false;
+      if (this.passageAudio && this.passageAudio.paused) {
+        this.passageAudio.play();
+        this.playPauseIcon = 'pause';
+        if (this.platform.is('android')) {
+          //this.musicControls.updateIsPlaying(true);
+        }
+      }
+    }
   }
 
   onAudioToggle = () => {
