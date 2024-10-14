@@ -13,18 +13,19 @@
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",
     "android": "ionic cordova run android",
-    "ios": "ionic cordova run ios"
+    "ios": "ionic cordova run ios",
+    "sass": "ionic-app-scripts sass"
   },
   "dependencies": {
     "@angular/animations": "5.2.11",
     "@angular/common": "5.2.11",
-    "@angular/compiler-cli": "5.2.11",
     "@angular/compiler": "5.2.11",
+    "@angular/compiler-cli": "5.2.11",
     "@angular/core": "5.2.11",
     "@angular/forms": "5.2.11",
     "@angular/http": "5.2.11",
-    "@angular/platform-browser-dynamic": "5.2.11",
     "@angular/platform-browser": "5.2.11",
+    "@angular/platform-browser-dynamic": "5.2.11",
     "@capacitor/core": "4.2.0",
     "@ionic-native/core": "^4.15.0",
     "@ionic-native/email-composer": "^4.18.0",
@@ -60,7 +61,7 @@
     "cordova-plugin-x-socialsharing": "^6.0.4",
     "cordova-sqlite-storage": "^6.1.0",
     "es6-promise-plugin": "^4.2.2",
-    "sass": "^1.49.9",
+    "sass": "^1.79.5",
     "typescript": "~2.6.2"
   },
   "overrides": {
