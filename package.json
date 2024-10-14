@@ -1,27 +1,30 @@
 {
   "name": "BibleTrainer",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "John Redeemed",
+  "homepage": "https://www.bibletrainer.co.uk",
+  "description": "Let the Word dwell in you richly",
   "private": true,
   "scripts": {
     "start": "ionic-app-scripts serve",
     "dev": "npm run start",
+    "devx": "ionic serve --external --no-browser",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",
-    "android": "ionic cordova run android"
+    "android": "ionic cordova run android",
+    "ios": "ionic cordova run ios"
   },
   "dependencies": {
     "@angular/animations": "5.2.11",
     "@angular/common": "5.2.11",
-    "@angular/compiler": "5.2.11",
     "@angular/compiler-cli": "5.2.11",
+    "@angular/compiler": "5.2.11",
     "@angular/core": "5.2.11",
     "@angular/forms": "5.2.11",
     "@angular/http": "5.2.11",
-    "@angular/platform-browser": "5.2.11",
     "@angular/platform-browser-dynamic": "5.2.11",
+    "@angular/platform-browser": "5.2.11",
     "@capacitor/core": "4.2.0",
     "@ionic-native/core": "^4.15.0",
     "@ionic-native/email-composer": "^4.18.0",
@@ -34,7 +37,6 @@
     "@ionic-native/splash-screen": "~4.15.0",
     "@ionic-native/status-bar": "~4.15.0",
     "@ionic/storage": "^2.2.0",
-    "cordova-ios": "4.5.5",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-music-controls": "2.2.0",
@@ -52,6 +54,7 @@
     "@capacitor/cli": "4.2.0",
     "@ionic/app-scripts": "3.2.4",
     "cordova-android": "^11.0.0",
+    "cordova-ios": "5.0.1",
     "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-ionic-webview": "^5.0.1",
     "cordova-plugin-x-socialsharing": "^6.0.4",
@@ -59,25 +62,28 @@
     "es6-promise-plugin": "^4.2.2",
     "typescript": "~2.6.2"
   },
-  "description": "An Ionic project",
+  "overrides": {
+    "fsevents": "2.3.2",
+    "node-pre-gyp": "0.17.0"
+  },
   "cordova": {
     "plugins": {
-      "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-network-information": {},
-      "cordova-plugin-music-controls": {},
-      "cordova-sqlite-storage": {},
-      "cordova-plugin-x-socialsharing": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-file": {
         "ANDROIDX_WEBKIT_VERSION": "1.4.0"
-      }
+      },
+      "cordova-plugin-music-controls": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-x-socialsharing": {},
+      "cordova-sqlite-storage": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

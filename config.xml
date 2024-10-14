@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml verson='1.0' encoding='utf-8'?>
 <widget id="io.bibletrainer.scripture" version="0.1.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BibleTrainer</name>
     <description>An app to put God's word in your heart</description>
@@ -58,5 +58,4 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-network-information" spec="~2.0.1" />
     <plugin name="cordova-plugin-music-controls" spec="2.2.0" />
-    <engine name="ios" spec="4.5.5" />
 </widget>
