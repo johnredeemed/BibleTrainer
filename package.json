@@ -65,7 +65,6 @@
   },
   "overrides": {
     "fsevents": "2.3.2",
-    "node-pre-gyp": "0.17.0",
     "node-sass": "^9.0.0"
   },
   "cordova": {
