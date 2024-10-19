@@ -2,15 +2,12 @@ import { AlertController, Events, NavController, NavParams, ToastController, Pla
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { MusicControls } from '@ionic-native/music-controls';
 import { HTTP } from '@ionic-native/http';
-// import { Network } from "@ionic-native/network";
 import { Storage } from "@ionic/storage";
 import { ENV } from '../../environments/environment';
 import { EmojiMap } from './emoji-map';
 
 const _SpeechRecognition =
   (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-const _SpeechGrammarList =
-  (window as any).SpeechGrammarList || (window as any).webkitSpeechGrammarList;
 
 @Component({
   selector: 'page-recite-passage',
@@ -38,7 +35,7 @@ export class RecitePassagePage {
   passagesInFolder;
   indexInFolder;
   folderObject;
-  speechEnabled = true;
+  speechEnabled = false;
   speechReady = false;
   passageReceived = false;
   passageAudio = null;

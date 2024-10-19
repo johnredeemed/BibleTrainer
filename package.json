@@ -1,16 +1,19 @@
 {
   "name": "BibleTrainer",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "John Redeemed",
+  "homepage": "https://www.bibletrainer.co.uk",
+  "description": "Let the Word dwell in you richly",
   "private": true,
   "scripts": {
     "start": "ionic-app-scripts serve",
     "dev": "npm run start",
+    "devx": "ionic serve --external --no-browser",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",
-    "android": "ionic cordova run android"
+    "android": "ionic cordova run android",
+    "ios": "ionic cordova run ios"
   },
   "dependencies": {
     "@angular/animations": "5.2.11",
@@ -33,8 +36,7 @@
     "@ionic-native/social-sharing": "^4.18.0",
     "@ionic-native/splash-screen": "~4.15.0",
     "@ionic-native/status-bar": "~4.15.0",
-    "@ionic/storage": "^2.2.0",
-    "cordova-ios": "4.5.5",
+    "@ionic/storage": "2.2.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-music-controls": "2.2.0",
@@ -52,32 +54,44 @@
     "@capacitor/cli": "4.2.0",
     "@ionic/app-scripts": "3.2.4",
     "cordova-android": "^11.0.0",
+    "cordova-ios": "5.0.1",
+    "cordova-plugin-advanced-http": "^3.3.1",
     "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-ionic-webview": "^5.0.1",
     "cordova-plugin-x-socialsharing": "^6.0.4",
     "cordova-sqlite-storage": "^6.1.0",
     "es6-promise-plugin": "^4.2.2",
+    "sass": "^1.79.5",
     "typescript": "~2.6.2"
   },
-  "description": "An Ionic project",
+  "overrides": {
+    "fsevents": "2.3.2",
+    "node-sass": "^9.0.0"
+  },
   "cordova": {
     "plugins": {
-      "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-network-information": {},
-      "cordova-plugin-music-controls": {},
-      "cordova-sqlite-storage": {},
-      "cordova-plugin-x-socialsharing": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-file": {
         "ANDROIDX_WEBKIT_VERSION": "1.4.0"
+      },
+      "cordova-plugin-music-controls": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-x-socialsharing": {
+        "PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION": "This app requires photo library access to function properly.",
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "This app requires photo library access to function properly."
+      },
+      "cordova-sqlite-storage": {},
+      "cordova-plugin-advanced-http": {
+        "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1"
       }
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
