@@ -1,7 +1,7 @@
 {
   "name": "Bible Trainer",
   "short_name": "Bible Trainer",
-  "start_url": "index.html",
+  "start_url": "index.html?source=pwa",
   "display": "standalone",
   "icons": [
     {
@@ -10,6 +10,6 @@
       "type": "image/png"
     }
   ],
-  "background_color": "#4e8ef7",
-  "theme_color": "#4e8ef7"
+  "background_color": "#a6b2b3",
+  "theme_color": "#a6b2b3"
 }
